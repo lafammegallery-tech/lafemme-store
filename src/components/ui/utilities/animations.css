@@ -1,0 +1,23 @@
+/* Reusable motion and focus utilities. Tailwind owns the keyframes and token values. */
+@layer utilities {
+  .lf-focus-ring {
+    @apply outline-none focus-visible:shadow-lf-focus;
+  }
+
+  .lf-animate-fade-in {
+    @apply animate-lf-fade-in;
+  }
+
+  .lf-animate-slide-up {
+    @apply animate-lf-slide-up;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lf-animate-fade-in,
+    .lf-animate-slide-up,
+    .animate-lf-spin,
+    .animate-lf-pulse {
+      animation: none !important;
+    }
+  }
+}

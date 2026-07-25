@@ -1,0 +1,107 @@
+[
+  {
+    "source": "404.html",
+    "route": "/not-found",
+    "scripts": [],
+    "header": false,
+    "footer": false
+  },
+  {
+    "source": "about.html",
+    "route": "/about",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": false
+  },
+  {
+    "source": "addresses.html",
+    "route": "/addresses",
+    "scripts": [],
+    "header": false,
+    "footer": false
+  },
+  {
+    "source": "cart.html",
+    "route": "/cart",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "checkout.html",
+    "route": "/checkout",
+    "scripts": [],
+    "header": true,
+    "footer": false
+  },
+  {
+    "source": "contact.html",
+    "route": "/contact",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "dashboard.html",
+    "route": "/dashboard",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "index.html",
+    "route": "/",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "login.html",
+    "route": "/login",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "orders.html",
+    "route": "/orders",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "product.html",
+    "route": "/product",
+    "scripts": ["/assets/data/products.js", "/assets/data/market.js", "/assets/js/product.js"],
+    "header": true,
+    "footer": false
+  },
+  {
+    "source": "products.html",
+    "route": "/products",
+    "scripts": ["/assets/data/products.js", "/assets/js/script.js"],
+    "header": true,
+    "footer": false
+  },
+  {
+    "source": "profile.html",
+    "route": "/profile",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "register.html",
+    "route": "/register",
+    "scripts": ["/assets/js/script.js"],
+    "header": true,
+    "footer": true
+  },
+  {
+    "source": "wishlist.html",
+    "route": "/wishlist",
+    "scripts": [],
+    "header": false,
+    "footer": false
+  }
+]

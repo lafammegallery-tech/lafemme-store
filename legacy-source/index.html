@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<!--
+=========================================================
+La Femme Official Website
+Version: 2.0
+
+Developer:
+This project is written from scratch without any framework.
+
+Technologies:
+- HTML5
+- CSS3
+- Vanilla JavaScript
+
+=========================================================
+-->
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <!-- ================= Character Encoding ================= -->
+
+    <meta charset="UTF-8">
+
+    <!-- ================= Responsive ================= -->
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <!-- ================= SEO ================= -->
+
+    <title>La Femme | شمش طلا و نقره</title>
+
+    <meta
+        name="description"
+        content="فروش شمش طلا و نقره برند La Femme">
+
+    <meta
+        name="keywords"
+        content="شمش طلا, شمش نقره, La Femme">
+
+    <meta
+        name="author"
+        content="La Femme">
+
+    <!-- ================= CSS ================= -->
+
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css">
+
+</head>
+
+<body>
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!--
+    این بخش در بالاترین قسمت سایت قرار می‌گیرد.
+
+    وظایف:
+
+    1- نمایش لوگوی برند
+
+    2- نمایش منوی اصلی
+
+    3- دکمه ارتباط با ما
+
+    نکته آموزشی:
+
+    از تگ Header استفاده می‌کنیم
+    چون یک تگ Semantic است.
+
+    گوگل راحت‌تر ساختار صفحه را متوجه می‌شود.
+
+    Screen Reader نیز آن را تشخیص می‌دهد.
+
+    ====================================================== -->
+    <header class="header">
+
+    <!--
+    Container باعث می‌شود محتوا همیشه
+    وسط صفحه بماند و به لبه‌های مانیتور نچسبد.
+    -->
+    <div class="container">
+
+        <!--
+        این بخش سه قسمت Header را کنار هم قرار می‌دهد:
+
+        1- لوگو
+        2- منو
+        3- دکمه تماس
+        -->
+
+        <div class="header-content">
+
+            <!-- ================= Logo ================= -->
+
+            <a href="index.html" class="logo">
+
+                <img
+                    src="assets/images/logo.png"
+                    alt="La Femme Logo">
+
+            </a>
+
+            <!-- پایان لوگو -->
+
+
+
+            <!-- ================= Navigation ================= -->
+
+            <nav class="main-nav">
+
+                <ul>
+
+                    <li>
+
+                        <a href="index.html">
+
+                            خانه
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="products.html">
+
+                            محصولات
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="about.html">
+
+                            درباره ما
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="contact.html">
+
+                            تماس با ما
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <!-- پایان منو -->
+
+
+
+            <!-- ================= CTA Button ================= -->
+
+            <a
+                href="contact.html"
+                class="contact-button">
+
+                ارتباط با ما
+
+            </a>
+            <!-- ===================================================== -->
+<!-- MOBILE MENU BUTTON -->
+<!--
+این دکمه فقط در موبایل نمایش داده می‌شود.
+
+وقتی روی آن کلیک شود،
+منوی سایت باز و بسته خواهد شد.
+-->
+<!-- ===================================================== -->
+
+<button
+    class="menu-toggle"
+    aria-label="باز کردن منو">
+
+    <span></span>
+
+    <span></span>
+
+    <span></span>
+
+</button>
+
+            <!-- پایان دکمه -->
+
+        </div>
+
+    </div>
+
+
+<!-- ====================================================================== -->
+<!-- LIVE MARKET BAR                                                        -->
+<!-- ====================================================================== -->
+<!--
+این نوار قیمت لحظه‌ای بازار را نمایش می‌دهد.
+
+در نسخه نهایی اطلاعات از API دریافت می‌شود.
+فعلاً مقادیر نمونه قرار داده شده‌اند.
+-->
+
+<div class="market-bar">
+
+    <div class="container">
+
+        <div class="market-wrapper">
+
+            <div class="market-item gold">
+
+                <span class="market-label">
+
+                    🟡 طلای ۱۸ عیار
+
+                </span>
+
+                <span id="gold-price">
+
+                    35,420,000 تومان
+
+                </span>
+
+                <span class="market-up">
+
+                    ▲ +0.42%
+
+                </span>
+
+            </div>
+
+            <div class="market-item silver">
+
+                <span class="market-label">
+
+                    ⚪ نقره
+
+                </span>
+
+                <span id="silver-price">
+
+                    1,245,000 تومان
+
+                </span>
+
+                <span class="market-down">
+
+                    ▼ -0.13%
+
+                </span>
+
+            </div>
+
+            <div class="market-time">
+
+                بروزرسانی:
+
+                <span id="update-time">
+
+                    12:48:05
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</header>
+<!-- ===================================================== -->
+<!-- MAIN -->
+<!--
+تگ Main محتوای اصلی صفحه را در بر می‌گیرد.
+
+گوگل و مرورگرها متوجه می‌شوند
+که محتوای اصلی سایت از این قسمت آغاز می‌شود.
+
+در آینده تمام Section های صفحه
+داخل Main قرار خواهند گرفت.
+-->
+<!-- ===================================================== -->
+
+<main>
+    <!-- ====================================================================== -->
+<!-- HERO SECTION                                                           -->
+<!-- ====================================================================== -->
+<!--
+این مهم‌ترین بخش صفحه اصلی است.
+
+هدف Hero:
+- معرفی برند در کمتر از ۳ ثانیه
+- جلب اعتماد کاربر
+- هدایت کاربر به صفحه محصولات
+
+ساختار:
+Hero
+├── متن
+│   ├── برچسب برند
+│   ├── عنوان اصلی (H1)
+│   ├── توضیح
+│   └── دکمه‌ها
+│
+└── تصویر محصول
+-->
+<section class="hero">
+
+    <div class="container">
+
+        <div class="hero-wrapper">
+
+            <!-- ================= HERO TEXT ================= -->
+
+            <div class="hero-content">
+
+                <span class="hero-badge">
+                    ✦ مجموعه اختصاصی شمش‌های لوکس
+                </span>
+
+                <h1>
+
+                    شمش‌های طلا و نقره
+
+                    <span>
+
+                        La Femme
+
+                    </span>
+
+                </h1>
+
+                <p>
+
+                    مجموعه‌ای منتخب از شمش‌های طلا و نقره با طراحی لوکس،
+                    کیفیت ممتاز و مناسب برای سرمایه‌گذاری، هدیه و حفظ ارزش دارایی.
+
+                </p>
+
+                <!-- ================= BUTTONS ================= -->
+
+                <div class="hero-buttons">
+
+                    <a href="products.html" class="btn btn-primary">
+
+                        مشاهده محصولات
+
+                    </a>
+
+                    <a href="about.html" class="btn btn-secondary">
+
+                        درباره برند
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <!-- ================= HERO IMAGE ================= -->
+
+            <div class="hero-image">
+
+                <!--
+                فعلاً این تصویر قرار می‌گیرد.
+
+                بعداً آن را با رندر سه‌بعدی اختصاصی
+                شمش La Femme جایگزین می‌کنیم.
+                -->
+
+                <img
+                    src="assets/images/hero-gold-bar.png"
+                    alt="شمش طلای La Femme">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ====================================================================== -->
+<!-- FEATURED PRODUCTS                                                      -->
+<!-- ====================================================================== -->
+<!--
+این بخش ویترین محصولات است.
+
+فعلاً ۳ محصول نمونه قرار می‌دهیم.
+بعداً این قسمت از پنل ادمین و API پر می‌شود.
+-->
+
+<section class="featured-products">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>La Femme Collection</span>
+
+            <h2>
+
+                مجموعه منتخب
+
+            </h2>
+
+            <p>
+
+                شمش‌های منتخب طلا و نقره با طراحی اختصاصی La Femme
+
+            </p>
+
+        </div>
+
+        <div class="products-grid">
+
+            <!-- ================= Product Card 1 ================= -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <img src="assets/images/gold-10g.png"
+                         alt="شمش طلای ۱۰ گرم">
+
+                </div>
+
+                <div class="product-content">
+
+                    <h3>شمش طلای ۱۰ گرم</h3>
+
+                    <span class="product-weight">
+
+                        ۱۰ گرم
+
+                    </span>
+
+                    <div class="product-price">
+
+                        قیمت لحظه‌ای
+
+                    </div>
+
+                    <a href="product.html"
+                       class="btn btn-primary">
+
+                        مشاهده محصول
+
+                    </a>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- ================= Product Card 2 ================= -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <img src="assets/images/gold-20g.png"
+                         alt="شمش طلای ۲۰ گرم">
+
+                </div>
+
+                <div class="product-content">
+
+                    <h3>شمش طلای ۲۰ گرم</h3>
+
+                    <span class="product-weight">
+
+                        ۲۰ گرم
+
+                    </span>
+
+                    <div class="product-price">
+
+                        قیمت لحظه‌ای
+
+                    </div>
+
+                    <a href="product.html"
+                       class="btn btn-primary">
+
+                        مشاهده محصول
+
+                    </a>
+
+                </div>
+
+            </article>
+
+
+
+            <!-- ================= Product Card 3 ================= -->
+
+            <article class="product-card">
+
+                <div class="product-image">
+
+                    <img src="assets/images/silver-100g.png"
+                         alt="شمش نقره ۱۰۰ گرم">
+
+                </div>
+
+                <div class="product-content">
+
+                    <h3>شمش نقره ۱۰۰ گرم</h3>
+
+                    <span class="product-weight">
+
+                        ۱۰۰ گرم
+
+                    </span>
+
+                    <div class="product-price">
+
+                        قیمت لحظه‌ای
+
+                    </div>
+
+                    <a href="product.html"
+                       class="btn btn-primary">
+
+                        مشاهده محصول
+
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ====================================================================== -->
+<!-- WHY CHOOSE US                                                          -->
+<!-- ====================================================================== -->
+<!--
+این بخش مزیت‌های برند La Femme را نمایش می‌دهد.
+
+در آینده متن هر کارت از پنل مدیریت قابل ویرایش خواهد بود.
+-->
+
+<section class="why-us">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <span>WHY LA FEMME</span>
+
+            <h2>
+
+                چرا La Femme؟
+
+            </h2>
+
+            <p>
+
+                ما فقط شمش نمی‌فروشیم؛
+                اعتماد، اصالت و کیفیت ارائه می‌کنیم.
+
+            </p>
+
+        </div>
+
+        <div class="features-grid">
+
+            <!-- ================= کارت اول ================= -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+
+                    ✨
+
+                </div>
+
+                <h3>
+
+                    اصالت کالا
+
+                </h3>
+
+                <p>
+
+                    تمامی محصولات با تضمین اصالت عرضه می‌شوند.
+
+                </p>
+
+            </article>
+
+            <!-- ================= کارت دوم ================= -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+
+                    🛡
+
+                </div>
+
+                <h3>
+
+                    کیفیت ممتاز
+
+                </h3>
+
+                <p>
+
+                    بسته بندی ضد جعل تولید شده با بالاترین استانداردهای کیفیت.
+
+                </p>
+
+            </article>
+
+            <!-- ================= کارت سوم ================= -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+
+                    🚚
+
+                </div>
+
+                <h3>
+
+                    ارسال امن
+
+                </h3>
+
+                <p>
+
+                    بسته‌بندی ویژه و ارسال کاملاً ایمن.
+
+                </p>
+
+            </article>
+
+            <!-- ================= کارت چهارم ================= -->
+
+            <article class="feature-card">
+
+                <div class="feature-icon">
+
+                    💎
+
+                </div>
+
+                <h3>
+
+                    سرمایه‌گذاری مطمئن
+
+                </h3>
+
+                <p>
+
+                    انتخابی مناسب برای حفظ ارزش سرمایه.
+
+                </p>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ====================================================================== -->
+<!-- FOOTER                                                                 -->
+<!-- ====================================================================== -->
+<!--
+این بخش در پایین تمام صفحات نمایش داده می‌شود.
+
+بعداً اطلاعات این بخش از پنل مدیریت قابل تغییر خواهد بود.
+-->
+
+<footer class="footer">
+
+    <div class="container">
+
+        <div class="footer-grid">
+
+            <!-- ================= ستون اول ================= -->
+
+            <div class="footer-column">
+
+                <h3>La Femme</h3>
+
+                <p>
+
+                    مجموعه‌ای از شمش‌های طلا و نقره با کیفیت ممتاز،
+                    مناسب سرمایه‌گذاری و هدیه.
+
+                </p>
+
+            </div>
+
+            <!-- ================= ستون دوم ================= -->
+
+            <div class="footer-column">
+
+                <h4>دسترسی سریع</h4>
+
+                <ul>
+
+                    <li><a href="index.html">خانه</a></li>
+
+                    <li><a href="products.html">محصولات</a></li>
+
+                    <li><a href="about.html">درباره ما</a></li>
+
+                    <li><a href="contact.html">تماس با ما</a></li>
+
+                </ul>
+
+            </div>
+
+            <!-- ================= ستون سوم ================= -->
+
+            <div class="footer-column">
+
+                <h4>ارتباط با ما</h4>
+
+                <p>شماره تماس</p>
+
+                <p>آدرس فروشگاه</p>
+
+                <p>Instagram</p>
+
+            </div>
+
+        </div>
+
+        <!-- ================= Copyright ================= -->
+
+        <div class="copyright">
+
+            © 2026 La Femme. تمامی حقوق محفوظ است.
+
+        </div>
+
+    </div>
+
+</footer>
+<script src="assets/js/script.js"></script>
+
+</body>
+
+</html>
+<!-- پایان Header -->

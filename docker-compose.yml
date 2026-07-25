@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lafemme
+      POSTGRES_USER: lafemme
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - lafemme_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lafemme -d lafemme"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://lafemme:${POSTGRES_PASSWORD:-change-me}@postgres:5432/lafemme
+      AUTH_SECRET: ${AUTH_SECRET:-replace-with-a-long-random-secret}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      MARKET_SYNC_SECRET: ${MARKET_SYNC_SECRET:-replace-market-secret}
+    ports:
+      - "3000:3000"
+volumes:
+  lafemme_postgres:

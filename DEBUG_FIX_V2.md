@@ -1,0 +1,1 @@
+Applied navy/gold theme overrides and prepared runtime debugging pass. Check terminal errors for remaining server/database issues.

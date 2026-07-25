@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+<!--
+=========================================================
+La Femme Official Website
+Products Page
+
+این فایل صفحه نمایش تمام محصولات فروشگاه است.
+
+در این صفحه هیچ محصولی به صورت دستی نوشته نمی‌شود.
+
+تمام محصولات از فایل:
+
+assets/data/products.js
+
+خوانده شده و توسط JavaScript نمایش داده می‌شوند.
+
+=========================================================
+-->
+
+<html lang="fa" dir="rtl">
+
+<head>
+
+    <!-- ================= Encoding ================= -->
+
+    <meta charset="UTF-8">
+
+    <!-- ================= Responsive ================= -->
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <!-- ================= SEO ================= -->
+
+    <title>
+
+        محصولات | La Femme
+
+    </title>
+
+    <meta
+        name="description"
+        content="مشاهده تمامی شمش‌های طلا و نقره La Femme">
+
+    <meta
+        name="keywords"
+        content="شمش طلا, شمش نقره, La Femme">
+
+    <meta
+        name="author"
+        content="La Femme">
+
+    <!-- ================= CSS ================= -->
+
+    <link
+        rel="stylesheet"
+        href="assets/css/style.css">
+
+</head>
+
+<body>
+
+<!-- ===================================================== -->
+<!-- HEADER -->
+<!--
+این Header دقیقا مشابه صفحه اصلی است.
+
+بعدا اگر Header را تغییر دهیم،
+تمام صفحات باید همین ساختار را داشته باشند.
+-->
+<!-- ===================================================== -->
+
+<header class="header">
+
+    <div class="container">
+
+        <div class="header-content">
+
+            <!-- Logo -->
+
+            <a
+                href="index.html"
+                class="logo">
+
+                <img
+                    src="assets/images/logo.png"
+                    alt="La Femme Logo">
+
+            </a>
+
+            <!-- Navigation -->
+
+            <nav class="main-nav">
+
+                <ul>
+
+                    <li>
+
+                        <a href="index.html">
+
+                            خانه
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a
+                            href="products.html"
+                            class="active">
+
+                            محصولات
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="about.html">
+
+                            درباره ما
+
+                        </a>
+
+                    </li>
+
+                    <li>
+
+                        <a href="contact.html">
+
+                            تماس با ما
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <!-- Contact Button -->
+
+            <a
+                href="contact.html"
+                class="contact-button">
+
+                ارتباط با ما
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- ===================================================== -->
+<!-- LIVE MARKET BAR -->
+<!-- ===================================================== -->
+
+<section class="market-bar">
+
+    <div class="container">
+
+        <div class="market-wrapper">
+
+            <!-- Gold -->
+
+            <div class="market-item gold">
+
+                <span class="market-label">
+
+                    🟡 طلای ۱۸ عیار
+
+                </span>
+
+                <span id="gold-price">
+
+                    در حال دریافت...
+
+                </span>
+
+            </div>
+
+            <!-- Silver -->
+
+            <div class="market-item silver">
+
+                <span class="market-label">
+
+                    ⚪ نقره
+
+                </span>
+
+                <span id="silver-price">
+
+                    در حال دریافت...
+
+                </span>
+
+            </div>
+
+            <!-- Time -->
+
+            <div class="market-time">
+
+                بروزرسانی
+
+                <span id="update-time">
+
+                    --
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ===================================================== -->
+<!-- MAIN -->
+<!-- ===================================================== -->
+
+<main>
+    <!-- ===================================================== -->
+<!-- PAGE HERO -->
+<!--
+این بخش هدر اختصاصی صفحه محصولات است.
+
+کاربر به محض ورود متوجه می‌شود
+که وارد صفحه محصولات شده است.
+
+همچنین در آینده می‌توانیم
+پس‌زمینه متحرک یا ویدئو نیز
+به این قسمت اضافه کنیم.
+-->
+<!-- ===================================================== -->
+
+<section class="page-hero">
+
+    <div class="container">
+
+        <!-- عنوان کوچک -->
+
+        <span class="hero-badge">
+
+            مجموعه شمش‌های لوکس
+
+        </span>
+
+        <!-- عنوان اصلی -->
+
+        <h1>
+
+            محصولات La Femme
+
+        </h1>
+
+        <!-- توضیح -->
+
+        <p>
+
+            مجموعه‌ای از شمش‌های طلا و نقره با طراحی اختصاصی،
+            کیفیت ممتاز و مناسب سرمایه‌گذاری.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- BREADCRUMB -->
+<!--
+مسیر صفحه
+
+خانه / محصولات
+
+این بخش برای سئو نیز مفید است.
+-->
+<!-- ===================================================== -->
+
+<section class="breadcrumb-section">
+
+    <div class="container">
+
+        <div class="breadcrumb">
+
+            <a href="index.html">
+
+                خانه
+
+            </a>
+
+            <span>
+
+                /
+
+            </span>
+
+            <span>
+
+                محصولات
+
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- PRODUCTS TOOLBAR -->
+<!--
+این قسمت شامل:
+
+1- جستجو
+
+2- فیلتر
+
+3- مرتب سازی
+
+است.
+
+در حال حاضر فقط ظاهر آن ساخته می‌شود.
+
+در مراحل بعدی JavaScript
+آن را فعال خواهد کرد.
+-->
+<!-- ===================================================== -->
+
+<section class="products-toolbar">
+
+    <div class="container">
+
+        <div class="toolbar-wrapper">
+
+            <!-- ================= SEARCH ================= -->
+
+            <div class="search-box">
+
+                <input
+
+                    type="text"
+
+                    id="searchInput"
+
+                    placeholder="جستجوی محصول ..."
+
+                >
+
+            </div>
+
+
+
+            <!-- ================= FILTER ================= -->
+
+            <div class="products-filter">
+
+                <button
+
+                    class="filter-btn active"
+
+                    data-filter="all">
+
+                    همه
+
+                </button>
+
+                <button
+
+                    class="filter-btn"
+
+                    data-filter="gold">
+
+                    طلا
+
+                </button>
+
+                <button
+
+                    class="filter-btn"
+
+                    data-filter="silver">
+
+                    نقره
+
+                </button>
+
+            </div>
+
+
+
+            <!-- ================= SORT ================= -->
+
+            <div class="sort-box">
+
+                <select id="sortProducts">
+
+                    <option value="default">
+
+                        مرتب سازی
+
+                    </option>
+
+                    <option value="newest">
+
+                        جدیدترین
+
+                    </option>
+
+                    <option value="weight-low">
+
+                        وزن کمتر
+
+                    </option>
+
+                    <option value="weight-high">
+
+                        وزن بیشتر
+
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- PRODUCTS -->
+<!--
+تمام کارت‌های محصولات
+
+داخل این قسمت
+
+توسط JavaScript
+
+ساخته خواهند شد.
+
+هیچ کارت محصولی
+داخل HTML نوشته نمی‌شود.
+-->
+<!-- ===================================================== -->
+
+<section class="products-section">
+
+    <div class="container">
+
+        <!--
+        این Container خالی است.
+
+        script.js
+
+        تمام کارت‌های محصول را
+
+        اینجا قرار می‌دهد.
+        -->
+
+        <div
+
+            class="products-grid"
+
+            id="products-container">
+
+        </div>
+
+    </div>
+
+</section>
+<!-- ===================================================== -->
+<!-- PRODUCTS INFO -->
+<!--
+این قسمت تعداد محصولات نمایش داده شده را نشان می‌دهد.
+
+فعلاً مقدار ثابت است.
+
+بعداً JavaScript تعداد واقعی محصولات را
+از products.js محاسبه می‌کند.
+-->
+<!-- ===================================================== -->
+
+<section class="products-info">
+
+    <div class="container">
+
+        <div class="products-info-wrapper">
+
+            <p>
+
+                تعداد محصولات:
+
+                <strong id="products-count">
+
+                    0
+
+                </strong>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- LOADING -->
+<!--
+قبل از اینکه محصولات از فایل products.js
+لود شوند، این بخش نمایش داده می‌شود.
+
+بعداً JavaScript آن را مخفی می‌کند.
+-->
+<!-- ===================================================== -->
+
+<section id="loading-products" class="loading-section">
+
+    <div class="container">
+
+        <div class="loading-box">
+
+            <div class="loading-spinner"></div>
+
+            <p>
+
+                در حال دریافت محصولات...
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- EMPTY PRODUCTS -->
+<!--
+اگر هیچ محصولی پیدا نشود
+این بخش نمایش داده می‌شود.
+
+مثلاً اگر کاربر چیزی جستجو کند
+و نتیجه‌ای وجود نداشته باشد.
+-->
+<!-- ===================================================== -->
+
+<section
+    id="empty-products"
+    class="empty-products">
+
+    <div class="container">
+
+        <h2>
+
+            محصولی پیدا نشد
+
+        </h2>
+
+        <p>
+
+            لطفاً عبارت دیگری جستجو کنید.
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+
+
+<!-- ===================================================== -->
+<!-- PAGINATION -->
+<!--
+صفحه‌بندی محصولات
+
+فعلاً فقط ظاهر آن ساخته می‌شود.
+
+بعداً تعداد صفحات توسط JavaScript
+تولید خواهد شد.
+-->
+<!-- ===================================================== -->
+
+<section class="pagination-section">
+
+    <div class="container">
+
+        <div id="pagination">
+
+        </div>
+
+    </div>
+
+</section>
+<script src="assets/data/products.js"></script>
+<script src="assets/js/script.js"></script>

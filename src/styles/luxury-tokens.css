@@ -1,0 +1,21 @@
+/* La Femme V1.8.1 Luxury Design Tokens */
+:root {
+  --lf-bg: #080808;
+  --lf-surface: #121212;
+  --lf-card: #181818;
+  --lf-gold: #c6a15b;
+  --lf-gold-soft: #d8bd83;
+  --lf-text: #f5f1e8;
+  --lf-muted: #b8ad9c;
+  --lf-border: rgba(198,161,91,.22);
+}
+
+.lf-luxury-card {
+  background: var(--lf-card);
+  border: 1px solid var(--lf-border);
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.lf-gold-text {
+  color: var(--lf-gold-soft);
+}

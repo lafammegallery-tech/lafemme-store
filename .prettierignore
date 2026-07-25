@@ -1,0 +1,8 @@
+.next
+node_modules
+legacy-source
+public/assets/css/style.css
+src/app/globals.css
+package-lock.json
+
+public/assets

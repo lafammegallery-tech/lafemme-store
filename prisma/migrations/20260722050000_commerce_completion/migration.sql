@@ -1,0 +1,10 @@
+CREATE TYPE "DiscountType" AS ENUM ('PERCENT','FIXED','FREE_SHIPPING');
+CREATE TABLE "Coupon" ("id" TEXT PRIMARY KEY, "code" TEXT NOT NULL, "title" TEXT NOT NULL, "type" "DiscountType" NOT NULL, "value" DECIMAL(18,0) NOT NULL DEFAULT 0, "minimumAmount" DECIMAL(18,0) NOT NULL DEFAULT 0, "maximumDiscount" DECIMAL(18,0), "usageLimit" INTEGER, "perUserLimit" INTEGER NOT NULL DEFAULT 1, "startsAt" TIMESTAMP(3), "expiresAt" TIMESTAMP(3), "isActive" BOOLEAN NOT NULL DEFAULT true, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP, "updatedAt" TIMESTAMP(3) NOT NULL);
+CREATE UNIQUE INDEX "Coupon_code_key" ON "Coupon"("code");
+CREATE INDEX "Coupon_isActive_startsAt_expiresAt_idx" ON "Coupon"("isActive","startsAt","expiresAt");
+CREATE TABLE "CouponUsage" ("id" TEXT PRIMARY KEY, "couponId" TEXT NOT NULL, "userId" TEXT, "orderId" TEXT NOT NULL, "amount" DECIMAL(18,0) NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE UNIQUE INDEX "CouponUsage_couponId_orderId_key" ON "CouponUsage"("couponId","orderId");
+CREATE INDEX "CouponUsage_couponId_userId_idx" ON "CouponUsage"("couponId","userId");
+ALTER TABLE "CouponUsage" ADD CONSTRAINT "CouponUsage_couponId_fkey" FOREIGN KEY ("couponId") REFERENCES "Coupon"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "CouponUsage" ADD CONSTRAINT "CouponUsage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "CouponUsage" ADD CONSTRAINT "CouponUsage_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
