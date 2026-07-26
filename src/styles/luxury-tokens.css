@@ -1,21 +1,30 @@
-/* La Femme V1.8.1 Luxury Design Tokens */
+/* La Femme V2.0 Luxury Design Tokens — پالت لاکچری طلا و جواهر */
 :root {
-  --lf-bg: #080808;
-  --lf-surface: #121212;
-  --lf-card: #181818;
-  --lf-gold: #c6a15b;
-  --lf-gold-soft: #d8bd83;
-  --lf-text: #f5f1e8;
+  --lf-bg: #050811;
+  --lf-surface: #0d1222;
+  --lf-card: #111827;
+  --lf-gold: #D4AF37;
+  --lf-gold-soft: #e8cc6a;
+  --lf-text: #FAF7F0;
   --lf-muted: #b8ad9c;
-  --lf-border: rgba(198,161,91,.22);
+  --lf-border: rgba(212,175,55,.18);
 }
 
+/* کارت لاکچری با افکت شیشه */
 .lf-luxury-card {
-  background: var(--lf-card);
+  background: linear-gradient(145deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
   border: 1px solid var(--lf-border);
-  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  box-shadow: 0 24px 70px rgba(0,0,0,.45);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
+/* متن طلایی */
 .lf-gold-text {
   color: var(--lf-gold-soft);
+}
+
+/* درخشش طلایی */
+.lf-gold-glow {
+  text-shadow: 0 0 20px rgba(212,175,55,.45), 0 0 40px rgba(212,175,55,.2);
 }

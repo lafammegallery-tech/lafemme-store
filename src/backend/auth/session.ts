@@ -6,7 +6,15 @@ import type { UserRole } from "@/generated/prisma/client";
 const COOKIE_NAME = "lafemme_session";
 const MAX_AGE = 60 * 60 * 24 * 14;
 type SessionPayload = { userId: string; role: UserRole; exp: number };
-function secret() { return process.env.AUTH_SECRET || "development-only-change-me"; }
+function secret() {
+  const s = process.env.AUTH_SECRET;
+  if (!s) {
+    // در محیط production بدون AUTH_SECRET سرور باید اجرا نشود
+    if (process.env.NODE_ENV === "production") throw new Error("AUTH_SECRET must be set in production.");
+    return "development-only-change-me";
+  }
+  return s;
+}
 function sign(value: string) { return createHmac("sha256", secret()).update(value).digest("base64url"); }
 function encode(payload: SessionPayload) { const body = Buffer.from(JSON.stringify(payload)).toString("base64url"); return `${body}.${sign(body)}`; }
 function decode(token?: string): SessionPayload | null {

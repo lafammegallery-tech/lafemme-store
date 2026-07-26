@@ -67,6 +67,7 @@ export async function updateInventoryAction(formData: FormData) {
     newData: { quantity, lowStockAt },
   });
   revalidatePath("/admin/inventory");
+  revalidatePath("/admin/products");
 }
 
 export async function toggleProductAction(formData: FormData) {

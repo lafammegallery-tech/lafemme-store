@@ -42,9 +42,10 @@ function buildWhereClause(options: ProductFilterOptions): Prisma.ProductWhereInp
   }
 
   if (options.minPrice !== undefined || options.maxPrice !== undefined) {
+    // قیمت در Prisma از نوع Decimal است — باید به رشته تبدیل شود
     where.price = {};
-    if (options.minPrice !== undefined) where.price.gte = options.minPrice;
-    if (options.maxPrice !== undefined) where.price.lte = options.maxPrice;
+    if (options.minPrice !== undefined) where.price.gte = String(options.minPrice);
+    if (options.maxPrice !== undefined) where.price.lte = String(options.maxPrice);
   }
 
   if (options.minWeight !== undefined || options.maxWeight !== undefined) {

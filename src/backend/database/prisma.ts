@@ -17,6 +17,7 @@ export function getPrisma(): PrismaClient {
 
   const adapter = new PrismaPg({ connectionString });
   const client = new PrismaClient({ adapter });
-  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = client;
+  // در همه محیط‌ها کلاینت را کش می‌کنیم تا از ایجاد اتصال‌های اضافه جلوگیری شود
+  globalForPrisma.prisma = client;
   return client;
 }

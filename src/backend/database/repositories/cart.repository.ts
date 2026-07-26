@@ -71,13 +71,12 @@ export const cartRepository = {
     quantity = 1,
     variantId?: string,
   ) {
-    const existing = await getPrisma().cartItem.findUnique({
+    // باید findFirst استفاده شود چون NULL در unique index با NULL برابر نیست در SQL
+    const existing = await getPrisma().cartItem.findFirst({
       where: {
-        cartId_productId_variantId: {
-          cartId,
-          productId,
-          variantId: variantId ?? "",
-        },
+        cartId,
+        productId,
+        variantId: variantId ?? null,
       },
     });
 
@@ -89,7 +88,7 @@ export const cartRepository = {
     }
 
     return getPrisma().cartItem.create({
-      data: { cartId, productId, variantId, quantity, unitPrice },
+      data: { cartId, productId, variantId: variantId ?? null, quantity, unitPrice },
     });
   },
 

@@ -2,7 +2,8 @@
 export const routes = {
   home: "/",
   products: "/products",
-  product: "/product",
+  /** این تابع آدرس صفحه محصول را با شناسه می‌سازد. */
+  product: (id: string) => `/products/${id}`,
   cart: "/cart",
   checkout: "/checkout",
   login: "/login",
@@ -22,5 +23,4 @@ export const routes = {
   terms: "/terms",
 } as const;
 
-/** نوع مسیرهای فروشگاه. */
 export type RouteKey = keyof typeof routes;

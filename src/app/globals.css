@@ -47,23 +47,29 @@
 
 :root{
 
-    /* ================= رنگ‌ها ================= */
+    /* ================= پالت رنگ لاکچری ================= */
 
-    --color-black:#04060C;
-    --color-background:#0A0E1C;
-    --color-surface:#131A30;
-    --color-surface-raised:#1B2440;
+    --color-black:#050811;
+    --color-background:#050811;
+    --color-surface:#0d1222;
+    --color-surface-raised:#151e35;
 
-    --color-gold:#C9A46B;
-    --color-gold-light:#E4C78C;
-    --color-gold-dark:#9C7A45;
+    /* رنگ طلای اصلی برند La Femme */
+    --color-gold:#D4AF37;
+    --color-gold-light:#e8cc6a;
+    --color-gold-dark:#a87c1a;
+    --color-gold-rgb:212,175,55;
 
-    --color-white:#EEF0F7;
+    /* کرم لاکچری */
+    --color-cream:#FAF7F0;
 
-    --color-gray:#A7ADC7;
-    --color-gray-light:#CDD1E4;
+    --color-white:#FAF7F0;
 
-    --color-border:rgba(238,240,247,.08);
+    --color-gray:#9ba3be;
+    --color-gray-light:#c8cfe0;
+
+    --color-border:rgba(212,175,55,.12);
+    --color-border-subtle:rgba(250,247,240,.06);
 
 
 
@@ -95,10 +101,33 @@
 
     /* ================= Shadow ================= */
 
-    --shadow-gold:0 18px 40px rgba(201,164,107,.20);
+    --shadow-gold:0 18px 50px rgba(212,175,55,.25);
 
-    --shadow-card:0 20px 60px rgba(0,0,0,.35);
+    --shadow-gold-glow:0 0 40px rgba(212,175,55,.18),0 18px 50px rgba(0,0,0,.45);
 
+    --shadow-card:0 24px 70px rgba(0,0,0,.45);
+
+    --shadow-glass:0 8px 32px rgba(0,0,0,.36);
+
+}
+
+/* ===== Gold Gradient Utility ===== */
+.gold-gradient{
+    background:linear-gradient(135deg,#c9a23b 0%,#D4AF37 40%,#e8cc6a 60%,#D4AF37 100%);
+}
+
+/* ===== Glass Card Effect ===== */
+.glass-card{
+    background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    border:1px solid rgba(212,175,55,.18);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+}
+
+/* ===== Gold Glow Text ===== */
+.gold-glow-text{
+    color:var(--color-gold);
+    text-shadow:0 0 20px rgba(212,175,55,.45),0 0 40px rgba(212,175,55,.2);
 }
 /* ========================================================================== */
 /*                              RESET                                         */
@@ -228,7 +257,7 @@ img{
 
     backdrop-filter:blur(22px);
 
-    border-bottom:1px solid rgba(201,164,107,.15);
+    border-bottom:1px solid rgba(212,175,55,.15);
 
     box-shadow:0 12px 35px rgba(0,0,0,.35);
 
@@ -258,12 +287,11 @@ img{
     height:var(--header-height);
     padding:6px 0;
     transition:padding .35s ease;
-    .header.scrolled .header-content{
-
-    padding:4px 0;
 
 }
 
+.header.scrolled .header-content{
+    padding:4px 0;
 }
 /* ========================================================================== */
 /*                                LOGO                                        */
@@ -368,14 +396,15 @@ img{
     font-weight:bold;
 
     transition:var(--transition);
-    box-shadow:0 12px 30px rgba(201,164,107,.20);
+    box-shadow:0 12px 30px rgba(212,175,55,.20);
+    overflow:hidden;
 
-overflow:hidden;
+}
+
 .contact-button:hover{
 
     transform:translateY(-3px);
 
-}
 }
 /* ========================================================================== */
 /*                                HERO                                        */
@@ -430,17 +459,18 @@ overflow:hidden;
     max-width:520px;
 
     height:auto;
-    @media (max-width:992px){
+
+}
+
+@media (max-width:992px){
 
 .hero-image img{
 
-width:75%;
+    width:75%;
 
-max-width:260px;
+    max-width:260px;
 
-margin:auto;
-
-}
+    margin:auto;
 
 }
 
@@ -459,7 +489,7 @@ margin:auto;
 
     padding:8px 18px;
 
-    border:1px solid rgba(201,164,107,.35);
+    border:1px solid rgba(212,175,55,.35);
 
     border-radius:50px;
 
@@ -551,18 +581,54 @@ margin:auto;
 
     font-weight:700;
 
-    transition:.35s;
+    transition:.35s cubic-bezier(.25,.8,.25,1);
+
+    letter-spacing:.02em;
+
+    position:relative;
+
+    overflow:hidden;
 
 }
-/*
-دکمه طلایی
-*/
 
+.btn:disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+
+    pointer-events:none;
+
+}
+
+/* دکمه اول — طلایی پریمیوم با گرادیان */
 .btn-primary{
 
-    background:var(--color-gold);
+    background:linear-gradient(135deg,#c9a23b 0%,#D4AF37 40%,#e8cc6a 70%,#D4AF37 100%);
 
-    color:#000;
+    background-size:200% 200%;
+
+    color:#050811;
+
+    box-shadow:0 4px 20px rgba(212,175,55,.30);
+
+}
+
+.btn-primary::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(135deg,rgba(255,255,255,.18),transparent);
+
+    border-radius:50px;
+
+    opacity:0;
+
+    transition:.35s;
 
 }
 
@@ -570,17 +636,28 @@ margin:auto;
 
     transform:translateY(-4px);
 
-    box-shadow:0 15px 40px rgba(201,164,107,.35);
+    box-shadow:0 16px 45px rgba(212,175,55,.40),0 0 30px rgba(212,175,55,.15);
+
+    background-position:right center;
 
 }
 
-/*
-دکمه دوم
-*/
+.btn-primary:hover::after{
 
+    opacity:1;
+
+}
+
+/* دکمه دوم — شیشه‌ای */
 .btn-secondary{
 
-    border:1px solid rgba(255,255,255,.2);
+    border:1px solid rgba(212,175,55,.35);
+
+    background:rgba(212,175,55,.06);
+
+    color:var(--color-gold-light);
+
+    backdrop-filter:blur(8px);
 
 }
 
@@ -589,6 +666,10 @@ margin:auto;
     border-color:var(--color-gold);
 
     color:var(--color-gold);
+
+    background:rgba(212,175,55,.12);
+
+    transform:translateY(-3px);
 
 }
 .hero-image{
@@ -606,7 +687,7 @@ margin:auto;
 
     height:420px;
 
-    background:rgba(201,164,107,.12);
+    background:rgba(212,175,55,.12);
 
     border-radius:50%;
 
@@ -642,6 +723,39 @@ margin:auto;
         transform:translateY(0);
 
     }
+
+}
+
+@keyframes goldPulse{
+
+    0%,100%{ box-shadow:0 0 20px rgba(212,175,55,.20); }
+
+    50%{ box-shadow:0 0 40px rgba(212,175,55,.40),0 0 60px rgba(212,175,55,.15); }
+
+}
+
+@keyframes shimmer{
+
+    0%{ background-position:-200% center; }
+
+    100%{ background-position:200% center; }
+
+}
+
+/* ===== نوار طلایی درخشان برای برند ===== */
+.gold-shimmer{
+
+    background:linear-gradient(90deg,#D4AF37 0%,#e8cc6a 30%,#fff5cc 50%,#e8cc6a 70%,#D4AF37 100%);
+
+    background-size:200% auto;
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+
+    background-clip:text;
+
+    animation:shimmer 3s linear infinite;
 
 }
 /* ========================================================================== */
@@ -707,34 +821,64 @@ margin:auto;
     overflow:hidden;
 
     background:linear-gradient(
-        180deg,
-        rgba(255,255,255,.03),
-        rgba(255,255,255,.015)
+        145deg,
+        rgba(255,255,255,.06),
+        rgba(255,255,255,.02)
     );
 
-    border:1px solid rgba(255,255,255,.08);
+    border:1px solid rgba(212,175,55,.14);
 
     border-radius:var(--radius-large);
 
-    transition:all var(--transition);
+    transition:all .4s cubic-bezier(.25,.8,.25,1);
 
     box-shadow:var(--shadow-card);
 
-    backdrop-filter:blur(12px);
+    backdrop-filter:blur(16px);
+
+    -webkit-backdrop-filter:blur(16px);
+
+}
+
+.product-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:1px;
+
+    background:linear-gradient(90deg,transparent,rgba(212,175,55,.4),transparent);
+
+    opacity:0;
+
+    transition:.4s;
 
 }
 
 .product-card:hover{
 
-    transform:translateY(-12px);
+    transform:translateY(-14px);
 
-    border-color:rgba(201,164,107,.35);
+    border-color:rgba(212,175,55,.40);
 
     box-shadow:
 
-        0 35px 80px rgba(0,0,0,.45),
+        0 40px 90px rgba(0,0,0,.55),
 
-        0 0 40px rgba(201,164,107,.15);
+        0 0 50px rgba(212,175,55,.18);
+
+}
+
+.product-card:hover::before{
+
+    opacity:1;
 
 }
 
@@ -763,7 +907,7 @@ margin:auto;
 
     height:220px;
 
-    background:rgba(201,164,107,.10);
+    background:rgba(212,175,55,.10);
 
     border-radius:50%;
 
@@ -903,13 +1047,13 @@ margin:auto;
 
 .footer{
 
-    margin-top:140px;
+    margin-top:80px;
 
     background:var(--color-black);
 
     border-top:1px solid var(--color-border);
 
-    padding:80px 0 30px;
+    padding:60px 0 25px;
 
 }
 
@@ -1360,131 +1504,8 @@ margin:auto;
 
 }
 /* =======================================================
-   FOOTER
-======================================================= */
-
-.footer{
-
-    background:#111;
-
-    color:#fff;
-
-    margin-top:80px;
-
-    padding:60px 0 25px;
-
-}
-
-.footer-content{
-
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:40px;
-
-}
-
-.footer-column h3{
-
-    margin-bottom:20px;
-
-    color:#d4af37;
-
-}
-
-.footer-column p{
-
-    color:#bbb;
-
-    line-height:2;
-
-}
-
-.footer-column ul{
-
-    list-style:none;
-
-    padding:0;
-
-}
-
-.footer-column li{
-
-    margin-bottom:12px;
-
-}
-
-.footer-column a{
-
-    color:#ddd;
-
-    text-decoration:none;
-
-    transition:.3s;
-
-}
-
-.footer-column a:hover{
-
-    color:#d4af37;
-
-}
-
-.footer-logo{
-
-    width:140px;
-
-    margin-bottom:20px;
-
-}
-
-.footer-bottom{
-
-    border-top:1px solid rgba(255,255,255,.1);
-
-    margin-top:40px;
-
-    padding-top:20px;
-
-    text-align:center;
-
-    color:#888;
-
-    font-size:.9rem;
-
-}
-/* =======================================================
    CONTACT PAGE
 ======================================================= */
-
-.page-hero{
-
-    padding:80px 0 50px;
-
-    text-align:center;
-
-}
-
-.page-hero h1{
-
-    font-size:42px;
-
-    margin:20px 0;
-
-}
-
-.page-hero p{
-
-    max-width:700px;
-
-    margin:auto;
-
-    color:#777;
-
-    line-height:2;
-
-}
 
 .section-subtitle{
 
@@ -1614,7 +1635,7 @@ margin:auto;
 
     outline:none;
 
-    box-shadow:0 0 0 4px rgba(201,164,107,.15);
+    box-shadow:0 0 0 4px rgba(212,175,55,.15);
 
 }
 
@@ -1743,7 +1764,7 @@ margin:auto;
 
     outline:none;
 
-    box-shadow:0 0 0 4px rgba(201,164,107,.15);
+    box-shadow:0 0 0 4px rgba(212,175,55,.15);
 
 }
 
@@ -2982,7 +3003,7 @@ input::placeholder, textarea::placeholder { color: var(--color-gray) !important;
 }
 
 /* Sprint 1.3 — وضعیت قیمت پویا و خوانایی فروشگاه */
-.price-source-badge{display:inline-flex;align-items:center;gap:.35rem;width:max-content;margin:.25rem 0 .85rem;padding:.3rem .65rem;border:1px solid rgba(201,164,107,.35);border-radius:999px;background:rgba(201,164,107,.1);color:var(--color-gold-light);font-size:.76rem;font-weight:700}
+.price-source-badge{display:inline-flex;align-items:center;gap:.35rem;width:max-content;margin:.25rem 0 .85rem;padding:.3rem .65rem;border:1px solid rgba(212,175,55,.35);border-radius:999px;background:rgba(212,175,55,.1);color:var(--color-gold-light);font-size:.76rem;font-weight:700}
 .live-price-note{margin:1rem 0;padding:.85rem 1rem;border-right:3px solid var(--color-gold);background:var(--color-surface-raised);color:var(--color-gray-light);border-radius:.6rem;line-height:1.8}
 button:disabled{cursor:not-allowed;opacity:.55}
 
