@@ -1,5 +1,7 @@
 # Running with Docker
 
+_Persian version: [docker.fa.md](docker.fa.md)_
+
 ## Quick start
 
 ```bash

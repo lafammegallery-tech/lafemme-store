@@ -37,7 +37,7 @@ Migrations run automatically on boot; the app is ready at http://localhost:3000 
 
 ## Further docs
 
-- [docs/docker.md](docs/docker.md) — running the app with Docker Compose, env vars, troubleshooting.
+- [docs/docker.md](docs/docker.md) — running the app with Docker Compose, env vars, troubleshooting (فارسی: [docs/docker.fa.md](docs/docker.fa.md)).
 - [docs/design-system.md](docs/design-system.md) — design tokens and visual language.
 - [docs/component-tree.md](docs/component-tree.md) — shared UI component library map.
 - [docs/admin-account.md](docs/admin-account.md) — how the seeded admin account works.
