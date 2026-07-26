@@ -11,7 +11,7 @@ docker compose up --build
 
 این دستور ایمیج برنامه را می‌سازد و دو سرویس را اجرا می‌کند:
 
-- `postgres` — پایگاه‌داده Postgres 16، با داده‌های ذخیره‌شده در volume به نام `lafemme_postgres`.
+- `postgres` — پایگاه‌داده Postgres 16، با داده‌های ذخیره‌شده در volume به نام `lafemme_postgres`، همچنین روی `localhost:5432` منتشر می‌شود (برای اتصال مستقیم با psql یا ابزارهای گرافیکی مدیریت پایگاه‌داده مفید است).
 - `app` — برنامه Next.js. نقطه ورود آن ([docker/entrypoint.sh](../docker/entrypoint.sh)) پیش از اجرای `next start` به‌صورت خودکار `prisma migrate deploy` را اجرا می‌کند، بنابراین یک پایگاه‌داده تازه در همان اولین اجرا کاملاً migrate می‌شود — نیازی به مرحله دستی migration نیست.
 
 وقتی هر دو کانتینر وضعیت `healthy` را نشان دهند (`docker compose ps`)، برنامه در آدرس http://localhost:3000 در دسترس است.

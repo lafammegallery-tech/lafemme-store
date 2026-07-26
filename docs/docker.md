@@ -11,7 +11,7 @@ docker compose up --build
 
 This builds the app image and starts two services:
 
-- `postgres` — Postgres 16, data persisted in the `lafemme_postgres` volume.
+- `postgres` — Postgres 16, data persisted in the `lafemme_postgres` volume, also published on `localhost:5432` (handy for connecting a local psql client or GUI tool directly).
 - `app` — the Next.js app. Its entrypoint ([docker/entrypoint.sh](../docker/entrypoint.sh)) runs `prisma migrate deploy` automatically before `next start`, so a brand-new database is fully migrated on first boot — no manual migration step needed.
 
 Once both containers report `healthy` (`docker compose ps`), the app is available at http://localhost:3000.
