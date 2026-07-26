@@ -8,7 +8,6 @@ const eslintConfig = [
     ignores: [
       ".next/**",
       "node_modules/**",
-      "legacy-source/**",
       "public/assets/**",
       "next-env.d.ts",
     ],

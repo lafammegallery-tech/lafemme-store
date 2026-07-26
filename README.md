@@ -1,32 +1,48 @@
-# La Femme — Next.js Phase 1 Migration
+# La Femme Store
 
-This repository migrates the original static website to Next.js App Router, TypeScript, and Tailwind CSS without intentionally redesigning the UI.
-
-## Run
-
-```bash
-npm install
-npm run dev
-npm run typecheck
-npm run build
-```
+A gold/silver jewelry storefront built with Next.js App Router, TypeScript, and PostgreSQL (via Prisma 7).
 
 ## Architecture
 
-- `src/app`: App Router pages and global layout.
-- `src/components/layout`: shared site shell.
-- `src/components/legacy`: compatibility components that preserve existing HTML and scripts.
-- `src/components/ui`: initial reusable primitives based on current CSS classes.
-- `src/lib`: shared route constants and future application utilities.
-- `src/types`: strict domain types.
-- `public/assets`: original images, fonts, data scripts, and JavaScript.
-- `legacy-source`: untouched original project retained with all comments.
-- `migration-manifest.json`: source-page to App Router mapping.
+- `src/app` — App Router routes: storefront pages, `admin/*` back office, `api/*` route handlers, and `actions/*` server actions.
+- `src/backend` — server-only layer:
+  - `database/repositories` — Prisma-backed data access per entity.
+  - `services` — business logic (cart, coupons, payments, gold/silver market pricing).
+  - `auth`, `security` — session/password handling, rate limiting, input validation.
+- `src/components` — UI, grouped by feature (`cart`, `checkout`, `products`, `admin`-facing, etc.) plus a shared `ui` primitive library (see [docs/component-tree.md](docs/component-tree.md)).
+- `src/data`, `src/lib`, `src/types` — static/reference data, shared route constants, and domain types.
+- `prisma/` — schema, migrations, and `seed.ts` (creates/updates the admin account from env vars — see [docs/admin-account.md](docs/admin-account.md)).
 
-## Phase 1 strategy
+## Local setup
 
-The original stylesheet and markup are retained for visual parity. Shared architecture is introduced around them. Later phases can incrementally replace compatibility markup with native React components without changing routes or visual behavior.
+```bash
+npm install                # also runs `prisma generate` via postinstall
+cp .env.example .env       # then fill in real values
+npm run db:migrate         # create the local database schema
+npm run db:seed            # create/update the admin account
+npm run dev
+```
 
-## Phase 2 completion status
+Useful scripts: `npm run check` (typecheck + lint), `npm run db:deploy` (apply migrations without prompting, for CI/production), `npm run market:sync` (trigger a gold/silver price refresh against a running dev server).
 
-The reusable Design System is now centralized in `src/components/ui/`. No page migration was performed in this phase. See `COMPONENT-TREE.md` and `FILES-PHASE2-COMPLETE.md`.
+## Running with Docker
+
+```bash
+cp .env.example .env       # then fill in real values
+docker compose up --build
+```
+
+This starts Postgres and the app. The app container's entrypoint runs `prisma migrate deploy` automatically before serving, so a fresh database is ready on first boot. Once it's up:
+
+```bash
+docker compose exec app npm run db:seed   # create/update the admin account
+curl http://localhost:3000/api/health     # confirm the app + database are healthy
+```
+
+Environment variables are read from `.env` (see `.env.example` for the full list — gold/silver price API URLs, `AUTH_SECRET`, `MARKET_SYNC_SECRET`, payment provider config, etc.). Compose overrides `DATABASE_URL` to point at the internal `postgres` service; everything else passes through from `.env` unchanged.
+
+## Further docs
+
+- [docs/design-system.md](docs/design-system.md) — design tokens and visual language.
+- [docs/component-tree.md](docs/component-tree.md) — shared UI component library map.
+- [docs/admin-account.md](docs/admin-account.md) — how the seeded admin account works.

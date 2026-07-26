@@ -5,4 +5,11 @@ node_modules
 .env.local
 *.log
 *.zip
+*.md
+docs
+legacy-source
+.vscode
+.DS_Store
+**/.DS_Store
 tsconfig.tsbuildinfo
+tsconfig.prisma.tsbuildinfo

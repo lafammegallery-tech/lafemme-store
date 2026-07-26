@@ -21,10 +21,23 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://lafemme:${POSTGRES_PASSWORD:-change-me}@postgres:5432/lafemme
-      AUTH_SECRET: ${AUTH_SECRET:-replace-with-a-long-random-secret}
+      GOLD_PRICE_API_URL: ${GOLD_PRICE_API_URL:-https://api.talasea.ir/api/market/getGoldPrice}
+      SILVER_PRICE_API_URL: ${SILVER_PRICE_API_URL:-https://api.noghresea.ir/api/market/getSilverPrice}
+      MARKET_SYNC_SECRET: ${MARKET_SYNC_SECRET:-replace-with-a-long-random-secret}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
-      MARKET_SYNC_SECRET: ${MARKET_SYNC_SECRET:-replace-market-secret}
+      AUTH_SECRET: ${AUTH_SECRET:-change-this-to-a-long-random-secret}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-MOCK}
+      PAYMENT_CALLBACK_URL: ${PAYMENT_CALLBACK_URL:-http://localhost:3000/api/payment/callback}
+      ADMIN_PHONE: ${ADMIN_PHONE:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
 volumes:
   lafemme_postgres:
