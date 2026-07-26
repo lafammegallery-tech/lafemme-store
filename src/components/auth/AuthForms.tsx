@@ -3,9 +3,10 @@ import { useActionState } from "react";
 import { Button, Checkbox, Input } from "@/components/ui";
 import { loginAction, registerAction, type AuthState } from "@/app/actions/auth";
 const initialState: AuthState = {};
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(loginAction, initialState);
   return <form action={action} className="space-y-4">
+    {next && <input type="hidden" name="next" value={next} />}
     <div className="form-group"><label htmlFor="login-phone">شماره موبایل</label><Input name="phone" id="login-phone" type="tel" inputMode="numeric" placeholder="09xxxxxxxxx" autoComplete="tel" required /></div>
     <div className="form-group"><label htmlFor="login-password">رمز عبور</label><Input name="password" id="login-password" type="password" autoComplete="current-password" required /></div>
     <Checkbox label="مرا به خاطر بسپار" />
@@ -13,9 +14,10 @@ export function LoginForm() {
     <Button className="btn btn-primary w-full" type="submit" disabled={pending}>{pending ? "در حال ورود..." : "ورود"}</Button>
   </form>;
 }
-export function RegisterForm() {
+export function RegisterForm({ next }: { next?: string }) {
   const [state, action, pending] = useActionState(registerAction, initialState);
   return <form action={action} className="space-y-4">
+    {next && <input type="hidden" name="next" value={next} />}
     <div className="form-group"><label htmlFor="register-name">نام و نام خانوادگی</label><Input name="name" id="register-name" autoComplete="name" required /></div>
     <div className="form-group"><label htmlFor="register-phone">شماره موبایل</label><Input name="phone" id="register-phone" type="tel" inputMode="numeric" required /></div>
     <div className="form-group"><label htmlFor="register-password">رمز عبور</label><Input name="password" id="register-password" type="password" autoComplete="new-password" minLength={8} required /></div>

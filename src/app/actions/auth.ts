@@ -9,6 +9,12 @@ export type AuthState = { error?: string };
 const normalizePhone = (value: FormDataEntryValue | null) =>
   String(value ?? "").replace(/\D/g, "");
 
+/** فقط مسیرهای داخلی امن (نه URL خارجی) به‌عنوان مقصد next پذیرفته می‌شوند. */
+const safeNext = (value: FormDataEntryValue | null) => {
+  const next = String(value ?? "");
+  return next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+};
+
 /** این تابع کاربر جدید را در سیستم ثبت می‌کند. */
 export async function registerAction(_: AuthState, formData: FormData): Promise<AuthState> {
   const fullName = String(formData.get("name") ?? "").trim();
@@ -30,7 +36,7 @@ export async function registerAction(_: AuthState, formData: FormData): Promise<
   });
 
   await createSession(user.id, user.role);
-  redirect("/dashboard");
+  redirect(safeNext(formData.get("next")));
 }
 
 /** این تابع ورود کاربر به سیستم را مدیریت می‌کند. */
@@ -45,7 +51,7 @@ export async function loginAction(_: AuthState, formData: FormData): Promise<Aut
   if (!valid) return { error: "شماره موبایل یا رمز عبور نادرست است." };
 
   await createSession(user.id, user.role);
-  redirect("/dashboard");
+  redirect(safeNext(formData.get("next")));
 }
 
 /** این تابع کاربر را از سیستم خارج می‌کند. */

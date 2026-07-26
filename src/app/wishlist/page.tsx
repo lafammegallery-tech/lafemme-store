@@ -11,11 +11,12 @@ export const metadata: Metadata = {
   title: "علاقه‌مندی‌ها | La Femme",
   robots: { index: false, follow: false },
 };
+export const dynamic = "force-dynamic";
 
 /** صفحه محصولات مورد علاقه کاربر — فقط برای کاربران لاگین‌شده. */
 export default async function WishlistPage() {
   // این بخش سطح دسترسی کاربر را بررسی می‌کند
-  const session = await requireSession();
+  const session = await requireSession("/wishlist");
 
   // دریافت آیدی محصولات مورد علاقه از دیتابیس
   const wishlist = await getPrisma().wishlist.findUnique({

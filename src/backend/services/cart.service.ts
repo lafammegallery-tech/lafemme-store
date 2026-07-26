@@ -10,7 +10,15 @@ type CartIdentity = { kind: "user"; userId: string } | { kind: "guest"; sessionI
 export async function getCartIdentity(): Promise<CartIdentity> {
   const session = await getSession(); if (session) return { kind: "user", userId: session.userId };
   const store = await cookies(); let sessionId = store.get(CART_COOKIE)?.value;
-  if (!sessionId) { sessionId = randomUUID(); store.set(CART_COOKIE, sessionId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60*60*24*30 }); }
+  if (!sessionId) {
+    sessionId = randomUUID();
+    try {
+      store.set(CART_COOKIE, sessionId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60*60*24*30 });
+    } catch {
+      // Reading the cart during a plain page render (e.g. GET /cart) can't set cookies —
+      // the cookie is created for real the next time a cart-mutating Server Action runs.
+    }
+  }
   return { kind: "guest", sessionId };
 }
 export async function getCurrentCart() { const identity = await getCartIdentity(); return identity.kind === "user" ? cartRepository.findByUserId(identity.userId) : cartRepository.findBySessionId(identity.sessionId); }

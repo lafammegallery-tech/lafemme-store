@@ -11,7 +11,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/login" },
 };
 /** صفحه ورود متصل به احراز هویت واقعی. */
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
   return (
     <PageLayout>
       <PageHero
@@ -26,12 +31,13 @@ export default function LoginPage() {
               <>
                 <Link href="/forgot-password">رمز عبور را فراموش کرده‌اید؟</Link>
                 <p className="mt-3">
-                  حساب ندارید؟ <Link href="/register">ثبت‌نام</Link>
+                  حساب ندارید؟{" "}
+                  <Link href={next ? `/register?next=${encodeURIComponent(next)}` : "/register"}>ثبت‌نام</Link>
                 </p>
               </>
             }
           >
-            <LoginForm />
+            <LoginForm next={next} />
           </AuthCard>
         </Container>
       </section>

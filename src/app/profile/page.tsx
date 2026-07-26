@@ -9,11 +9,12 @@ export const metadata: Metadata = {
   title: "پروفایل | La Femme",
   robots: { index: false, follow: false },
 };
+export const dynamic = "force-dynamic";
 
 /** صفحه ویرایش پروفایل — فقط برای کاربران لاگین‌شده. */
 export default async function ProfilePage() {
   // این بخش سطح دسترسی کاربر را بررسی می‌کند
-  await requireSession();
+  await requireSession("/profile");
 
   return (
     <PageLayout>

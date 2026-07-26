@@ -10,7 +10,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/register" },
 };
 /** صفحه ثبت‌نام نمایشی و آماده اتصال به Backend است. */
-export default function RegisterPage() {
+export default async function RegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
   return (
     <PageLayout>
       <PageHero title="ایجاد حساب کاربری" />
@@ -20,11 +25,12 @@ export default function RegisterPage() {
             title="ثبت‌نام"
             footer={
               <p>
-                قبلاً ثبت‌نام کرده‌اید؟ <Link href="/login">ورود</Link>
+                قبلاً ثبت‌نام کرده‌اید؟{" "}
+                <Link href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}>ورود</Link>
               </p>
             }
           >
-            <RegisterForm />
+            <RegisterForm next={next} />
           </AuthCard>
         </Container>
       </section>
