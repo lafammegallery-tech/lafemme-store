@@ -105,3 +105,12 @@ export const MetalType = {
 } as const
 
 export type MetalType = (typeof MetalType)[keyof typeof MetalType]
+
+
+export const DiscountType = {
+  PERCENT: 'PERCENT',
+  FIXED: 'FIXED',
+  FREE_SHIPPING: 'FREE_SHIPPING'
+} as const
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]

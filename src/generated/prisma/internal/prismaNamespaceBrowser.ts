@@ -65,8 +65,11 @@ export const ModelName = {
   WishlistItem: 'WishlistItem',
   Order: 'Order',
   OrderItem: 'OrderItem',
+  OrderStatusHistory: 'OrderStatusHistory',
   Shipment: 'Shipment',
   Payment: 'Payment',
+  Coupon: 'Coupon',
+  CouponUsage: 'CouponUsage',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   PreOrder: 'PreOrder'
@@ -159,6 +162,8 @@ export const ProductScalarFieldEnum = {
   certificate: 'certificate',
   price: 'price',
   marketPrice: 'marketPrice',
+  premiumPercent: 'premiumPercent',
+  fixedPremium: 'fixedPremium',
   image: 'image',
   stock: 'stock',
   status: 'status',
@@ -219,10 +224,13 @@ export type InventoryScalarFieldEnum = (typeof InventoryScalarFieldEnum)[keyof t
 export const MarketPriceScalarFieldEnum = {
   id: 'id',
   productId: 'productId',
-  title: 'title',
-  value: 'value',
+  metalType: 'metalType',
+  price: 'price',
+  changePercent: 'changePercent',
+  currency: 'currency',
   unit: 'unit',
   source: 'source',
+  isStale: 'isStale',
   recordedAt: 'recordedAt',
   createdAt: 'createdAt'
 } as const
@@ -316,6 +324,19 @@ export const OrderItemScalarFieldEnum = {
 export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
 
 
+export const OrderStatusHistoryScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  fromStatus: 'fromStatus',
+  toStatus: 'toStatus',
+  note: 'note',
+  actorId: 'actorId',
+  createdAt: 'createdAt'
+} as const
+
+export type OrderStatusHistoryScalarFieldEnum = (typeof OrderStatusHistoryScalarFieldEnum)[keyof typeof OrderStatusHistoryScalarFieldEnum]
+
+
 export const ShipmentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
@@ -340,6 +361,7 @@ export const PaymentScalarFieldEnum = {
   gateway: 'gateway',
   authority: 'authority',
   transactionId: 'transactionId',
+  idempotencyKey: 'idempotencyKey',
   paidAt: 'paidAt',
   failureReason: 'failureReason',
   metadata: 'metadata',
@@ -348,6 +370,38 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const CouponScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  title: 'title',
+  type: 'type',
+  value: 'value',
+  minimumAmount: 'minimumAmount',
+  maximumDiscount: 'maximumDiscount',
+  usageLimit: 'usageLimit',
+  perUserLimit: 'perUserLimit',
+  startsAt: 'startsAt',
+  expiresAt: 'expiresAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
+
+
+export const CouponUsageScalarFieldEnum = {
+  id: 'id',
+  couponId: 'couponId',
+  userId: 'userId',
+  orderId: 'orderId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type CouponUsageScalarFieldEnum = (typeof CouponUsageScalarFieldEnum)[keyof typeof CouponUsageScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {

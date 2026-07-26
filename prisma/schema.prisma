@@ -197,7 +197,6 @@ model Product {
   wishlistItems WishlistItem[]
   orderItems    OrderItem[]
   preOrders     PreOrder[]
-  couponUsages  CouponUsage[]
 
   @@index([categoryId, status])
   @@index([isFeatured, status])

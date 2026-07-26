@@ -1,2 +1,53 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {requireAdmin} from "@/backend/auth/session";import {getPrisma} from "@/backend/database/prisma";import {createCouponAction,toggleCouponAction} from "@/app/actions/admin";import {PageLayout,PageHero} from "@/components/common";import {Container,Card,Input,Button} from "@/components/ui";export const dynamic="force-dynamic";export default async function Page(){await requireAdmin();const rows=await (getPrisma() as any).coupon.findMany({include:{_count:{select:{usages:true}}},orderBy:{createdAt:"desc"}});return <PageLayout><PageHero title="کدهای تخفیف" description="مدیریت تخفیف و ارسال رایگان"/><Container><form action={createCouponAction} className="grid gap-3 max-w-xl py-8"><Input name="code" placeholder="CODE" dir="ltr" required/><Input name="title" placeholder="عنوان" required/><select name="type" className="border rounded-xl p-3"><option value="PERCENT">درصدی</option><option value="FIXED">مبلغ ثابت</option><option value="FREE_SHIPPING">ارسال رایگان</option></select><Input name="value" type="number" placeholder="مقدار (درصد یا تومان)"/><Input name="minimumAmount" type="number" placeholder="حداقل خرید"/><Input name="usageLimit" type="number" placeholder="سقف استفاده"/><Input name="expiresAt" type="date"/><Button type="submit">ساخت کد</Button></form><div className="grid gap-3 pb-12">{rows.map((x:any)=><Card key={x.id} className="p-4 flex justify-between"><div><b dir="ltr">{x.code}</b><p>{x.title} • {x.type} • {x._count.usages} استفاده</p></div><form action={toggleCouponAction}><input type="hidden" name="id" value={x.id}/><Button variant="secondary">{x.isActive?'غیرفعال':'فعال'}</Button></form></Card>)}</div></Container></PageLayout>}
+import { requireAdmin } from "@/backend/auth/session";
+import { getPrisma } from "@/backend/database/prisma";
+import { createCouponAction, toggleCouponAction } from "@/app/actions/admin";
+import { PageLayout, PageHero } from "@/components/common";
+import { Container, Card, Input, Button } from "@/components/ui";
+
+export const dynamic = "force-dynamic";
+
+export default async function Page() {
+  await requireAdmin();
+  const rows = await getPrisma().coupon.findMany({
+    include: { _count: { select: { usages: true } } },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return (
+    <PageLayout>
+      <PageHero title="کدهای تخفیف" description="مدیریت تخفیف و ارسال رایگان" />
+      <Container>
+        <form action={createCouponAction} className="grid gap-3 max-w-xl py-8">
+          <Input name="code" placeholder="CODE" dir="ltr" required />
+          <Input name="title" placeholder="عنوان" required />
+          <select name="type" className="border rounded-xl p-3">
+            <option value="PERCENT">درصدی</option>
+            <option value="FIXED">مبلغ ثابت</option>
+            <option value="FREE_SHIPPING">ارسال رایگان</option>
+          </select>
+          <Input name="value" type="number" placeholder="مقدار (درصد یا تومان)" />
+          <Input name="minimumAmount" type="number" placeholder="حداقل خرید" />
+          <Input name="usageLimit" type="number" placeholder="سقف استفاده" />
+          <Input name="expiresAt" type="date" />
+          <Button type="submit">ساخت کد</Button>
+        </form>
+        <div className="grid gap-3 pb-12">
+          {rows.map((x) => (
+            <Card key={x.id} className="p-4 flex justify-between">
+              <div>
+                <b dir="ltr">{x.code}</b>
+                <p>
+                  {x.title} • {x.type} • {x._count.usages} استفاده
+                </p>
+              </div>
+              <form action={toggleCouponAction}>
+                <input type="hidden" name="id" value={x.id} />
+                <Button variant="secondary">{x.isActive ? "غیرفعال" : "فعال"}</Button>
+              </form>
+            </Card>
+          ))}
+        </div>
+      </Container>
+    </PageLayout>
+  );
+}

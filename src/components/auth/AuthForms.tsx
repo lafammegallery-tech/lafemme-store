@@ -3,10 +3,9 @@ import { useActionState } from "react";
 import { Button, Checkbox, Input } from "@/components/ui";
 import { loginAction, registerAction, type AuthState } from "@/app/actions/auth";
 const initialState: AuthState = {};
-export function LoginForm({ nextPath = "" }: { nextPath?: string }) {
+export function LoginForm() {
   const [state, action, pending] = useActionState(loginAction, initialState);
   return <form action={action} className="space-y-4">
-    <input type="hidden" name="next" value={nextPath} />
     <div className="form-group"><label htmlFor="login-phone">شماره موبایل</label><Input name="phone" id="login-phone" type="tel" inputMode="numeric" placeholder="09xxxxxxxxx" autoComplete="tel" required /></div>
     <div className="form-group"><label htmlFor="login-password">رمز عبور</label><Input name="password" id="login-password" type="password" autoComplete="current-password" required /></div>
     <Checkbox label="مرا به خاطر بسپار" />

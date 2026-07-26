@@ -1,29 +1,32 @@
-# La Femme
+# La Femme — Next.js Phase 1 Migration
 
-پروژه فروشگاه La Femme با Next.js 15، TypeScript، Prisma و PostgreSQL.
+This repository migrates the original static website to Next.js App Router, TypeScript, and Tailwind CSS without intentionally redesigning the UI.
 
-## اجرای استاندارد
-
-1. فایل `.env.example` را با نام `.env` کپی کنید.
-2. PostgreSQL را اجرا کنید یا از Docker استفاده کنید.
-3. دستورات زیر را اجرا کنید:
+## Run
 
 ```bash
 npm install
-npm run db:generate
-npm run db:migrate
-npm run db:seed
-npm run check
-npm run build
 npm run dev
+npm run typecheck
+npm run build
 ```
 
-## ورود مدیر
+## Architecture
 
-اطلاعات حساب مدیر از متغیرهای `ADMIN_PHONE`، `ADMIN_EMAIL` و `ADMIN_PASSWORD` در `.env` خوانده می‌شود و با `npm run db:seed` ساخته می‌شود.
+- `src/app`: App Router pages and global layout.
+- `src/components/layout`: shared site shell.
+- `src/components/legacy`: compatibility components that preserve existing HTML and scripts.
+- `src/components/ui`: initial reusable primitives based on current CSS classes.
+- `src/lib`: shared route constants and future application utilities.
+- `src/types`: strict domain types.
+- `public/assets`: original images, fonts, data scripts, and JavaScript.
+- `legacy-source`: untouched original project retained with all comments.
+- `migration-manifest.json`: source-page to App Router mapping.
 
-مسیر پنل مدیریت: `/admin`
+## Phase 1 strategy
 
-## نکته امنیتی
+The original stylesheet and markup are retained for visual parity. Shared architecture is introduced around them. Later phases can incrementally replace compatibility markup with native React components without changing routes or visual behavior.
 
-مقادیر `AUTH_SECRET` و `ADMIN_PASSWORD` را پیش از انتشار تغییر دهید و فایل `.env` را منتشر نکنید.
+## Phase 2 completion status
+
+The reusable Design System is now centralized in `src/components/ui/`. No page migration was performed in this phase. See `COMPONENT-TREE.md` and `FILES-PHASE2-COMPLETE.md`.

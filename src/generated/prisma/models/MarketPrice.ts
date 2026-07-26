@@ -27,20 +27,25 @@ export type AggregateMarketPrice = {
 }
 
 export type MarketPriceAvgAggregateOutputType = {
-  value: runtime.Decimal | null
+  price: runtime.Decimal | null
+  changePercent: runtime.Decimal | null
 }
 
 export type MarketPriceSumAggregateOutputType = {
-  value: runtime.Decimal | null
+  price: runtime.Decimal | null
+  changePercent: runtime.Decimal | null
 }
 
 export type MarketPriceMinAggregateOutputType = {
   id: string | null
   productId: string | null
-  title: string | null
-  value: runtime.Decimal | null
+  metalType: $Enums.MetalType | null
+  price: runtime.Decimal | null
+  changePercent: runtime.Decimal | null
+  currency: string | null
   unit: string | null
   source: string | null
+  isStale: boolean | null
   recordedAt: Date | null
   createdAt: Date | null
 }
@@ -48,10 +53,13 @@ export type MarketPriceMinAggregateOutputType = {
 export type MarketPriceMaxAggregateOutputType = {
   id: string | null
   productId: string | null
-  title: string | null
-  value: runtime.Decimal | null
+  metalType: $Enums.MetalType | null
+  price: runtime.Decimal | null
+  changePercent: runtime.Decimal | null
+  currency: string | null
   unit: string | null
   source: string | null
+  isStale: boolean | null
   recordedAt: Date | null
   createdAt: Date | null
 }
@@ -59,10 +67,13 @@ export type MarketPriceMaxAggregateOutputType = {
 export type MarketPriceCountAggregateOutputType = {
   id: number
   productId: number
-  title: number
-  value: number
+  metalType: number
+  price: number
+  changePercent: number
+  currency: number
   unit: number
   source: number
+  isStale: number
   recordedAt: number
   createdAt: number
   _all: number
@@ -70,20 +81,25 @@ export type MarketPriceCountAggregateOutputType = {
 
 
 export type MarketPriceAvgAggregateInputType = {
-  value?: true
+  price?: true
+  changePercent?: true
 }
 
 export type MarketPriceSumAggregateInputType = {
-  value?: true
+  price?: true
+  changePercent?: true
 }
 
 export type MarketPriceMinAggregateInputType = {
   id?: true
   productId?: true
-  title?: true
-  value?: true
+  metalType?: true
+  price?: true
+  changePercent?: true
+  currency?: true
   unit?: true
   source?: true
+  isStale?: true
   recordedAt?: true
   createdAt?: true
 }
@@ -91,10 +107,13 @@ export type MarketPriceMinAggregateInputType = {
 export type MarketPriceMaxAggregateInputType = {
   id?: true
   productId?: true
-  title?: true
-  value?: true
+  metalType?: true
+  price?: true
+  changePercent?: true
+  currency?: true
   unit?: true
   source?: true
+  isStale?: true
   recordedAt?: true
   createdAt?: true
 }
@@ -102,10 +121,13 @@ export type MarketPriceMaxAggregateInputType = {
 export type MarketPriceCountAggregateInputType = {
   id?: true
   productId?: true
-  title?: true
-  value?: true
+  metalType?: true
+  price?: true
+  changePercent?: true
+  currency?: true
   unit?: true
   source?: true
+  isStale?: true
   recordedAt?: true
   createdAt?: true
   _all?: true
@@ -200,10 +222,13 @@ export type MarketPriceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type MarketPriceGroupByOutputType = {
   id: string
   productId: string | null
-  title: string
-  value: runtime.Decimal
+  metalType: $Enums.MetalType
+  price: runtime.Decimal
+  changePercent: runtime.Decimal
+  currency: string
   unit: string
-  source: string | null
+  source: string
+  isStale: boolean
   recordedAt: Date
   createdAt: Date
   _count: MarketPriceCountAggregateOutputType | null
@@ -234,10 +259,13 @@ export type MarketPriceWhereInput = {
   NOT?: Prisma.MarketPriceWhereInput | Prisma.MarketPriceWhereInput[]
   id?: Prisma.StringFilter<"MarketPrice"> | string
   productId?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
-  title?: Prisma.StringFilter<"MarketPrice"> | string
-  value?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFilter<"MarketPrice"> | $Enums.MetalType
+  price?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"MarketPrice"> | string
   unit?: Prisma.StringFilter<"MarketPrice"> | string
-  source?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
+  source?: Prisma.StringFilter<"MarketPrice"> | string
+  isStale?: Prisma.BoolFilter<"MarketPrice"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
   product?: Prisma.XOR<Prisma.ProductNullableScalarRelationFilter, Prisma.ProductWhereInput> | null
@@ -246,10 +274,13 @@ export type MarketPriceWhereInput = {
 export type MarketPriceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   productId?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrder
-  value?: Prisma.SortOrder
+  metalType?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
+  isStale?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   product?: Prisma.ProductOrderByWithRelationInput
@@ -257,26 +288,33 @@ export type MarketPriceOrderByWithRelationInput = {
 
 export type MarketPriceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  metalType_source_recordedAt?: Prisma.MarketPriceMetalTypeSourceRecordedAtCompoundUniqueInput
   AND?: Prisma.MarketPriceWhereInput | Prisma.MarketPriceWhereInput[]
   OR?: Prisma.MarketPriceWhereInput[]
   NOT?: Prisma.MarketPriceWhereInput | Prisma.MarketPriceWhereInput[]
   productId?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
-  title?: Prisma.StringFilter<"MarketPrice"> | string
-  value?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFilter<"MarketPrice"> | $Enums.MetalType
+  price?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"MarketPrice"> | string
   unit?: Prisma.StringFilter<"MarketPrice"> | string
-  source?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
+  source?: Prisma.StringFilter<"MarketPrice"> | string
+  isStale?: Prisma.BoolFilter<"MarketPrice"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
   product?: Prisma.XOR<Prisma.ProductNullableScalarRelationFilter, Prisma.ProductWhereInput> | null
-}, "id">
+}, "id" | "metalType_source_recordedAt">
 
 export type MarketPriceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   productId?: Prisma.SortOrderInput | Prisma.SortOrder
-  title?: Prisma.SortOrder
-  value?: Prisma.SortOrder
+  metalType?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   unit?: Prisma.SortOrder
-  source?: Prisma.SortOrderInput | Prisma.SortOrder
+  source?: Prisma.SortOrder
+  isStale?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.MarketPriceCountOrderByAggregateInput
@@ -292,20 +330,26 @@ export type MarketPriceScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MarketPriceScalarWhereWithAggregatesInput | Prisma.MarketPriceScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"MarketPrice"> | string
   productId?: Prisma.StringNullableWithAggregatesFilter<"MarketPrice"> | string | null
-  title?: Prisma.StringWithAggregatesFilter<"MarketPrice"> | string
-  value?: Prisma.DecimalWithAggregatesFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeWithAggregatesFilter<"MarketPrice"> | $Enums.MetalType
+  price?: Prisma.DecimalWithAggregatesFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalWithAggregatesFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringWithAggregatesFilter<"MarketPrice"> | string
   unit?: Prisma.StringWithAggregatesFilter<"MarketPrice"> | string
-  source?: Prisma.StringNullableWithAggregatesFilter<"MarketPrice"> | string | null
+  source?: Prisma.StringWithAggregatesFilter<"MarketPrice"> | string
+  isStale?: Prisma.BoolWithAggregatesFilter<"MarketPrice"> | boolean
   recordedAt?: Prisma.DateTimeWithAggregatesFilter<"MarketPrice"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MarketPrice"> | Date | string
 }
 
 export type MarketPriceCreateInput = {
   id?: string
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
   product?: Prisma.ProductCreateNestedOneWithoutMarketPricesInput
@@ -314,20 +358,26 @@ export type MarketPriceCreateInput = {
 export type MarketPriceUncheckedCreateInput = {
   id?: string
   productId?: string | null
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type MarketPriceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   product?: Prisma.ProductUpdateOneWithoutMarketPricesNestedInput
@@ -336,10 +386,13 @@ export type MarketPriceUpdateInput = {
 export type MarketPriceUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -347,20 +400,26 @@ export type MarketPriceUncheckedUpdateInput = {
 export type MarketPriceCreateManyInput = {
   id?: string
   productId?: string | null
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type MarketPriceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -368,10 +427,13 @@ export type MarketPriceUpdateManyMutationInput = {
 export type MarketPriceUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   productId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -386,28 +448,41 @@ export type MarketPriceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type MarketPriceMetalTypeSourceRecordedAtCompoundUniqueInput = {
+  metalType: $Enums.MetalType
+  source: string
+  recordedAt: Date | string
+}
+
 export type MarketPriceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  value?: Prisma.SortOrder
+  metalType?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  isStale?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type MarketPriceAvgOrderByAggregateInput = {
-  value?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
 }
 
 export type MarketPriceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  value?: Prisma.SortOrder
+  metalType?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  isStale?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -415,16 +490,20 @@ export type MarketPriceMaxOrderByAggregateInput = {
 export type MarketPriceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   productId?: Prisma.SortOrder
-  title?: Prisma.SortOrder
-  value?: Prisma.SortOrder
+  metalType?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   source?: Prisma.SortOrder
+  isStale?: Prisma.SortOrder
   recordedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
 export type MarketPriceSumOrderByAggregateInput = {
-  value?: Prisma.SortOrder
+  price?: Prisma.SortOrder
+  changePercent?: Prisma.SortOrder
 }
 
 export type MarketPriceCreateNestedManyWithoutProductInput = {
@@ -471,20 +550,26 @@ export type MarketPriceUncheckedUpdateManyWithoutProductNestedInput = {
 
 export type MarketPriceCreateWithoutProductInput = {
   id?: string
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type MarketPriceUncheckedCreateWithoutProductInput = {
   id?: string
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
 }
@@ -521,50 +606,65 @@ export type MarketPriceScalarWhereInput = {
   NOT?: Prisma.MarketPriceScalarWhereInput | Prisma.MarketPriceScalarWhereInput[]
   id?: Prisma.StringFilter<"MarketPrice"> | string
   productId?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
-  title?: Prisma.StringFilter<"MarketPrice"> | string
-  value?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFilter<"MarketPrice"> | $Enums.MetalType
+  price?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFilter<"MarketPrice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFilter<"MarketPrice"> | string
   unit?: Prisma.StringFilter<"MarketPrice"> | string
-  source?: Prisma.StringNullableFilter<"MarketPrice"> | string | null
+  source?: Prisma.StringFilter<"MarketPrice"> | string
+  isStale?: Prisma.BoolFilter<"MarketPrice"> | boolean
   recordedAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"MarketPrice"> | Date | string
 }
 
 export type MarketPriceCreateManyProductInput = {
   id?: string
-  title: string
-  value: runtime.Decimal | runtime.DecimalJsLike | number | string
-  unit: string
-  source?: string | null
+  metalType: $Enums.MetalType
+  price: runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: string
+  unit?: string
+  source: string
+  isStale?: boolean
   recordedAt?: Date | string
   createdAt?: Date | string
 }
 
 export type MarketPriceUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MarketPriceUncheckedUpdateWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MarketPriceUncheckedUpdateManyWithoutProductInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  title?: Prisma.StringFieldUpdateOperationsInput | string
-  value?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  metalType?: Prisma.EnumMetalTypeFieldUpdateOperationsInput | $Enums.MetalType
+  price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  changePercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   unit?: Prisma.StringFieldUpdateOperationsInput | string
-  source?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  source?: Prisma.StringFieldUpdateOperationsInput | string
+  isStale?: Prisma.BoolFieldUpdateOperationsInput | boolean
   recordedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -574,10 +674,13 @@ export type MarketPriceUncheckedUpdateManyWithoutProductInput = {
 export type MarketPriceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   productId?: boolean
-  title?: boolean
-  value?: boolean
+  metalType?: boolean
+  price?: boolean
+  changePercent?: boolean
+  currency?: boolean
   unit?: boolean
   source?: boolean
+  isStale?: boolean
   recordedAt?: boolean
   createdAt?: boolean
   product?: boolean | Prisma.MarketPrice$productArgs<ExtArgs>
@@ -586,10 +689,13 @@ export type MarketPriceSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type MarketPriceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   productId?: boolean
-  title?: boolean
-  value?: boolean
+  metalType?: boolean
+  price?: boolean
+  changePercent?: boolean
+  currency?: boolean
   unit?: boolean
   source?: boolean
+  isStale?: boolean
   recordedAt?: boolean
   createdAt?: boolean
   product?: boolean | Prisma.MarketPrice$productArgs<ExtArgs>
@@ -598,10 +704,13 @@ export type MarketPriceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 export type MarketPriceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   productId?: boolean
-  title?: boolean
-  value?: boolean
+  metalType?: boolean
+  price?: boolean
+  changePercent?: boolean
+  currency?: boolean
   unit?: boolean
   source?: boolean
+  isStale?: boolean
   recordedAt?: boolean
   createdAt?: boolean
   product?: boolean | Prisma.MarketPrice$productArgs<ExtArgs>
@@ -610,15 +719,18 @@ export type MarketPriceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type MarketPriceSelectScalar = {
   id?: boolean
   productId?: boolean
-  title?: boolean
-  value?: boolean
+  metalType?: boolean
+  price?: boolean
+  changePercent?: boolean
+  currency?: boolean
   unit?: boolean
   source?: boolean
+  isStale?: boolean
   recordedAt?: boolean
   createdAt?: boolean
 }
 
-export type MarketPriceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "title" | "value" | "unit" | "source" | "recordedAt" | "createdAt", ExtArgs["result"]["marketPrice"]>
+export type MarketPriceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "productId" | "metalType" | "price" | "changePercent" | "currency" | "unit" | "source" | "isStale" | "recordedAt" | "createdAt", ExtArgs["result"]["marketPrice"]>
 export type MarketPriceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   product?: boolean | Prisma.MarketPrice$productArgs<ExtArgs>
 }
@@ -637,10 +749,13 @@ export type $MarketPricePayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     productId: string | null
-    title: string
-    value: runtime.Decimal
+    metalType: $Enums.MetalType
+    price: runtime.Decimal
+    changePercent: runtime.Decimal
+    currency: string
     unit: string
-    source: string | null
+    source: string
+    isStale: boolean
     recordedAt: Date
     createdAt: Date
   }, ExtArgs["result"]["marketPrice"]>
@@ -1069,10 +1184,13 @@ export interface Prisma__MarketPriceClient<T, Null = never, ExtArgs extends runt
 export interface MarketPriceFieldRefs {
   readonly id: Prisma.FieldRef<"MarketPrice", 'String'>
   readonly productId: Prisma.FieldRef<"MarketPrice", 'String'>
-  readonly title: Prisma.FieldRef<"MarketPrice", 'String'>
-  readonly value: Prisma.FieldRef<"MarketPrice", 'Decimal'>
+  readonly metalType: Prisma.FieldRef<"MarketPrice", 'MetalType'>
+  readonly price: Prisma.FieldRef<"MarketPrice", 'Decimal'>
+  readonly changePercent: Prisma.FieldRef<"MarketPrice", 'Decimal'>
+  readonly currency: Prisma.FieldRef<"MarketPrice", 'String'>
   readonly unit: Prisma.FieldRef<"MarketPrice", 'String'>
   readonly source: Prisma.FieldRef<"MarketPrice", 'String'>
+  readonly isStale: Prisma.FieldRef<"MarketPrice", 'Boolean'>
   readonly recordedAt: Prisma.FieldRef<"MarketPrice", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"MarketPrice", 'DateTime'>
 }

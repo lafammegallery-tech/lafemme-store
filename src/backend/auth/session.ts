@@ -23,13 +23,5 @@ export async function createSession(userId: string, role: UserRole) {
 }
 export async function destroySession() { const store = await cookies(); store.delete(COOKIE_NAME); }
 export async function getSession() { const store = await cookies(); return decode(store.get(COOKIE_NAME)?.value); }
-export async function requireSession(nextPath = "/dashboard") {
-  const session = await getSession();
-  if (!session) redirect(`/login?next=${encodeURIComponent(nextPath)}`);
-  return session;
-}
-export async function requireAdmin() {
-  const session = await requireSession("/admin");
-  if (session.role !== "ADMIN" && session.role !== "STAFF") redirect("/dashboard");
-  return session;
-}
+export async function requireSession() { const session = await getSession(); if (!session) redirect("/login?next=/dashboard"); return session; }
+export async function requireAdmin() { const session = await requireSession(); if (session.role !== "ADMIN" && session.role !== "STAFF") redirect("/dashboard"); return session; }

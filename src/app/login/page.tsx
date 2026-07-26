@@ -11,15 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/login" },
 };
 /** صفحه ورود متصل به احراز هویت واقعی. */
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ next?: string }>;
-}) {
-  const params = await searchParams;
-  const nextPath = params.next?.startsWith("/") && !params.next.startsWith("//")
-    ? params.next
-    : "";
+export default function LoginPage() {
   return (
     <PageLayout>
       <PageHero
@@ -39,7 +31,7 @@ export default async function LoginPage({
               </>
             }
           >
-            <LoginForm nextPath={nextPath} />
+            <LoginForm />
           </AuthCard>
         </Container>
       </section>

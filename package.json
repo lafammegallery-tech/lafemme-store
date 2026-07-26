@@ -16,8 +16,7 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "market:sync": "curl -X POST http://localhost:3000/api/market",
-    "check": "npm run typecheck && npm run typecheck:prisma && npm run lint && npm run audit:routes",
-    "audit:routes": "node scripts/audit-routes.mjs"
+    "check": "npm run typecheck && npm run typecheck:prisma && npm run lint"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",

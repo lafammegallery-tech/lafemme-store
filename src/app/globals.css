@@ -49,20 +49,21 @@
 
     /* ================= رنگ‌ها ================= */
 
-    --color-black:#050505;
-    --color-background:#0B0B0B;
-    --color-surface:#141414;
+    --color-black:#04060C;
+    --color-background:#0A0E1C;
+    --color-surface:#131A30;
+    --color-surface-raised:#1B2440;
 
-    --color-gold:#D4AF37;
-    --color-gold-light:#E7C65C;
-    --color-gold-dark:#A88214;
+    --color-gold:#C9A46B;
+    --color-gold-light:#E4C78C;
+    --color-gold-dark:#9C7A45;
 
-    --color-white:#FFFFFF;
+    --color-white:#EEF0F7;
 
-    --color-gray:#A5A5A5;
-    --color-gray-light:#D6D6D6;
+    --color-gray:#A7ADC7;
+    --color-gray-light:#CDD1E4;
 
-    --color-border:rgba(255,255,255,.08);
+    --color-border:rgba(238,240,247,.08);
 
 
 
@@ -94,7 +95,7 @@
 
     /* ================= Shadow ================= */
 
-    --shadow-gold:0 18px 40px rgba(212,175,55,.20);
+    --shadow-gold:0 18px 40px rgba(201,164,107,.20);
 
     --shadow-card:0 20px 60px rgba(0,0,0,.35);
 
@@ -227,7 +228,7 @@ img{
 
     backdrop-filter:blur(22px);
 
-    border-bottom:1px solid rgba(212,175,55,.15);
+    border-bottom:1px solid rgba(201,164,107,.15);
 
     box-shadow:0 12px 35px rgba(0,0,0,.35);
 
@@ -367,7 +368,7 @@ img{
     font-weight:bold;
 
     transition:var(--transition);
-    box-shadow:0 12px 30px rgba(212,175,55,.20);
+    box-shadow:0 12px 30px rgba(201,164,107,.20);
 
 overflow:hidden;
 .contact-button:hover{
@@ -458,7 +459,7 @@ margin:auto;
 
     padding:8px 18px;
 
-    border:1px solid rgba(212,175,55,.35);
+    border:1px solid rgba(201,164,107,.35);
 
     border-radius:50px;
 
@@ -569,7 +570,7 @@ margin:auto;
 
     transform:translateY(-4px);
 
-    box-shadow:0 15px 40px rgba(212,175,55,.35);
+    box-shadow:0 15px 40px rgba(201,164,107,.35);
 
 }
 
@@ -605,7 +606,7 @@ margin:auto;
 
     height:420px;
 
-    background:rgba(212,175,55,.12);
+    background:rgba(201,164,107,.12);
 
     border-radius:50%;
 
@@ -727,13 +728,13 @@ margin:auto;
 
     transform:translateY(-12px);
 
-    border-color:rgba(212,175,55,.35);
+    border-color:rgba(201,164,107,.35);
 
     box-shadow:
 
         0 35px 80px rgba(0,0,0,.45),
 
-        0 0 40px rgba(212,175,55,.15);
+        0 0 40px rgba(201,164,107,.15);
 
 }
 
@@ -762,7 +763,7 @@ margin:auto;
 
     height:220px;
 
-    background:rgba(212,175,55,.10);
+    background:rgba(201,164,107,.10);
 
     border-radius:50%;
 
@@ -904,9 +905,9 @@ margin:auto;
 
     margin-top:140px;
 
-    background:#050505;
+    background:var(--color-black);
 
-    border-top:1px solid rgba(255,255,255,.08);
+    border-top:1px solid var(--color-border);
 
     padding:80px 0 30px;
 
@@ -1515,9 +1516,9 @@ margin:auto;
 
 .contact-card{
 
-    background:#fff;
+    background:var(--color-surface);
 
-    border:1px solid #eee;
+    border:1px solid var(--color-border);
 
     border-radius:16px;
 
@@ -1533,27 +1534,35 @@ margin:auto;
 
     transform:translateY(-5px);
 
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
 }
 
 .contact-card h3{
 
-    color:#d4af37;
+    color:var(--color-gold);
 
     margin-bottom:12px;
 
 }
 
+.contact-card p{
+
+    color:var(--color-gray);
+
+}
+
 .contact-form{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:20px;
 
     padding:35px;
 
-    box-shadow:0 15px 40px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
 }
 
@@ -1571,6 +1580,8 @@ margin:auto;
 
     font-weight:600;
 
+    color:var(--color-gray-light);
+
 }
 
 .form-group input,
@@ -1581,7 +1592,11 @@ margin:auto;
 
     padding:14px;
 
-    border:1px solid #ddd;
+    background:var(--color-surface-raised);
+
+    color:var(--color-white);
+
+    border:1px solid var(--color-border);
 
     border-radius:10px;
 
@@ -1595,11 +1610,11 @@ margin:auto;
 
 .form-group textarea:focus{
 
-    border-color:#d4af37;
+    border-color:var(--color-gold);
 
     outline:none;
 
-    box-shadow:0 0 0 4px rgba(212,175,55,.15);
+    box-shadow:0 0 0 4px rgba(201,164,107,.15);
 
 }
 
@@ -1613,7 +1628,7 @@ margin:auto;
 
     height:350px;
 
-    background:#f5f5f5;
+    background:var(--color-surface);
 
     border-radius:20px;
 
@@ -1623,9 +1638,9 @@ margin:auto;
 
     align-items:center;
 
-    color:#777;
+    color:var(--color-gray);
 
-    border:2px dashed #ddd;
+    border:2px dashed var(--color-border);
 
 }
 /* =======================================================
@@ -1644,15 +1659,15 @@ margin:auto;
 
     margin:0 auto;
 
-    background:#ffffff;
+    background:var(--color-surface);
 
     border-radius:20px;
 
     padding:45px;
 
-    box-shadow:0 20px 60px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
-    border:1px solid #ececec;
+    border:1px solid var(--color-border);
 
 }
 
@@ -1664,13 +1679,15 @@ margin:auto;
 
     text-align:center;
 
+    color:var(--color-white);
+
 }
 
 .auth-card p{
 
     text-align:center;
 
-    color:#777;
+    color:var(--color-gray);
 
     margin-bottom:35px;
 
@@ -1694,7 +1711,7 @@ margin:auto;
 
     font-weight:600;
 
-    color:#222;
+    color:var(--color-gray-light);
 
 }
 
@@ -1704,7 +1721,7 @@ margin:auto;
 
     height:56px;
 
-    border:1px solid #ddd;
+    border:1px solid var(--color-border);
 
     border-radius:12px;
 
@@ -1714,17 +1731,19 @@ margin:auto;
 
     transition:.3s;
 
-    background:#fff;
+    background:var(--color-surface-raised);
+
+    color:var(--color-white);
 
 }
 
 .auth-form input:focus{
 
-    border-color:#d4af37;
+    border-color:var(--color-gold);
 
     outline:none;
 
-    box-shadow:0 0 0 4px rgba(212,175,55,.15);
+    box-shadow:0 0 0 4px rgba(201,164,107,.15);
 
 }
 
@@ -1736,9 +1755,9 @@ margin:auto;
 
     border-radius:12px;
 
-    background:#d4af37;
+    background:var(--color-gold);
 
-    color:#fff;
+    color:var(--color-black);
 
     font-size:16px;
 
@@ -1754,7 +1773,7 @@ margin:auto;
 
     transform:translateY(-2px);
 
-    background:#c39b21;
+    background:var(--color-gold-light);
 
 }
 
@@ -1764,7 +1783,7 @@ margin:auto;
 
     margin-top:30px;
 
-    color:#666;
+    color:var(--color-gray);
 
 }
 
@@ -1825,13 +1844,15 @@ margin:auto;
 
 .dashboard-sidebar{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:20px;
 
     padding:30px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
 }
 
@@ -1839,7 +1860,7 @@ margin:auto;
 
     margin-bottom:30px;
 
-    color:#d4af37;
+    color:var(--color-gold);
 
 }
 
@@ -1869,7 +1890,7 @@ margin:auto;
 
     text-decoration:none;
 
-    color:#222;
+    color:var(--color-gray-light);
 
     transition:.3s;
 
@@ -1877,9 +1898,9 @@ margin:auto;
 
 .dashboard-sidebar a:hover{
 
-    background:#d4af37;
+    background:var(--color-gold);
 
-    color:#fff;
+    color:var(--color-black);
 
 }
 
@@ -1895,13 +1916,17 @@ margin:auto;
 
 .dashboard-card{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:20px;
 
     padding:30px;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
+
+    color:var(--color-white);
 
 }
 
@@ -1929,7 +1954,9 @@ margin:auto;
 
 .stat-card{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:18px;
 
@@ -1937,7 +1964,7 @@ margin:auto;
 
     text-align:center;
 
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
 }
 
@@ -1945,9 +1972,11 @@ margin:auto;
 
     font-size:16px;
 
-    color:#666;
+    color:var(--color-gray);
 
     margin-bottom:12px;
+
+    font-weight:600;
 
 }
 
@@ -1957,7 +1986,7 @@ margin:auto;
 
     font-weight:bold;
 
-    color:#d4af37;
+    color:var(--color-gold);
 
 }
 
@@ -1967,13 +1996,15 @@ margin:auto;
 
     border-collapse:collapse;
 
+    color:var(--color-white);
+
 }
 
 .orders-table th{
 
-    background:#d4af37;
+    background:var(--color-gold);
 
-    color:#fff;
+    color:var(--color-black);
 
     padding:15px;
 
@@ -1983,13 +2014,13 @@ margin:auto;
 
     padding:15px;
 
-    border-bottom:1px solid #eee;
+    border-bottom:1px solid var(--color-border);
 
 }
 
 .orders-table tr:hover{
 
-    background:#fafafa;
+    background:var(--color-surface-raised);
 
 }
 
@@ -2017,19 +2048,19 @@ grid-template-columns:1fr;
 .dashboard-card th,
 .dashboard-card span{
 
-    color:#222;
+    color:var(--color-white);
 
 }
 
 .dashboard-sidebar{
 
-    color:#222;
+    color:var(--color-gray-light);
 
 }
 
 .dashboard-sidebar a{
 
-    color:#222;
+    color:var(--color-gray-light);
 
 }
 /*=====================================================
@@ -2066,7 +2097,9 @@ grid-template-columns:1fr;
 
 .cart-card{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:18px;
 
@@ -2078,7 +2111,7 @@ grid-template-columns:1fr;
 
     align-items:center;
 
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
     gap:20px;
 
@@ -2108,13 +2141,13 @@ grid-template-columns:1fr;
 
     margin-bottom:10px;
 
-    color:#222;
+    color:var(--color-white);
 
 }
 
 .cart-info p{
 
-    color:#777;
+    color:var(--color-gray);
 
     margin-bottom:10px;
 
@@ -2122,7 +2155,7 @@ grid-template-columns:1fr;
 
 .cart-price{
 
-    color:#c9a227;
+    color:var(--color-gold);
 
     font-size:20px;
 
@@ -2150,9 +2183,9 @@ grid-template-columns:1fr;
 
     border-radius:10px;
 
-    background:#c9a227;
+    background:var(--color-gold);
 
-    color:#fff;
+    color:var(--color-black);
 
     cursor:pointer;
 
@@ -2176,7 +2209,7 @@ grid-template-columns:1fr;
 
     font-weight:bold;
 
-    color:#222;
+    color:var(--color-white);
 
 }
 
@@ -2198,13 +2231,15 @@ grid-template-columns:1fr;
 
 .cart-summary{
 
-    background:#fff;
+    background:var(--color-surface);
+
+    border:1px solid var(--color-border);
 
     border-radius:18px;
 
     padding:30px;
 
-    box-shadow:0 12px 30px rgba(0,0,0,.08);
+    box-shadow:var(--shadow-card);
 
     position:sticky;
 
@@ -2277,43 +2312,43 @@ flex-direction:column;
 .cart-summary,
 .cart-summary *{
 
-    color:#222 !important;
+    color:var(--color-white) !important;
 
 }
 
 .cart-info p{
 
-    color:#777 !important;
+    color:var(--color-gray) !important;
 
 }
 
 .cart-price{
 
-    color:#c9a227 !important;
+    color:var(--color-gold) !important;
 
 }
 
 .summary-total strong{
 
-    color:#c9a227 !important;
+    color:var(--color-gold) !important;
 
 }
 
 .remove-item{
 
-    color:#fff !important;
+    color:var(--color-white) !important;
 
 }
 
 .cart-quantity button{
 
-    color:#fff !important;
+    color:var(--color-black) !important;
 
 }
 
 .cart-summary .btn{
 
-    color:#fff !important;
+    color:var(--color-black) !important;
 
 }
 /* ===== Cart Item ===== */
@@ -2813,17 +2848,10 @@ flex-direction:column;
 /* ========================================================================== */
 
 :root {
-  --lf-ink: #080808;
-  --lf-ivory: #faf7f0;
-  --lf-gold-rich: #c9a227;
-  --lf-gold-light: #e7cf78;
+  --lf-gold-rich: #c9a46b;
+  --lf-gold-light: #e4c78c;
   --lf-silver-rich: #b8bcc4;
-  --lf-readable-muted: #5e584e;
-}
-
-body {
-  color: var(--lf-ink);
-  background: var(--lf-ivory);
+  --lf-readable-muted: #b9afa0;
 }
 
 .luxury-market-section {
@@ -2832,7 +2860,7 @@ body {
   padding: 6.5rem 0;
   background:
     radial-gradient(circle at 15% 20%, rgba(201, 162, 39, 0.12), transparent 34%),
-    linear-gradient(135deg, #080808 0%, #15120c 54%, #080808 100%);
+    linear-gradient(135deg, #04060C 0%, #131A30 54%, #04060C 100%);
 }
 
 .luxury-market-section::before {
@@ -2941,11 +2969,11 @@ body {
 }
 
 input, textarea, select {
-  color: #16130f !important;
-  background-color: #fffdf8;
+  color: var(--color-white) !important;
+  background-color: var(--color-surface-raised);
 }
 
-input::placeholder, textarea::placeholder { color: #777066 !important; opacity: 1; }
+input::placeholder, textarea::placeholder { color: var(--color-gray) !important; opacity: 1; }
 
 @media (max-width: 768px) {
   .luxury-market-section { padding: 4.5rem 0; }
@@ -2954,8 +2982,8 @@ input::placeholder, textarea::placeholder { color: #777066 !important; opacity: 
 }
 
 /* Sprint 1.3 — وضعیت قیمت پویا و خوانایی فروشگاه */
-.price-source-badge{display:inline-flex;align-items:center;gap:.35rem;width:max-content;margin:.25rem 0 .85rem;padding:.3rem .65rem;border:1px solid rgba(201,162,39,.42);border-radius:999px;background:rgba(201,162,39,.08);color:#725b0c;font-size:.76rem;font-weight:700}
-.live-price-note{margin:1rem 0;padding:.85rem 1rem;border-right:3px solid #c9a227;background:#faf7f0;color:#3f350f;border-radius:.6rem;line-height:1.8}
+.price-source-badge{display:inline-flex;align-items:center;gap:.35rem;width:max-content;margin:.25rem 0 .85rem;padding:.3rem .65rem;border:1px solid rgba(201,164,107,.35);border-radius:999px;background:rgba(201,164,107,.1);color:var(--color-gold-light);font-size:.76rem;font-weight:700}
+.live-price-note{margin:1rem 0;padding:.85rem 1rem;border-right:3px solid var(--color-gold);background:var(--color-surface-raised);color:var(--color-gray-light);border-radius:.6rem;line-height:1.8}
 button:disabled{cursor:not-allowed;opacity:.55}
 
 /* Sprint 4 — ماشین حساب سرمایه‌گذاری و تجربه Production */
@@ -2970,61 +2998,3 @@ button:disabled{cursor:not-allowed;opacity:.55}
 .investment-calculator__results>div{padding:1rem;border-radius:.8rem;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}
 .investment-calculator__results span{display:block;color:#bdb6aa;font-size:.78rem;margin-bottom:.45rem}.investment-calculator__results strong{color:#fff;font-size:.95rem}.investment-calculator__results .is-positive strong{color:#93e6ad}.investment-calculator__results .is-negative strong{color:#ffaaaa}
 @media(max-width:900px){.investment-calculator__results{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:640px){.investment-calculator__head{display:block}.investment-calculator__head p{margin-top:.8rem}.investment-calculator__inputs,.investment-calculator__results{grid-template-columns:1fr}}
-
-
-/* ==========================================================================
-   V1.8 Dark Luxury Theme Layer
-   ========================================================================== */
-:root {
-  --lf-bg: #080808;
-  --lf-surface: #121212;
-  --lf-card: #171512;
-  --lf-gold: #c6a15b;
-  --lf-gold-soft: #d4b978;
-  --lf-text: #f5f1e8;
-  --lf-muted: #b8b0a0;
-}
-
-body {
-  background: var(--lf-bg);
-  color: var(--lf-text);
-}
-
-.lf-luxury-surface {
-  background: var(--lf-surface);
-  border: 1px solid rgba(198,161,91,.22);
-}
-
-.lf-gold-text {
-  color: var(--lf-gold-soft);
-}
-
-.lf-luxury-card {
-  background: linear-gradient(145deg,#171512,#0d0d0d);
-  border: 1px solid rgba(198,161,91,.18);
-  box-shadow: 0 20px 60px rgba(0,0,0,.45);
-}
-
-
-:root{
- --lf-navy:#050811;
- --lf-surface:#0B1224;
- --lf-gold:#D4AF37;
-}
-
-body{
- background:
- radial-gradient(circle at top, rgba(212,175,55,.10), transparent 35%),
- #050811 !important;
- color:#F8FAFC;
-}
-
-.contact-form, .card, .luxury-card{
- background:linear-gradient(145deg,rgba(11,18,36,.95),rgba(5,8,17,.95)) !important;
- border-color:rgba(212,175,55,.25) !important;
-}
-
-.btn-primary{
- background:linear-gradient(135deg,#D4AF37,#F5D76E)!important;
- color:#050811!important;
-}

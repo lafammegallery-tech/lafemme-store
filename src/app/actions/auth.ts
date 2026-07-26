@@ -17,19 +17,9 @@ export async function registerAction(_: AuthState, formData: FormData): Promise<
   await createSession(user.id, user.role); redirect("/dashboard");
 }
 export async function loginAction(_: AuthState, formData: FormData): Promise<AuthState> {
-  const phone = normalizePhone(formData.get("phone"));
-  const password = String(formData.get("password") ?? "");
-  const requestedNext = String(formData.get("next") ?? "");
-  const safeNext = requestedNext.startsWith("/") && !requestedNext.startsWith("//")
-    ? requestedNext
-    : null;
-
+  const phone = normalizePhone(formData.get("phone")); const password = String(formData.get("password") ?? "");
   const user = await userRepository.findByPhone(phone);
-  if (!user?.passwordHash || !user.isActive || !verifyPassword(password, user.passwordHash)) {
-    return { error: "شماره موبایل یا رمز عبور نادرست است." };
-  }
-
-  await createSession(user.id, user.role);
-  redirect(safeNext ?? (user.role === "ADMIN" || user.role === "STAFF" ? "/admin" : "/dashboard"));
+  if (!user?.passwordHash || !user.isActive || !verifyPassword(password, user.passwordHash)) return { error: "شماره موبایل یا رمز عبور نادرست است." };
+  await createSession(user.id, user.role); redirect("/dashboard");
 }
 export async function logoutAction() { await destroySession(); redirect("/"); }

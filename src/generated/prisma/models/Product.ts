@@ -30,6 +30,8 @@ export type ProductAvgAggregateOutputType = {
   weightValue: number | null
   price: runtime.Decimal | null
   marketPrice: runtime.Decimal | null
+  premiumPercent: runtime.Decimal | null
+  fixedPremium: runtime.Decimal | null
   stock: number | null
 }
 
@@ -37,6 +39,8 @@ export type ProductSumAggregateOutputType = {
   weightValue: number | null
   price: runtime.Decimal | null
   marketPrice: runtime.Decimal | null
+  premiumPercent: runtime.Decimal | null
+  fixedPremium: runtime.Decimal | null
   stock: number | null
 }
 
@@ -56,6 +60,8 @@ export type ProductMinAggregateOutputType = {
   certificate: string | null
   price: runtime.Decimal | null
   marketPrice: runtime.Decimal | null
+  premiumPercent: runtime.Decimal | null
+  fixedPremium: runtime.Decimal | null
   image: string | null
   stock: number | null
   status: $Enums.ProductStatus | null
@@ -81,6 +87,8 @@ export type ProductMaxAggregateOutputType = {
   certificate: string | null
   price: runtime.Decimal | null
   marketPrice: runtime.Decimal | null
+  premiumPercent: runtime.Decimal | null
+  fixedPremium: runtime.Decimal | null
   image: string | null
   stock: number | null
   status: $Enums.ProductStatus | null
@@ -106,6 +114,8 @@ export type ProductCountAggregateOutputType = {
   certificate: number
   price: number
   marketPrice: number
+  premiumPercent: number
+  fixedPremium: number
   image: number
   stock: number
   status: number
@@ -121,6 +131,8 @@ export type ProductAvgAggregateInputType = {
   weightValue?: true
   price?: true
   marketPrice?: true
+  premiumPercent?: true
+  fixedPremium?: true
   stock?: true
 }
 
@@ -128,6 +140,8 @@ export type ProductSumAggregateInputType = {
   weightValue?: true
   price?: true
   marketPrice?: true
+  premiumPercent?: true
+  fixedPremium?: true
   stock?: true
 }
 
@@ -147,6 +161,8 @@ export type ProductMinAggregateInputType = {
   certificate?: true
   price?: true
   marketPrice?: true
+  premiumPercent?: true
+  fixedPremium?: true
   image?: true
   stock?: true
   status?: true
@@ -172,6 +188,8 @@ export type ProductMaxAggregateInputType = {
   certificate?: true
   price?: true
   marketPrice?: true
+  premiumPercent?: true
+  fixedPremium?: true
   image?: true
   stock?: true
   status?: true
@@ -197,6 +215,8 @@ export type ProductCountAggregateInputType = {
   certificate?: true
   price?: true
   marketPrice?: true
+  premiumPercent?: true
+  fixedPremium?: true
   image?: true
   stock?: true
   status?: true
@@ -309,6 +329,8 @@ export type ProductGroupByOutputType = {
   certificate: string | null
   price: runtime.Decimal
   marketPrice: runtime.Decimal | null
+  premiumPercent: runtime.Decimal
+  fixedPremium: runtime.Decimal
   image: string | null
   stock: number
   status: $Enums.ProductStatus
@@ -357,6 +379,8 @@ export type ProductWhereInput = {
   certificate?: Prisma.StringNullableFilter<"Product"> | string | null
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.DecimalNullableFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.StringNullableFilter<"Product"> | string | null
   stock?: Prisma.IntFilter<"Product"> | number
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
@@ -391,6 +415,8 @@ export type ProductOrderByWithRelationInput = {
   certificate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   stock?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -428,6 +454,8 @@ export type ProductWhereUniqueInput = Prisma.AtLeast<{
   certificate?: Prisma.StringNullableFilter<"Product"> | string | null
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.DecimalNullableFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.StringNullableFilter<"Product"> | string | null
   stock?: Prisma.IntFilter<"Product"> | number
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
@@ -462,6 +490,8 @@ export type ProductOrderByWithAggregationInput = {
   certificate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrderInput | Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   stock?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -495,6 +525,8 @@ export type ProductScalarWhereWithAggregatesInput = {
   certificate?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   price?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.DecimalNullableWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalWithAggregatesFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.StringNullableWithAggregatesFilter<"Product"> | string | null
   stock?: Prisma.IntWithAggregatesFilter<"Product"> | number
   status?: Prisma.EnumProductStatusWithAggregatesFilter<"Product"> | $Enums.ProductStatus
@@ -519,6 +551,8 @@ export type ProductCreateInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -553,6 +587,8 @@ export type ProductUncheckedCreateInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -585,6 +621,8 @@ export type ProductUpdateInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -619,6 +657,8 @@ export type ProductUncheckedUpdateInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -652,6 +692,8 @@ export type ProductCreateManyInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -676,6 +718,8 @@ export type ProductUpdateManyMutationInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -701,6 +745,8 @@ export type ProductUncheckedUpdateManyInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -736,6 +782,8 @@ export type ProductCountOrderByAggregateInput = {
   certificate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   image?: Prisma.SortOrder
   stock?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -749,6 +797,8 @@ export type ProductAvgOrderByAggregateInput = {
   weightValue?: Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   stock?: Prisma.SortOrder
 }
 
@@ -768,6 +818,8 @@ export type ProductMaxOrderByAggregateInput = {
   certificate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   image?: Prisma.SortOrder
   stock?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -793,6 +845,8 @@ export type ProductMinOrderByAggregateInput = {
   certificate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   image?: Prisma.SortOrder
   stock?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -806,6 +860,8 @@ export type ProductSumOrderByAggregateInput = {
   weightValue?: Prisma.SortOrder
   price?: Prisma.SortOrder
   marketPrice?: Prisma.SortOrder
+  premiumPercent?: Prisma.SortOrder
+  fixedPremium?: Prisma.SortOrder
   stock?: Prisma.SortOrder
 }
 
@@ -1026,6 +1082,8 @@ export type ProductCreateWithoutCategoryInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1058,6 +1116,8 @@ export type ProductUncheckedCreateWithoutCategoryInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1120,6 +1180,8 @@ export type ProductScalarWhereInput = {
   certificate?: Prisma.StringNullableFilter<"Product"> | string | null
   price?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.DecimalNullableFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFilter<"Product"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.StringNullableFilter<"Product"> | string | null
   stock?: Prisma.IntFilter<"Product"> | number
   status?: Prisma.EnumProductStatusFilter<"Product"> | $Enums.ProductStatus
@@ -1144,6 +1206,8 @@ export type ProductCreateWithoutImagesInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1177,6 +1241,8 @@ export type ProductUncheckedCreateWithoutImagesInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1224,6 +1290,8 @@ export type ProductUpdateWithoutImagesInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1257,6 +1325,8 @@ export type ProductUncheckedUpdateWithoutImagesInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1288,6 +1358,8 @@ export type ProductCreateWithoutVariantsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1321,6 +1393,8 @@ export type ProductUncheckedCreateWithoutVariantsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1368,6 +1442,8 @@ export type ProductUpdateWithoutVariantsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1401,6 +1477,8 @@ export type ProductUncheckedUpdateWithoutVariantsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1432,6 +1510,8 @@ export type ProductCreateWithoutInventoryInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1465,6 +1545,8 @@ export type ProductUncheckedCreateWithoutInventoryInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1512,6 +1594,8 @@ export type ProductUpdateWithoutInventoryInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1545,6 +1629,8 @@ export type ProductUncheckedUpdateWithoutInventoryInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1576,6 +1662,8 @@ export type ProductCreateWithoutMarketPricesInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1609,6 +1697,8 @@ export type ProductUncheckedCreateWithoutMarketPricesInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1656,6 +1746,8 @@ export type ProductUpdateWithoutMarketPricesInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1689,6 +1781,8 @@ export type ProductUncheckedUpdateWithoutMarketPricesInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1720,6 +1814,8 @@ export type ProductCreateWithoutCartItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1753,6 +1849,8 @@ export type ProductUncheckedCreateWithoutCartItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1800,6 +1898,8 @@ export type ProductUpdateWithoutCartItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1833,6 +1933,8 @@ export type ProductUncheckedUpdateWithoutCartItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1864,6 +1966,8 @@ export type ProductCreateWithoutWishlistItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1897,6 +2001,8 @@ export type ProductUncheckedCreateWithoutWishlistItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -1944,6 +2050,8 @@ export type ProductUpdateWithoutWishlistItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -1977,6 +2085,8 @@ export type ProductUncheckedUpdateWithoutWishlistItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2008,6 +2118,8 @@ export type ProductCreateWithoutOrderItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -2041,6 +2153,8 @@ export type ProductUncheckedCreateWithoutOrderItemsInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -2088,6 +2202,8 @@ export type ProductUpdateWithoutOrderItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2121,6 +2237,8 @@ export type ProductUncheckedUpdateWithoutOrderItemsInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2152,6 +2270,8 @@ export type ProductCreateWithoutPreOrdersInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -2185,6 +2305,8 @@ export type ProductUncheckedCreateWithoutPreOrdersInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -2232,6 +2354,8 @@ export type ProductUpdateWithoutPreOrdersInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2265,6 +2389,8 @@ export type ProductUncheckedUpdateWithoutPreOrdersInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2296,6 +2422,8 @@ export type ProductCreateManyCategoryInput = {
   certificate?: string | null
   price: runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: string | null
   stock?: number
   status?: $Enums.ProductStatus
@@ -2320,6 +2448,8 @@ export type ProductUpdateWithoutCategoryInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2352,6 +2482,8 @@ export type ProductUncheckedUpdateWithoutCategoryInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2384,6 +2516,8 @@ export type ProductUncheckedUpdateManyWithoutCategoryInput = {
   certificate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   marketPrice?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  premiumPercent?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  fixedPremium?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stock?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumProductStatusFieldUpdateOperationsInput | $Enums.ProductStatus
@@ -2494,6 +2628,8 @@ export type ProductSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   certificate?: boolean
   price?: boolean
   marketPrice?: boolean
+  premiumPercent?: boolean
+  fixedPremium?: boolean
   image?: boolean
   stock?: boolean
   status?: boolean
@@ -2529,6 +2665,8 @@ export type ProductSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   certificate?: boolean
   price?: boolean
   marketPrice?: boolean
+  premiumPercent?: boolean
+  fixedPremium?: boolean
   image?: boolean
   stock?: boolean
   status?: boolean
@@ -2555,6 +2693,8 @@ export type ProductSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   certificate?: boolean
   price?: boolean
   marketPrice?: boolean
+  premiumPercent?: boolean
+  fixedPremium?: boolean
   image?: boolean
   stock?: boolean
   status?: boolean
@@ -2581,6 +2721,8 @@ export type ProductSelectScalar = {
   certificate?: boolean
   price?: boolean
   marketPrice?: boolean
+  premiumPercent?: boolean
+  fixedPremium?: boolean
   image?: boolean
   stock?: boolean
   status?: boolean
@@ -2590,7 +2732,7 @@ export type ProductSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "name" | "slug" | "sku" | "shortDescription" | "description" | "metalType" | "brand" | "weight" | "weightValue" | "purity" | "certificate" | "price" | "marketPrice" | "image" | "stock" | "status" | "isFeatured" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
+export type ProductOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "name" | "slug" | "sku" | "shortDescription" | "description" | "metalType" | "brand" | "weight" | "weightValue" | "purity" | "certificate" | "price" | "marketPrice" | "premiumPercent" | "fixedPremium" | "image" | "stock" | "status" | "isFeatured" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["product"]>
 export type ProductInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   images?: boolean | Prisma.Product$imagesArgs<ExtArgs>
@@ -2639,6 +2781,8 @@ export type $ProductPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     certificate: string | null
     price: runtime.Decimal
     marketPrice: runtime.Decimal | null
+    premiumPercent: runtime.Decimal
+    fixedPremium: runtime.Decimal
     image: string | null
     stock: number
     status: $Enums.ProductStatus
@@ -3093,6 +3237,8 @@ export interface ProductFieldRefs {
   readonly certificate: Prisma.FieldRef<"Product", 'String'>
   readonly price: Prisma.FieldRef<"Product", 'Decimal'>
   readonly marketPrice: Prisma.FieldRef<"Product", 'Decimal'>
+  readonly premiumPercent: Prisma.FieldRef<"Product", 'Decimal'>
+  readonly fixedPremium: Prisma.FieldRef<"Product", 'Decimal'>
   readonly image: Prisma.FieldRef<"Product", 'String'>
   readonly stock: Prisma.FieldRef<"Product", 'Int'>
   readonly status: Prisma.FieldRef<"Product", 'ProductStatus'>

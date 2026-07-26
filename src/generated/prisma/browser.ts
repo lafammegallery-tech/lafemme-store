@@ -88,6 +88,11 @@ export type Order = Prisma.OrderModel
  */
 export type OrderItem = Prisma.OrderItemModel
 /**
+ * Model OrderStatusHistory
+ * 
+ */
+export type OrderStatusHistory = Prisma.OrderStatusHistoryModel
+/**
  * Model Shipment
  * 
  */
@@ -97,6 +102,16 @@ export type Shipment = Prisma.ShipmentModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model Coupon
+ * 
+ */
+export type Coupon = Prisma.CouponModel
+/**
+ * Model CouponUsage
+ * 
+ */
+export type CouponUsage = Prisma.CouponUsageModel
 /**
  * Model Notification
  * 
