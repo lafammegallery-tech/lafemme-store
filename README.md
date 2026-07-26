@@ -30,19 +30,14 @@ Useful scripts: `npm run check` (typecheck + lint), `npm run db:deploy` (apply m
 ```bash
 cp .env.example .env       # then fill in real values
 docker compose up --build
+docker compose exec app npm run db:seed   # first time only: create the admin account
 ```
 
-This starts Postgres and the app. The app container's entrypoint runs `prisma migrate deploy` automatically before serving, so a fresh database is ready on first boot. Once it's up:
-
-```bash
-docker compose exec app npm run db:seed   # create/update the admin account
-curl http://localhost:3000/api/health     # confirm the app + database are healthy
-```
-
-Environment variables are read from `.env` (see `.env.example` for the full list — gold/silver price API URLs, `AUTH_SECRET`, `MARKET_SYNC_SECRET`, payment provider config, etc.). Compose overrides `DATABASE_URL` to point at the internal `postgres` service; everything else passes through from `.env` unchanged.
+Migrations run automatically on boot; the app is ready at http://localhost:3000 once `docker compose ps` shows both services `healthy`. Full details, common commands, and troubleshooting: [docs/docker.md](docs/docker.md).
 
 ## Further docs
 
+- [docs/docker.md](docs/docker.md) — running the app with Docker Compose, env vars, troubleshooting.
 - [docs/design-system.md](docs/design-system.md) — design tokens and visual language.
 - [docs/component-tree.md](docs/component-tree.md) — shared UI component library map.
 - [docs/admin-account.md](docs/admin-account.md) — how the seeded admin account works.
