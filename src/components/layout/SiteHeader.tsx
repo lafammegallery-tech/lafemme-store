@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui";
 import { MobileNavigation } from "./MobileNavigation";
 import { MarketTicker } from "@/components/market/MarketTicker";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const navigationItems = [
   { href: "/", label: "خانه" },
@@ -56,6 +57,7 @@ export function SiteHeader() {
 
           {/* ================= CTA Button ================= */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             <Link className="contact-button" href="/contact">
               ارتباط با ما
             </Link>

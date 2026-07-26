@@ -47,18 +47,18 @@
 
 :root{
 
-    /* ================= پالت رنگ لاکچری ================= */
+    /* ================= پالت رنگ لاکچری — تم تیره (پیش‌فرض) ================= */
 
     --color-black:#050811;
     --color-background:#050811;
     --color-surface:#0d1222;
-    --color-surface-raised:#151e35;
+    --color-surface-raised:#161f38;
 
     /* رنگ طلای اصلی برند La Femme */
     --color-gold:#D4AF37;
     --color-gold-light:#e8cc6a;
     --color-gold-dark:#a87c1a;
-    --color-gold-rgb:212,175,55;
+    --color-gold-rgb:212 175 55;
 
     /* کرم لاکچری */
     --color-cream:#FAF7F0;
@@ -68,8 +68,14 @@
     --color-gray:#9ba3be;
     --color-gray-light:#c8cfe0;
 
-    --color-border:rgba(212,175,55,.12);
+    --color-border:rgba(212,175,55,.14);
     --color-border-subtle:rgba(250,247,240,.06);
+
+    --color-danger:#e2685c;
+    --color-danger-rgb:226 104 92;
+    --color-success:#4fa97d;
+    --color-success-rgb:79 169 125;
+    --color-warning:#e4c78c;
 
 
 
@@ -109,6 +115,42 @@
 
     --shadow-glass:0 8px 32px rgba(0,0,0,.36);
 
+}
+
+/* ================= پالت رنگ لاکچری — تم روشن ================= */
+/* همان برند، روی زمینه‌ی عاج/شامپاین گرم به‌جای سرمه‌ای تیره. */
+:root[data-theme="light"]{
+
+    --color-black:#211a10;
+    --color-background:#FBF7EF;
+    --color-surface:#FFFFFF;
+    --color-surface-raised:#F5EFE1;
+
+    --color-gold:#B8863A;
+    --color-gold-light:#D4AF37;
+    --color-gold-dark:#8C6423;
+    --color-gold-rgb:184 134 58;
+
+    --color-cream:#FBF7EF;
+
+    --color-white:#221b12;
+
+    --color-gray:#6c6353;
+    --color-gray-light:#8f8676;
+
+    --color-border:rgba(184,134,58,.28);
+    --color-border-subtle:rgba(34,27,18,.08);
+
+    --color-danger:#c0392b;
+    --color-danger-rgb:192 57 43;
+    --color-success:#2f8a5b;
+    --color-success-rgb:47 138 91;
+    --color-warning:#a8791f;
+
+    --shadow-gold:0 14px 36px rgba(184,134,58,.18);
+    --shadow-gold-glow:0 0 30px rgba(184,134,58,.14),0 14px 36px rgba(34,27,18,.10);
+    --shadow-card:0 18px 48px rgba(34,27,18,.10);
+    --shadow-glass:0 6px 24px rgba(34,27,18,.08);
 }
 
 /* ===== Gold Gradient Utility ===== */
@@ -261,6 +303,17 @@ img{
 
     box-shadow:0 12px 35px rgba(0,0,0,.35);
 
+}
+
+:root[data-theme="light"] .header{
+    background:rgba(251,247,239,.78);
+    border-bottom:1px solid rgba(34,27,18,.06);
+}
+
+:root[data-theme="light"] .header.scrolled{
+    background:rgba(255,255,255,.92);
+    border-bottom:1px solid rgba(184,134,58,.22);
+    box-shadow:0 12px 35px rgba(34,27,18,.10);
 }
 /* ========================================================================== */
 /*                           HEADER CONTENT                                   */
@@ -492,6 +545,8 @@ img{
     border:1px solid rgba(212,175,55,.35);
 
     border-radius:50px;
+
+    background:rgb(var(--color-gold-rgb) / 0.08);
 
     color:var(--color-gold);
 
@@ -840,6 +895,18 @@ img{
 
 }
 
+:root[data-theme="light"] .product-card{
+    background:linear-gradient(145deg, #ffffff, #fbf7ef);
+    border:1px solid rgba(184,134,58,.20);
+}
+
+:root[data-theme="light"] .product-card:hover{
+    border-color:rgba(184,134,58,.45);
+    box-shadow:
+        0 30px 60px rgba(34,27,18,.14),
+        0 0 40px rgba(184,134,58,.14);
+}
+
 .product-card::before{
 
     content:"";
@@ -986,6 +1053,11 @@ img{
 
 }
 
+:root[data-theme="light"] .market-bar{
+    background:var(--color-black);
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
 .market-wrapper{
 
     display:flex;
@@ -1047,13 +1119,33 @@ img{
 
 .footer{
 
+    position:relative;
+
     margin-top:80px;
 
     background:var(--color-black);
 
-    border-top:1px solid var(--color-border);
-
     padding:60px 0 25px;
+
+}
+
+.footer::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:1px;
+
+    background:linear-gradient(90deg, transparent, var(--color-gold), transparent);
+
+    opacity:.55;
 
 }
 
@@ -1121,7 +1213,7 @@ img{
 
     padding-top:25px;
 
-    border-top:1px solid rgba(255,255,255,.08);
+    border-top:1px solid var(--color-border-subtle);
 
     text-align:center;
 

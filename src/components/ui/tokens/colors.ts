@@ -1,16 +1,21 @@
-/** Brand color tokens shared by Tailwind configuration and typed UI code. */
+/**
+ * Brand color tokens for typed, non-CSS contexts (e.g. inline SVG fills).
+ * Mirrors the dark-theme values of the CSS variables defined in globals.css —
+ * those variables (and the matching `lf.*` Tailwind colors) are the source of
+ * truth and respond to the light/dark toggle; this object does not.
+ */
 export const colors = {
-  black: "#04060C",
-  background: "#0A0E1C",
-  surface: "#131A30",
-  surfaceRaised: "#1B2440",
-  gold: "#C9A46B",
-  goldLight: "#E4C78C",
-  goldDark: "#9C7A45",
-  white: "#EEF0F7",
-  gray: "#A7ADC7",
-  grayLight: "#CDD1E4",
-  danger: "#D9695F",
-  success: "#4FA97D",
-  warning: "#E4C78C",
+  black: "#050811",
+  background: "#050811",
+  surface: "#0d1222",
+  surfaceRaised: "#161f38",
+  gold: "#D4AF37",
+  goldLight: "#e8cc6a",
+  goldDark: "#a87c1a",
+  white: "#FAF7F0",
+  gray: "#9ba3be",
+  grayLight: "#c8cfe0",
+  danger: "#e2685c",
+  success: "#4fa97d",
+  warning: "#e4c78c",
 } as const;

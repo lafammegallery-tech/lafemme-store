@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       ref={ref}
       aria-invalid={error || undefined}
       className={cn(
-        "min-h-11 w-full rounded-lf-sm border bg-lf-surface px-4 py-2 text-lf-white outline-none placeholder:text-lf-gray focus:border-lf-gold focus:shadow-lf-focus disabled:opacity-50",
+        "min-h-11 w-full rounded-lf-sm border bg-lf-surface px-4 py-2 text-lf-white outline-none transition duration-lf placeholder:text-lf-gray focus:border-lf-gold focus:shadow-lf-focus disabled:opacity-50",
         error ? "border-lf-danger" : "border-lf-border",
         className,
       )}

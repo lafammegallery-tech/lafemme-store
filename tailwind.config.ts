@@ -1,5 +1,15 @@
 import type { Config } from "tailwindcss";
 
+/**
+ * Lets `bg-lf-gold/10`-style opacity modifiers work on a CSS-variable color:
+ * Tailwind can't decompose a plain `var(--x)` hex string into an alpha channel,
+ * so colors that are used with an opacity modifier need an RGB-triplet variable instead.
+ */
+function withOpacity(rgbVar: string) {
+  return ({ opacityValue }: { opacityValue?: string }) =>
+    opacityValue === undefined ? `rgb(var(${rgbVar}))` : `rgb(var(${rgbVar}) / ${opacityValue})`;
+}
+
 const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   // Preserve the approved legacy UI while allowing the isolated UI library to use Tailwind utilities.
@@ -7,21 +17,24 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Every lf.* color resolves to the CSS variables defined in globals.css,
+        // so Tailwind utility classes (bg-lf-gold, text-lf-white, ...) follow the
+        // active [data-theme] automatically instead of needing dark:/light: variants.
         lf: {
-          black: "#04060C",
-          background: "#0A0E1C",
-          surface: "#131A30",
-          "surface-raised": "#1B2440",
-          gold: "#C9A46B",
-          "gold-light": "#E4C78C",
-          "gold-dark": "#9C7A45",
-          white: "#EEF0F7",
-          gray: "#A7ADC7",
-          "gray-light": "#CDD1E4",
-          border: "rgba(238,240,247,.08)",
-          danger: "#D9695F",
-          success: "#4FA97D",
-          warning: "#E4C78C",
+          black: "var(--color-black)",
+          background: "var(--color-background)",
+          surface: "var(--color-surface)",
+          "surface-raised": "var(--color-surface-raised)",
+          gold: withOpacity("--color-gold-rgb"),
+          "gold-light": "var(--color-gold-light)",
+          "gold-dark": "var(--color-gold-dark)",
+          white: "var(--color-white)",
+          gray: "var(--color-gray)",
+          "gray-light": "var(--color-gray-light)",
+          border: "var(--color-border)",
+          danger: withOpacity("--color-danger-rgb"),
+          success: withOpacity("--color-success-rgb"),
+          warning: "var(--color-warning)",
         },
       },
       fontFamily: { sans: ["var(--font-vazirmatn)", "Vazirmatn", "sans-serif"] },
@@ -36,9 +49,9 @@ const config: Config = {
         "lf-lg": "1.75rem",
       },
       boxShadow: {
-        "lf-card": "0 20px 60px rgba(0,0,0,.35)",
-        "lf-gold": "0 18px 40px rgba(201,164,107,.20)",
-        "lf-focus": "0 0 0 3px rgba(201,164,107,.30)",
+        "lf-card": "var(--shadow-card)",
+        "lf-gold": "var(--shadow-gold)",
+        "lf-focus": "0 0 0 3px rgb(var(--color-gold-rgb) / 0.35)",
       },
       transitionDuration: { lf: "350ms" },
       keyframes: {
