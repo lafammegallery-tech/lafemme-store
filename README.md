@@ -4,11 +4,11 @@ A gold/silver jewelry storefront built with Next.js App Router, TypeScript, and 
 
 ## Architecture
 
-- `src/app` — App Router routes: storefront pages, `admin/*` back office, `api/*` route handlers, and `actions/*` server actions.
+- `src/app` — App Router routes: storefront pages, `admin/*` back office, `api/*` route handlers (including a JSON REST surface under `api/admin/*` for products/orders/users), and `actions/*` server actions.
 - `src/backend` — server-only layer:
   - `database/repositories` — Prisma-backed data access per entity.
   - `services` — business logic (cart, coupons, payments, gold/silver market pricing).
-  - `auth`, `security` — session/password handling, rate limiting, input validation.
+  - `auth`, `security` — JWT-based session handling (`jose`, HS256), rate limiting, input validation.
 - `src/components` — UI, grouped by feature (`cart`, `checkout`, `products`, `admin`-facing, etc.) plus a shared `ui` primitive library (see [docs/component-tree.md](docs/component-tree.md)).
 - `src/data`, `src/lib`, `src/types` — static/reference data, shared route constants, and domain types.
 - `prisma/` — schema, migrations, and `seed.ts` (creates/updates the admin account from env vars — see [docs/admin-account.md](docs/admin-account.md)).
@@ -40,4 +40,5 @@ Migrations run automatically on boot; the app is ready at http://localhost:3000 
 - [docs/docker.md](docs/docker.md) — running the app with Docker Compose, env vars, troubleshooting (فارسی: [docs/docker.fa.md](docs/docker.fa.md)).
 - [docs/design-system.md](docs/design-system.md) — design tokens and visual language.
 - [docs/component-tree.md](docs/component-tree.md) — shared UI component library map.
-- [docs/admin-account.md](docs/admin-account.md) — how the seeded admin account works.
+- [docs/admin-account.md](docs/admin-account.md) — how the seeded admin account works, admin panel access, and promoting other users to admin.
+- [docs/tasks.md](docs/tasks.md) — backlog of known limitations and suggested next steps.
