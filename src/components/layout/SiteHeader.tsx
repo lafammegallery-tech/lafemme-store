@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui";
 import { MobileNavigation } from "./MobileNavigation";
+import { AccountLink } from "./AccountLink";
 import { MarketTicker } from "@/components/market/MarketTicker";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
@@ -14,7 +15,9 @@ const navigationItems = [
 
 /**
  * Shared site header preserving the exact legacy class names and DOM hierarchy.
- * The market values remain static until the approved data/API phase.
+ * Stays a plain (non-cookie-reading) Server Component so pages that render it can
+ * still be statically generated/ISR'd — auth-aware bits live in <AccountLink>,
+ * a client component that reads a lightweight cookie instead.
  */
 export function SiteHeader() {
   return (
@@ -61,9 +64,7 @@ export function SiteHeader() {
             <Link className="contact-button" href="/contact">
               ارتباط با ما
             </Link>
-            <Link className="hidden text-sm text-lf-gray-light lg:inline" href="/login">
-              حساب کاربری
-            </Link>
+            <AccountLink className="hidden text-sm text-lf-gray-light lg:inline" />
             <MobileNavigation />
           </div>
         </div>

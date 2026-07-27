@@ -4,7 +4,7 @@ import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
-import type { DiscountType, MetalType, OrderStatus } from "@/generated/prisma/enums";
+import type { DiscountType, MetalType, OrderStatus, UserRole } from "@/generated/prisma/enums";
 
 export async function updateOrderStatusAction(formData: FormData) {
   const session = await requireAdmin();
@@ -207,6 +207,28 @@ export async function toggleCategoryAction(formData: FormData) {
     newData: { isActive: !old.isActive },
   });
   revalidatePath("/admin/categories");
+}
+
+/** ارتقا یا تنزل نقش کاربر بین مشتری و مدیر — یک ادمین نمی‌تواند نقش خودش را تغییر دهد. */
+export async function toggleUserAdminAction(formData: FormData) {
+  const s = await requireAdmin();
+  const id = text(formData.get("id"), 100);
+  if (id === s.userId) throw new Error("امکان تغییر نقش حساب خودتان وجود ندارد.");
+
+  const p = getPrisma();
+  const target = await p.user.findUniqueOrThrow({ where: { id } });
+  const nextRole: UserRole = target.role === "ADMIN" ? "CUSTOMER" : "ADMIN";
+  await p.user.update({ where: { id }, data: { role: nextRole } });
+
+  await writeAudit({
+    actorId: s.userId,
+    action: "USER_ROLE_TOGGLE",
+    entityType: "User",
+    entityId: id,
+    oldData: { role: target.role },
+    newData: { role: nextRole },
+  });
+  revalidatePath("/admin/users");
 }
 
 export async function createCouponAction(formData: FormData) {
