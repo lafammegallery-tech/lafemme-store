@@ -9,6 +9,10 @@ import { getStorefrontProduct } from "@/backend/services/storefront-product.serv
 import { addToCartAction } from "@/app/actions/cart";
 
 interface PageProps { params: Promise<{ id: string }>; }
+// force-dynamic عمداً است، نه ISR — نگاه کنید به توضیح مشابه در src/app/products/page.tsx:
+// این پروژه در Docker بدون دسترسی به دیتابیس در زمان build ساخته می‌شود، و ISR باعث
+// می‌شود Next.js این صفحه را در همان مرحله build از پیش رندر کند و fallback محصولات
+// نمونه را برای کل بازه revalidate در ایمیج ذخیره کند. یک بار این باگ واقعاً رخ داد.
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

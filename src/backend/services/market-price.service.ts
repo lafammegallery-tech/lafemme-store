@@ -36,21 +36,45 @@ function deepFindNumber(payload: unknown, keys: string[]): number {
   return 0;
 }
 
+/**
+ * وقتی یک provider شکست می‌خورد، تا مدتی از تلاش دوباره صرف‌نظر می‌کنیم (circuit breaker ساده).
+ * بدون این، هر بار که provider در دسترس نباشد (مثلاً noghresea.ir پشت محافظت ضد-ربات Arvan Cloud)
+ * هر رندر صفحه چند ثانیه منتظر timeout آن fetch می‌ماند — چون fetchهای ناموفق برخلاف fetchهای
+ * موفق در Next.js کش نمی‌شوند.
+ */
+const providerCooldownUntil = new Map<string, number>();
+const FAILURE_COOLDOWN_MS = 60_000;
+const FETCH_TIMEOUT_MS = 4_000;
+
 export async function fetchProviderQuote(metal: MetalKind, url: string, source: string): Promise<MarketQuote> {
+  const staleQuote = (): MarketQuote => ({
+    metal,
+    price: 0,
+    change24h: 0,
+    source,
+    updatedAt: new Date().toISOString(),
+    stale: true,
+  });
+
+  const cooldownUntil = providerCooldownUntil.get(source);
+  if (cooldownUntil && Date.now() < cooldownUntil) return staleQuote();
+
   try {
     const response = await fetch(url, {
       headers: { Accept: "application/json", "User-Agent": "LaFemme-Market-Service/1.3" },
       next: { revalidate: 300 },
-      signal: AbortSignal.timeout(8_000),
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const payload: unknown = await response.json();
     const price = deepFindNumber(payload, ["price", "value", "currentPrice", "finalPrice", "geram18", "gram18", "silverPrice"]);
     const change = deepFindNumber(payload, ["changePercent", "change24h", "percent", "change"]);
     if (price <= 0) throw new Error("invalid market price");
+    providerCooldownUntil.delete(source);
     return { metal, price, change24h: change, source, updatedAt: new Date().toISOString(), stale: false };
   } catch {
-    return { metal, price: 0, change24h: 0, source, updatedAt: new Date().toISOString(), stale: true };
+    providerCooldownUntil.set(source, Date.now() + FAILURE_COOLDOWN_MS);
+    return staleQuote();
   }
 }
 

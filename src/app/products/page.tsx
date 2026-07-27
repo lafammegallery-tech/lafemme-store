@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   openGraph: { title: "محصولات La Femme", description: "شمش‌های طلا و نقره با قیمت لحظه‌ای بازار", url: "/products", type: "website" },
 };
 
+// force-dynamic عمداً است، نه ISR: این پروژه در Docker ساخته می‌شود بدون دسترسی به
+// دیتابیس در زمان build (migration/seed فقط هنگام اجرای کانتینر انجام می‌شود). اگر این
+// صفحه ISR شود، Next.js آن را در همان مرحله build از پیش رندر می‌کند، جایی که دیتابیس
+// در دسترس نیست — و fallback محصولات نمونه (id های "1".."6") برای کل بازه revalidate
+// در ایمیج ذخیره می‌شود. یک بار این باگ واقعاً رخ داد؛ به force-dynamic برنگردید.
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {

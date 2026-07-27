@@ -57,7 +57,11 @@ async function loadDbProducts(): Promise<Product[] | null> {
         fixedPremium: Number(extendedRow.fixedPremium ?? 0),
       } satisfies Product;
     });
-  } catch {
+  } catch (err) {
+    // خطای واقعی دیتابیس را لاگ می‌کنیم — قبلاً این catch کاملاً بی‌صدا بود و یک قطعی
+    // موقت را با محصولات نمونه (id های "1".."6") جایگزین می‌کرد که وقتی این صفحه ISR
+    // است، می‌تواند تا پایان بازه revalidate روی سایت واقعی بماند.
+    console.error("[storefront-product.service] loadDbProducts failed, falling back to mock catalog:", err);
     return null;
   }
 }
