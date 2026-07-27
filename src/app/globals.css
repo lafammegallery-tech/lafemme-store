@@ -567,9 +567,9 @@ img{
 
     font-size:68px;
 
-    line-height:1.1;
+    line-height:1.15;
 
-    font-weight:800;
+    font-weight:700;
 
     margin-bottom:30px;
 
@@ -3055,7 +3055,7 @@ flex-direction:column;
   display: block;
   color: var(--lf-gold-light);
   font-size: clamp(1.55rem, 3vw, 2.7rem);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .luxury-market-card--silver strong { color: #e3e5e9; }
