@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { userRepository } from "@/backend/database/repositories/user.repository";
 import { createSession, destroySession } from "@/backend/auth/session";
 import { hashPassword, verifyPassword } from "@/backend/auth/password";
+import { assertRateLimit } from "@/backend/security/rate-limit";
 
 export type AuthState = { error?: string };
 
@@ -20,6 +21,12 @@ export async function registerAction(_: AuthState, formData: FormData): Promise<
   const fullName = String(formData.get("name") ?? "").trim();
   const phone = normalizePhone(formData.get("phone"));
   const password = String(formData.get("password") ?? "");
+
+  try {
+    assertRateLimit(`register:${phone}`, 5, 60_000);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "درخواست بیش از حد مجاز." };
+  }
 
   if (!/^09\d{9}$/.test(phone)) return { error: "شماره موبایل معتبر وارد کنید." };
   if (password.length < 8) return { error: "رمز عبور باید حداقل ۸ کاراکتر باشد." };
@@ -43,6 +50,13 @@ export async function registerAction(_: AuthState, formData: FormData): Promise<
 export async function loginAction(_: AuthState, formData: FormData): Promise<AuthState> {
   const phone = normalizePhone(formData.get("phone"));
   const password = String(formData.get("password") ?? "");
+
+  try {
+    // محدودیت تلاش برای جلوگیری از حمله brute-force روی رمز عبور
+    assertRateLimit(`login:${phone}`, 5, 60_000);
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "درخواست بیش از حد مجاز." };
+  }
 
   const user = await userRepository.findByPhone(phone);
   if (!user?.passwordHash || !user.isActive) return { error: "شماره موبایل یا رمز عبور نادرست است." };
