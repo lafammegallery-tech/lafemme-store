@@ -538,3 +538,12 @@ model PreOrder {
   @@index([variantId])
   @@index([deletedAt])
 }
+
+model MarketSettings {
+  id              String   @id @default("global")
+  isManualMode    Boolean  @default(false)
+  manualGold750   Decimal? @db.Decimal(18, 0)
+  manualSilver999 Decimal? @db.Decimal(18, 0)
+  updatedAt       DateTime @updatedAt
+  updatedBy       String?
+}

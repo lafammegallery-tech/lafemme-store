@@ -52,4 +52,5 @@ export interface Product {
   fixedPremium?: number;
   marketPricePerGram?: number;
   isLivePrice?: boolean;
+  images?: Array<{ id: string; url: string; altText?: string | null; isPrimary: boolean; sortOrder: number }>;
 }

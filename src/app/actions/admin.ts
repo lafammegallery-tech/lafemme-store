@@ -98,6 +98,9 @@ export async function createProductAction(formData: FormData) {
 
   const price = String(Math.max(0, Number(formData.get("price") || 0)));
   const stock = positiveInt(formData.get("stock"), 1_000_000);
+  const premiumPercent = String(Math.max(0, Number(formData.get("premiumPercent") || 0)));
+  const fixedPremium = String(Math.max(0, Number(formData.get("fixedPremium") || 0)));
+  const isFeatured = formData.get("isFeatured") === "on";
 
   const product = await p.product.create({
     data: {
@@ -110,6 +113,9 @@ export async function createProductAction(formData: FormData) {
       weightValue: Number(formData.get("weightValue") || 0) || null,
       purity: text(formData.get("purity"), 50) || null,
       price,
+      premiumPercent,
+      fixedPremium,
+      isFeatured,
       stock,
       status: "ACTIVE",
       shortDescription: text(formData.get("shortDescription"), 300) || null,
@@ -135,6 +141,10 @@ export async function updateProductAction(formData: FormData) {
   const name = text(formData.get("name"), 160);
   const price = String(Math.max(0, Number(formData.get("price") || 0)));
   const stock = positiveInt(formData.get("stock"), 1_000_000);
+  const premiumPercent = String(Math.max(0, Number(formData.get("premiumPercent") || 0)));
+  const fixedPremium = String(Math.max(0, Number(formData.get("fixedPremium") || 0)));
+  const isFeatured = formData.get("isFeatured") === "on";
+  const categoryId = text(formData.get("categoryId"), 100) || undefined;
 
   await p.$transaction([
     p.product.update({
@@ -143,9 +153,15 @@ export async function updateProductAction(formData: FormData) {
         name,
         price,
         stock,
+        ...(categoryId ? { categoryId } : {}),
         sku: text(formData.get("sku"), 80) || null,
+        metalType: text(formData.get("metalType"), 20) as MetalType,
         weight: text(formData.get("weight"), 50) || null,
+        weightValue: Number(formData.get("weightValue") || 0) || null,
         purity: text(formData.get("purity"), 50) || null,
+        premiumPercent,
+        fixedPremium,
+        isFeatured,
         shortDescription: text(formData.get("shortDescription"), 300) || null,
       },
     }),
@@ -166,6 +182,7 @@ export async function updateProductAction(formData: FormData) {
   });
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${id}`);
+  revalidatePath(`/admin/products/${id}/edit`);
 }
 
 export async function archiveProductAction(formData: FormData) {
@@ -264,4 +281,44 @@ export async function toggleCouponAction(formData: FormData) {
     newData: { isActive: !old.isActive },
   });
   revalidatePath("/admin/coupons");
+}
+
+export async function updateMarketOverrideAction(formData: FormData) {
+  const s = await requireAdmin();
+  const isManual = formData.get("isManualMode") === "on";
+  const gold750Raw = formData.get("manualGold750");
+  const silver999Raw = formData.get("manualSilver999");
+  const gold750 = gold750Raw ? String(Math.max(0, Number(gold750Raw))) : null;
+  const silver999 = silver999Raw ? String(Math.max(0, Number(silver999Raw))) : null;
+
+  const prisma = getPrisma() as unknown as {
+    marketSettings?: { upsert: (args: unknown) => Promise<unknown> };
+  };
+  if (!prisma.marketSettings?.upsert) throw new Error("لطفاً مهاجرت دیتابیس را اجرا کنید.");
+
+  await prisma.marketSettings.upsert({
+    where: { id: "global" },
+    create: {
+      id: "global",
+      isManualMode: isManual,
+      manualGold750: gold750 ?? undefined,
+      manualSilver999: silver999 ?? undefined,
+      updatedBy: s.userId,
+    },
+    update: {
+      isManualMode: isManual,
+      manualGold750: gold750 ?? undefined,
+      manualSilver999: silver999 ?? undefined,
+      updatedBy: s.userId,
+    },
+  });
+
+  await writeAudit({
+    actorId: s.userId,
+    action: "MARKET_OVERRIDE_UPDATE",
+    entityType: "MarketSettings",
+    entityId: "global",
+    newData: { isManual, gold750, silver999 },
+  });
+  revalidatePath("/admin/market-prices");
 }

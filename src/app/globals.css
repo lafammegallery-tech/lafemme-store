@@ -1113,6 +1113,11 @@ img{
     color:var(--color-gray);
 
 }
+
+.market-stale{
+    color:var(--color-gray);
+    font-size:0.85rem;
+}
 /* ========================================================================== */
 /*                                 FOOTER                                     */
 /* ========================================================================== */
@@ -1392,7 +1397,7 @@ img{
 
     margin-bottom:20px;
 
-    color:#fff;
+    color: var(--color-white);
 
 }
 
@@ -1402,7 +1407,7 @@ img{
 
     margin:auto;
 
-    color:#bdbdbd;
+    color: var(--color-gray);
 
     line-height:2;
 
@@ -1428,11 +1433,11 @@ img{
 
     padding:12px 28px;
 
-    background:#161616;
+    background: var(--color-surface-raised);
 
-    color:white;
+    color: var(--color-white);
 
-    border:1px solid #2a2a2a;
+    border:1px solid var(--color-border);
 
     border-radius:50px;
 
@@ -1475,9 +1480,9 @@ img{
 
 .product-card{
 
-    background:#111;
+    background: var(--color-surface);
 
-    border:1px solid #222;
+    border:1px solid var(--color-border);
 
     border-radius:20px;
 
@@ -1513,7 +1518,7 @@ img{
 
     align-items:center;
 
-    background:#181818;
+    background: var(--color-surface-raised);
 
 }
 
@@ -1551,7 +1556,7 @@ img{
 
 .product-content h3{
 
-    color:#fff;
+    color: var(--color-white);
 
     margin-bottom:12px;
 

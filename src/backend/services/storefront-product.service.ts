@@ -3,26 +3,28 @@ import type { Product } from "@/types/product";
 import { products as fallbackProducts } from "@/data/products";
 import { calculateProductPrice, getMarketQuotes } from "./market-price.service";
 
+// استفاده از طلای ۹۹۵ به عنوان مبنای محاسبه قیمت
 function purityFactor(purity: string | null | undefined): number {
   const text = purity ?? "";
-  if (text.includes("۱۸" ) || text.includes("18")) return 0.75;
-  if (text.includes("۹۹۹") || text.includes("999") || text.includes("۲۴") || text.includes("24")) return 0.999;
-  return 1;
+  if (text.includes("۷۵۰") || text.includes("750") || text.includes("۱۸") || text.includes("18")) return 750 / 995;
+  if (text.includes("۹۹۵") || text.includes("995")) return 1.0;
+  if (text.includes("۹۹۹") || text.includes("999") || text.includes("۲۴") || text.includes("24")) return 999 / 995;
+  return 1.0;
 }
 
-function applyLivePrices(items: Product[], gold: number, silver: number): Product[] {
+function applyLivePrices(items: Product[], gold995: number, silver: number): Product[] {
   return items.map((item) => ({
     ...item,
     price: calculateProductPrice({
       weightInGrams: item.weightValue,
-      marketPricePerGram: item.type === "gold" ? gold : silver,
+      marketPricePerGram: item.type === "gold" ? gold995 : silver,
       purityFactor: purityFactor(item.purity),
       premiumPercent: item.premiumPercent ?? 0,
       fixedPremium: item.fixedPremium ?? 0,
       fallbackPrice: item.price,
     }),
-    marketPricePerGram: item.type === "gold" ? gold : silver,
-    isLivePrice: (item.type === "gold" ? gold : silver) > 0,
+    marketPricePerGram: item.type === "gold" ? gold995 : silver,
+    isLivePrice: (item.type === "gold" ? gold995 : silver) > 0,
   }));
 }
 
@@ -42,6 +44,13 @@ async function loadDbProducts(): Promise<Product[] | null> {
         description: row.description ?? row.shortDescription ?? "",
         price: Number(row.price),
         imageSrc: primary?.url ?? row.image ?? "/assets/images/hero-gold-bar.png",
+        images: row.images.map((img) => ({
+          id: img.id,
+          url: img.url,
+          altText: img.altText,
+          isPrimary: img.isPrimary,
+          sortOrder: img.sortOrder,
+        })),
         category: row.category.name,
         href: `/products/${row.id}`,
         stock: Math.max(0, inventory - (row.inventory?.reserved ?? 0)),
@@ -58,9 +67,6 @@ async function loadDbProducts(): Promise<Product[] | null> {
       } satisfies Product;
     });
   } catch (err) {
-    // خطای واقعی دیتابیس را لاگ می‌کنیم — قبلاً این catch کاملاً بی‌صدا بود و یک قطعی
-    // موقت را با محصولات نمونه (id های "1".."6") جایگزین می‌کرد که وقتی این صفحه ISR
-    // است، می‌تواند تا پایان بازه revalidate روی سایت واقعی بماند.
     console.error("[storefront-product.service] loadDbProducts failed, falling back to mock catalog:", err);
     return null;
   }
@@ -68,7 +74,11 @@ async function loadDbProducts(): Promise<Product[] | null> {
 
 export async function getStorefrontProducts(): Promise<Product[]> {
   const [dbProducts, quotes] = await Promise.all([loadDbProducts(), getMarketQuotes()]);
-  return applyLivePrices(dbProducts?.length ? dbProducts : fallbackProducts, quotes.gold.price, quotes.silver.price);
+  return applyLivePrices(
+    dbProducts?.length ? dbProducts : fallbackProducts,
+    quotes.gold995.price,
+    quotes.silver999.price,
+  );
 }
 
 export async function getStorefrontProduct(idOrSlug: string): Promise<Product | undefined> {
