@@ -72,7 +72,8 @@ export const ModelName = {
   CouponUsage: 'CouponUsage',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
-  PreOrder: 'PreOrder'
+  PreOrder: 'PreOrder',
+  MarketSettings: 'MarketSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -451,6 +452,18 @@ export const PreOrderScalarFieldEnum = {
 } as const
 
 export type PreOrderScalarFieldEnum = (typeof PreOrderScalarFieldEnum)[keyof typeof PreOrderScalarFieldEnum]
+
+
+export const MarketSettingsScalarFieldEnum = {
+  id: 'id',
+  isManualMode: 'isManualMode',
+  manualGold750: 'manualGold750',
+  manualSilver999: 'manualSilver999',
+  updatedAt: 'updatedAt',
+  updatedBy: 'updatedBy'
+} as const
+
+export type MarketSettingsScalarFieldEnum = (typeof MarketSettingsScalarFieldEnum)[keyof typeof MarketSettingsScalarFieldEnum]
 
 
 export const SortOrder = {

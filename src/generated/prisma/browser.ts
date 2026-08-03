@@ -127,3 +127,8 @@ export type AuditLog = Prisma.AuditLogModel
  * 
  */
 export type PreOrder = Prisma.PreOrderModel
+/**
+ * Model MarketSettings
+ * 
+ */
+export type MarketSettings = Prisma.MarketSettingsModel

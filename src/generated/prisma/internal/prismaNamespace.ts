@@ -405,7 +405,8 @@ export const ModelName = {
   CouponUsage: 'CouponUsage',
   Notification: 'Notification',
   AuditLog: 'AuditLog',
-  PreOrder: 'PreOrder'
+  PreOrder: 'PreOrder',
+  MarketSettings: 'MarketSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "address" | "category" | "product" | "productImage" | "productVariant" | "inventory" | "marketPrice" | "cart" | "cartItem" | "wishlist" | "wishlistItem" | "order" | "orderItem" | "orderStatusHistory" | "shipment" | "payment" | "coupon" | "couponUsage" | "notification" | "auditLog" | "preOrder"
+    modelProps: "user" | "address" | "category" | "product" | "productImage" | "productVariant" | "inventory" | "marketPrice" | "cart" | "cartItem" | "wishlist" | "wishlistItem" | "order" | "orderItem" | "orderStatusHistory" | "shipment" | "payment" | "coupon" | "couponUsage" | "notification" | "auditLog" | "preOrder" | "marketSettings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2053,6 +2054,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MarketSettings: {
+      payload: Prisma.$MarketSettingsPayload<ExtArgs>
+      fields: Prisma.MarketSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MarketSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MarketSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.MarketSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MarketSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.MarketSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.MarketSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.MarketSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MarketSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.MarketSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        update: {
+          args: Prisma.MarketSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.MarketSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MarketSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MarketSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.MarketSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MarketSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.MarketSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMarketSettings>
+        }
+        groupBy: {
+          args: Prisma.MarketSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MarketSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MarketSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2452,6 +2527,18 @@ export const PreOrderScalarFieldEnum = {
 } as const
 
 export type PreOrderScalarFieldEnum = (typeof PreOrderScalarFieldEnum)[keyof typeof PreOrderScalarFieldEnum]
+
+
+export const MarketSettingsScalarFieldEnum = {
+  id: 'id',
+  isManualMode: 'isManualMode',
+  manualGold750: 'manualGold750',
+  manualSilver999: 'manualSilver999',
+  updatedAt: 'updatedAt',
+  updatedBy: 'updatedBy'
+} as const
+
+export type MarketSettingsScalarFieldEnum = (typeof MarketSettingsScalarFieldEnum)[keyof typeof MarketSettingsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2870,6 +2957,7 @@ export type GlobalOmitConfig = {
   notification?: Prisma.NotificationOmit
   auditLog?: Prisma.AuditLogOmit
   preOrder?: Prisma.PreOrderOmit
+  marketSettings?: Prisma.MarketSettingsOmit
 }
 
 /* Types for Logging */
