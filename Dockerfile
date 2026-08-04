@@ -27,7 +27,7 @@ COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src/generated ./src/generated
 COPY docker/entrypoint.sh ./entrypoint.sh
-RUN chmod +x ./entrypoint.sh && chown -R nextjs:nodejs /app
+RUN chmod +x ./entrypoint.sh && mkdir -p /app/public/uploads/products && chown -R nextjs:nodejs /app
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \

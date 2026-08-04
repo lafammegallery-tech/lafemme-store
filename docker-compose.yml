@@ -35,6 +35,8 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     ports:
       - "8088:3000"
+    volumes:
+      - lafemme_uploads:/app/public/uploads
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
@@ -43,3 +45,4 @@ services:
       retries: 3
 volumes:
   lafemme_postgres:
+  lafemme_uploads:

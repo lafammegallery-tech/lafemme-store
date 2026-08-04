@@ -1,10 +1,20 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
 import type { DiscountType, MetalType, OrderStatus, UserRole } from "@/generated/prisma/enums";
+
+function toSlug(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[\s_]+/g, "-")
+    .replace(/[^\w-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
 
 export async function updateOrderStatusAction(formData: FormData) {
   const session = await requireAdmin();
@@ -92,9 +102,11 @@ export async function createProductAction(formData: FormData) {
   const s = await requireAdmin();
   const p = getPrisma();
   const name = text(formData.get("name"), 160);
-  const slug = text(formData.get("slug"), 180).toLowerCase().replace(/\s+/g, "-");
   const categoryId = text(formData.get("categoryId"), 100);
-  if (!name || !slug || !categoryId) throw new Error("نام، اسلاگ و دسته‌بندی الزامی است.");
+  if (!name || !categoryId) throw new Error("نام و دسته‌بندی الزامی است.");
+
+  const rawSlug = text(formData.get("slug"), 180);
+  const slug = toSlug(rawSlug) || `product-${Date.now()}`;
 
   const price = String(Math.max(0, Number(formData.get("price") || 0)));
   const stock = positiveInt(formData.get("stock"), 1_000_000);
@@ -146,6 +158,7 @@ export async function createProductAction(formData: FormData) {
     newData: { name, slug, stock },
   });
   revalidatePath("/admin/products");
+  redirect("/admin/products");
 }
 
 export async function updateProductAction(formData: FormData) {
@@ -209,6 +222,7 @@ export async function updateProductAction(formData: FormData) {
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${id}`);
   revalidatePath(`/admin/products/${id}/edit`);
+  redirect("/admin/products");
 }
 
 export async function archiveProductAction(formData: FormData) {

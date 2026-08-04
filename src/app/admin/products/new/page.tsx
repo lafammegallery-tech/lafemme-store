@@ -25,7 +25,7 @@ export default async function Page() {
           <fieldset className="grid gap-4">
             <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>اطلاعات اصلی</legend>
             <Input name="name" placeholder="نام محصول" required />
-            <Input name="slug" placeholder="slug-english" dir="ltr" required />
+            <Input name="slug" placeholder="slug-english (اختیاری — اگر خالی باشد خودکار ساخته می‌شود)" dir="ltr" />
             <Input name="sku" placeholder="SKU (اختیاری)" dir="ltr" />
 
             <div>
