@@ -3,6 +3,7 @@ import { getPrisma } from "@/backend/database/prisma";
 import { toggleProductAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
 import Link from "next/link";
+import Image from "next/image";
 import { Container, Card, Button, PriceDisplay } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -30,17 +31,24 @@ export default async function Page() {
             {items.map((x) => (
               <Card key={x.id} className="p-5">
                 <div className="flex flex-wrap justify-between gap-4">
-                  <div>
-                    <h2 style={{ marginBottom: "0.25rem" }}>{x.name}</h2>
-                    <p style={{ color: "var(--color-gray)", fontSize: "0.9rem" }}>
-                      {x.category.name} • {x.metalType} • {x.weight ?? "—"}
-                    </p>
-                    <p style={{ color: "var(--color-gray)", fontSize: "0.85rem" }}>
-                      وضعیت: <strong style={{ color: x.status === "ACTIVE" ? "var(--color-success)" : "var(--color-danger)" }}>{x.status}</strong>
-                      {" | "}
-                      موجودی: {x.inventory?.quantity ?? x.stock}
-                      {x.purity && ` | عیار: ${x.purity}`}
-                    </p>
+                  <div className="flex gap-4 items-start">
+                    {x.image && (
+                      <div style={{ flexShrink: 0, width: 72, height: 72, borderRadius: 8, overflow: "hidden", border: "1px solid var(--color-border)" }}>
+                        <Image src={x.image} alt={x.name} width={72} height={72} style={{ objectFit: "cover", width: "100%", height: "100%" }} unoptimized />
+                      </div>
+                    )}
+                    <div>
+                      <h2 style={{ marginBottom: "0.25rem" }}>{x.name}</h2>
+                      <p style={{ color: "var(--color-gray)", fontSize: "0.9rem" }}>
+                        {x.category.name} • {x.metalType} • {x.weight ?? "—"}
+                      </p>
+                      <p style={{ color: "var(--color-gray)", fontSize: "0.85rem" }}>
+                        وضعیت: <strong style={{ color: x.status === "ACTIVE" ? "var(--color-success)" : "var(--color-danger)" }}>{x.status}</strong>
+                        {" | "}
+                        موجودی: {x.inventory?.quantity ?? x.stock}
+                        {x.purity && ` | عیار: ${x.purity}`}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex flex-col gap-3 items-end">
                     <PriceDisplay value={Number(x.price)} />

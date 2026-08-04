@@ -4,7 +4,12 @@ export type MetalKind = "GOLD" | "SILVER";
 
 export interface MarketQuote {
   metal: MetalKind;
+  /** قیمت به تومان */
   price: number;
+  /** قیمت به تومان */
+  priceToman: number;
+  /** قیمت به ریال (تومان × ۱۰) */
+  priceRial: number;
   change24h: number;
   source: string;
   updatedAt: string;
@@ -74,6 +79,8 @@ export async function fetchProviderQuote(
   const staleQuote = (): MarketQuote => ({
     metal,
     price: 0,
+    priceToman: 0,
+    priceRial: 0,
     change24h: 0,
     source,
     updatedAt: new Date().toISOString(),
@@ -157,6 +164,8 @@ export async function fetchProviderQuote(
     return {
       metal,
       price,
+      priceToman: price,
+      priceRial: price * 10,
       change24h: change,
       source,
       updatedAt: new Date().toISOString(),
@@ -341,6 +350,8 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
     gold750Quote={
       metal:"GOLD",
       price:override.gold750,
+      priceToman:override.gold750,
+      priceRial:override.gold750*10,
       change24h:0,
       source:"دستی",
       updatedAt:new Date().toISOString(),
@@ -361,6 +372,8 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
     gold750Quote={
       metal:"GOLD",
       price:fallback.price,
+      priceToman:fallback.price,
+      priceRial:fallback.price*10,
       change24h:rawGold.change24h,
       source:fallback.source,
       updatedAt:fallback.recordedAt,
@@ -378,31 +391,20 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
 
 
 
-  const gold995Quote:MarketQuote={
+  const gold995Price =
+    gold750Quote.price > 0
+      ? Math.round(gold750Quote.price * (995 / 750))
+      : 0;
 
-    metal:"GOLD",
-
-    price:
-      gold750Quote.price>0
-      ?
-      Math.round(
-        gold750Quote.price*(995/750)
-      )
-      :
-      0,
-
-    change24h:
-      gold750Quote.change24h,
-
-    source:
-      "محاسبه از ۷۵۰",
-
-    updatedAt:
-      gold750Quote.updatedAt,
-
-    stale:
-      gold750Quote.stale
-
+  const gold995Quote: MarketQuote = {
+    metal: "GOLD",
+    price: gold995Price,
+    priceToman: gold995Price,
+    priceRial: gold995Price * 10,
+    change24h: gold750Quote.change24h,
+    source: "محاسبه از ۷۵۰",
+    updatedAt: gold750Quote.updatedAt,
+    stale: gold750Quote.stale,
   };
 
 

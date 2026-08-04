@@ -3,6 +3,7 @@ import { getPrisma } from "@/backend/database/prisma";
 import { createProductAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
 import { Container, Input, Textarea, Button } from "@/components/ui";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 export const dynamic = "force-dynamic";
 
@@ -116,6 +117,12 @@ export default async function Page() {
           <fieldset className="grid gap-4">
             <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>توضیحات</legend>
             <Textarea name="shortDescription" placeholder="توضیح کوتاه محصول (نمایش در کارت)" rows={3} />
+          </fieldset>
+
+          {/* تصویر محصول */}
+          <fieldset className="grid gap-4">
+            <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>تصویر</legend>
+            <ImageUploader name="imageUrl" />
           </fieldset>
 
           {/* گزینه‌های نمایش */}

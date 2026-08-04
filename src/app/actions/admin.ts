@@ -102,6 +102,8 @@ export async function createProductAction(formData: FormData) {
   const fixedPremium = String(Math.max(0, Number(formData.get("fixedPremium") || 0)));
   const isFeatured = formData.get("isFeatured") === "on";
 
+  const imageUrl = text(formData.get("imageUrl"), 500) || null;
+
   const product = await p.product.create({
     data: {
       name,
@@ -117,9 +119,22 @@ export async function createProductAction(formData: FormData) {
       fixedPremium,
       isFeatured,
       stock,
+      image: imageUrl,
       status: "ACTIVE",
       shortDescription: text(formData.get("shortDescription"), 300) || null,
       inventory: { create: { quantity: stock, lowStockAt: 5 } },
+      ...(imageUrl
+        ? {
+            images: {
+              create: {
+                url: imageUrl,
+                altText: name,
+                isPrimary: true,
+                sortOrder: 0,
+              },
+            },
+          }
+        : {}),
     },
   });
 
@@ -146,8 +161,10 @@ export async function updateProductAction(formData: FormData) {
   const isFeatured = formData.get("isFeatured") === "on";
   const categoryId = text(formData.get("categoryId"), 100) || undefined;
 
-  await p.$transaction([
-    p.product.update({
+  const imageUrl = text(formData.get("imageUrl"), 500) || null;
+
+  await p.$transaction(async (tx) => {
+    await tx.product.update({
       where: { id },
       data: {
         name,
@@ -162,15 +179,24 @@ export async function updateProductAction(formData: FormData) {
         premiumPercent,
         fixedPremium,
         isFeatured,
+        image: imageUrl,
         shortDescription: text(formData.get("shortDescription"), 300) || null,
       },
-    }),
-    p.inventory.upsert({
+    });
+
+    await tx.inventory.upsert({
       where: { productId: id },
       create: { productId: id, quantity: stock, lowStockAt: 5 },
       update: { quantity: stock },
-    }),
-  ]);
+    });
+
+    if (imageUrl) {
+      await tx.productImage.updateMany({ where: { productId: id, isPrimary: true }, data: { isPrimary: false } });
+      await tx.productImage.create({
+        data: { productId: id, url: imageUrl, altText: name, isPrimary: true, sortOrder: 0 },
+      });
+    }
+  });
 
   await writeAudit({
     actorId: s.userId,
