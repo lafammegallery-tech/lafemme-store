@@ -54,7 +54,7 @@ export async function checkoutAction(
         session?.userId,
       );
       const discountAmount = applied?.discount ?? 0;
-      const shippingAmount = subtotal >= 100_000_000 || applied?.freeShipping ? 0 : 1_500_000;
+      const shippingAmount = subtotal >= 100_000_000 || applied?.freeShipping ? 0 : 500_000;
       const totalAmount = subtotal - discountAmount + shippingAmount;
 
       // شماره سفارش یکتا با timestamp و random برای جلوگیری از تکرار

@@ -3994,3 +3994,72 @@ button:disabled{cursor:not-allowed;opacity:.55}
     right: -2%;
   }
 }
+/* ==========================================================================
+   LIGHT MODE — MARKET BAR READABILITY FIX
+   ========================================================================== */
+
+:root[data-theme="light"] .market-bar {
+  background: #17120a;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.28);
+}
+
+:root[data-theme="light"] .market-item {
+  color: #fff8e8;
+}
+
+:root[data-theme="light"] .market-label {
+  color: #d9ad3f;
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .market-item strong,
+:root[data-theme="light"] .market-item span:not(.market-label):not(.market-up):not(.market-down) {
+  color: #fff8e8;
+}
+
+:root[data-theme="light"] .market-up {
+  color: #39d98a;
+  font-weight: 800;
+}
+
+:root[data-theme="light"] .market-down {
+  color: #ff6b6b;
+  font-weight: 800;
+}
+
+:root[data-theme="light"] .market-time,
+:root[data-theme="light"] .market-stale {
+  color: #d8cdbb;
+}
+:root[data-theme="light"] .market-wrapper,
+:root[data-theme="light"] .market-wrapper * {
+  text-shadow: none;
+}
+
+:root[data-theme="light"] .market-item {
+  color: #ffffff !important;
+}
+
+:root[data-theme="light"] .market-label {
+  color: #d9ad3f !important;
+}
+
+:root[data-theme="light"] .market-up {
+  color: #39d98a !important;
+}
+
+:root[data-theme="light"] .market-down {
+  color: #ff6b6b !important;
+}
+
+:root[data-theme="light"] .market-time,
+:root[data-theme="light"] .market-stale {
+  color: #d8cdbb !important;
+}
+:root[data-theme="light"] .main-nav a {
+  color: #2b2114;
+}
+
+:root[data-theme="light"] .main-nav a:hover {
+  color: #b8863a;
+}
