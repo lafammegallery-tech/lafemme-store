@@ -8,6 +8,7 @@ export function HeroSection() {
     <section className="hero" aria-labelledby="home-hero-title">
       <div className="hero-ambient hero-ambient--one" aria-hidden="true" />
       <div className="hero-ambient hero-ambient--two" aria-hidden="true" />
+
       <Container>
         <div className="hero-wrapper">
           {/* ================= HERO TEXT ================= */}
@@ -16,11 +17,14 @@ export function HeroSection() {
               <span aria-hidden="true">✦</span>
               مجموعه اختصاصی شمش‌های لوکس
             </span>
+
             <h1 id="home-hero-title">
               شمش‌های طلا و نقره
               <span lang="fr">La Femme</span>
             </h1>
+
             <p className="hero-lead">تجسم هنر، سرمایه‌گذاری و اصالت</p>
+
             <p className="hero-description">
               مجموعه‌ای منتخب از شمش‌های طلا و نقره با طراحی ماندگار، بسته‌بندی نفیس و تضمین اصالت؛
               برای هدیه‌ای ارزشمند و سرمایه‌گذاری مطمئن.
@@ -29,10 +33,12 @@ export function HeroSection() {
             {/* ================= BUTTONS ================= */}
             <div className="hero-buttons">
               <ButtonLink href="/products">اکنون خرید کنید</ButtonLink>
+
               <Link className="hero-consultation" href="/contact">
                 <span className="hero-consultation__icon" aria-hidden="true">
                   ✦
                 </span>
+
                 <span>
                   <strong>مشاوره رایگان</strong>
                   <small>راهنمای انتخاب و خرید</small>
@@ -42,13 +48,18 @@ export function HeroSection() {
 
             <ul className="hero-trust" aria-label="مزیت‌های خرید از La Femme">
               <li>
-                <span aria-hidden="true">✓</span> تضمین اصالت
+                <span aria-hidden="true">✓</span>
+                تضمین اصالت
               </li>
+
               <li>
-                <span aria-hidden="true">✓</span> ارسال امن
+                <span aria-hidden="true">✓</span>
+                ارسال امن
               </li>
+
               <li>
-                <span aria-hidden="true">✓</span> بسته‌بندی نفیس
+                <span aria-hidden="true">✓</span>
+                بسته‌بندی نفیس
               </li>
             </ul>
           </div>
@@ -57,23 +68,31 @@ export function HeroSection() {
           <div className="hero-image">
             <div className="hero-product-stage">
               <div className="hero-product-glow" aria-hidden="true" />
+
               <div className="hero-product-frame">
                 <span className="hero-product-frame__shine" aria-hidden="true" />
-                <Image
-                  alt="شمش طلای La Femme در بسته‌بندی سبز"
-                  src="/assets/images/hero-gold-bar.png"
-                  width={693}
-                  height={965}
-                  priority
-                  sizes="(max-width: 768px) 62vw, 360px"
-                />
+
+                <div className="relative flex h-full w-full items-center justify-center">
+                  <Image
+                    alt="شمش طلای La Femme در بسته‌بندی سبز"
+                    src="/assets/images/hero-gold-bar.webp"
+                    width={693}
+                    height={965}
+                    priority
+                    sizes="(max-width: 768px) 62vw, 360px"
+                    className="mx-auto block h-auto max-h-full w-auto max-w-full object-contain object-center"
+                  />
+                </div>
               </div>
+
               <div className="hero-product-stand" aria-hidden="true">
                 <span />
               </div>
+
               <div className="hero-metal-card hero-metal-card--gold" aria-hidden="true">
                 Au
               </div>
+
               <div className="hero-metal-card hero-metal-card--silver" aria-hidden="true">
                 Ag
               </div>

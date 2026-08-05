@@ -3665,3 +3665,332 @@ button:disabled{cursor:not-allowed;opacity:.55}
     animation: none;
   }
 }
+/* ==========================================================================
+   HERO IMAGE — CENTER FIX
+   این بخش باید در انتهای فایل globals.css قرار بگیرد.
+   ========================================================================== */
+
+.hero-image {
+  grid-column: 2;
+  min-width: 0;
+  align-self: end;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.hero-product-stage {
+  position: relative;
+
+  width: min(100%, 510px);
+  height: 520px;
+
+  margin-inline: auto;
+
+  perspective: 1100px;
+}
+
+/* هاله نور دقیقاً پشت محصول */
+.hero-product-glow {
+  top: 8%;
+  left: 50%;
+
+  width: 54%;
+  height: 68%;
+
+  transform: translateX(-50%);
+}
+
+/* قاب اصلی شمش دقیقاً وسط استیج */
+.hero-product-frame {
+  left: 50%;
+  right: auto;
+  bottom: 64px;
+
+  width: 260px;
+  height: 370px;
+
+  transform:
+    translateX(-50%)
+    rotateY(-5deg)
+    rotateZ(-1.2deg);
+
+  transform-origin: center bottom;
+}
+
+/* خود عکس شمش بدون برش و کاملاً وسط */
+.hero-product-frame img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+
+  margin: 0 auto;
+
+  object-fit: contain;
+  object-position: center;
+
+  border-radius: 18px;
+}
+
+/* پایه زیر شمش دقیقاً وسط */
+.hero-product-stand {
+  left: 50%;
+  right: auto;
+  bottom: 34px;
+
+  transform:
+    translateX(-50%)
+    perspective(460px)
+    rotateX(58deg);
+
+  transform-origin: center;
+}
+
+/* دسکتاپ کوچک */
+@media (max-width: 1120px) {
+  .hero-product-stage {
+    margin-inline: auto;
+
+    transform: scale(.9);
+    transform-origin: bottom center;
+  }
+}
+
+/* تبلت */
+@media (max-width: 992px) {
+  .hero-image {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-product-stage {
+    width: min(100%, 510px);
+    height: 430px;
+
+    margin: -12px auto 0;
+
+    transform: scale(.82);
+    transform-origin: top center;
+  }
+}
+
+/* موبایل */
+@media (max-width: 640px) {
+  .hero-product-stage {
+    width: 390px;
+    max-width: 100%;
+    height: 370px;
+
+    margin-inline: auto;
+    margin-right: auto;
+
+    transform: scale(.72);
+    transform-origin: top center;
+  }
+
+  .hero-product-frame {
+    left: 50%;
+  }
+
+  .hero-product-stand {
+    left: 50%;
+  }
+}
+/* ==========================================================================
+   HERO PRODUCT IMAGE — FINAL LANDSCAPE FIX
+   ========================================================================== */
+
+.hero-image {
+  grid-column: 2;
+  min-width: 0;
+  align-self: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-product-stage {
+  position: relative;
+
+  width: min(100%, 560px);
+  height: 500px;
+
+  margin-inline: auto;
+
+  perspective: 1100px;
+}
+
+/* نور پشت تصویر */
+.hero-product-glow {
+  top: 18%;
+  left: 50%;
+
+  width: 72%;
+  height: 55%;
+
+  transform: translateX(-50%);
+
+  background: rgba(238, 202, 92, 0.16);
+  filter: blur(65px);
+}
+
+/* قاب عکس افقی */
+.hero-product-frame {
+  position: absolute;
+
+  left: 50%;
+  right: auto;
+  bottom: 108px;
+
+  z-index: 3;
+
+  width: 390px;
+  height: 250px;
+
+  padding: 8px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(255, 238, 184, 0.7);
+  border-radius: 24px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+
+  box-shadow:
+    0 32px 58px rgba(0, 0, 0, 0.54),
+    0 0 31px rgba(229, 190, 69, 0.2),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.075);
+
+  transform:
+    translateX(-50%)
+    rotateY(-3deg)
+    rotateZ(-0.5deg);
+
+  transform-origin: center bottom;
+
+  backdrop-filter: blur(8px);
+}
+
+/* عکس داخل قاب */
+.hero-product-frame > div {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 17px;
+  background: #030504;
+}
+
+.hero-product-frame img {
+  display: block;
+
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+
+  margin: 0 auto;
+
+  object-fit: cover;
+  object-position: center;
+
+  border-radius: 17px;
+
+  filter:
+    saturate(1.04)
+    contrast(1.06)
+    brightness(0.96);
+
+  transform: scale(1.08);
+}
+
+/* پایه زیر تصویر */
+.hero-product-stand {
+  left: 50%;
+  right: auto;
+  bottom: 55px;
+
+  width: 430px;
+  height: 48px;
+
+  transform:
+    translateX(-50%)
+    perspective(460px)
+    rotateX(58deg);
+
+  transform-origin: center;
+}
+
+/* کارت طلایی */
+.hero-metal-card--gold {
+  left: 1%;
+  bottom: 88px;
+
+  z-index: 4;
+}
+
+/* کارت نقره‌ای */
+.hero-metal-card--silver {
+  right: 1%;
+  bottom: 82px;
+
+  z-index: 4;
+}
+
+/* تبلت */
+@media (max-width: 992px) {
+  .hero-product-stage {
+    width: min(100%, 520px);
+    height: 410px;
+
+    margin: 0 auto;
+
+    transform: scale(0.86);
+    transform-origin: top center;
+  }
+}
+
+/* موبایل */
+@media (max-width: 640px) {
+  .hero-product-stage {
+    width: 390px;
+    max-width: 100%;
+    height: 330px;
+
+    margin-inline: auto;
+
+    transform: scale(0.76);
+    transform-origin: top center;
+  }
+
+  .hero-product-frame {
+    width: 350px;
+    height: 225px;
+    bottom: 90px;
+  }
+
+  .hero-product-stand {
+    width: 390px;
+    bottom: 43px;
+  }
+
+  .hero-metal-card--gold {
+    left: -2%;
+  }
+
+  .hero-metal-card--silver {
+    right: -2%;
+  }
+}

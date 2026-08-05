@@ -9,7 +9,7 @@ services:
     volumes:
       - lafemme_postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U lafemme -d lafemme"]
       interval: 10s
@@ -34,7 +34,7 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
     ports:
-      - "8088:3000"
+      - "8090:3000"
     volumes:
       - lafemme_uploads:/app/public/uploads
     healthcheck:

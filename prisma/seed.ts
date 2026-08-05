@@ -5,46 +5,77 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 
 const scryptAsync = promisify(scrypt);
-const connectionString = process.env.DATABASE_URL;
-if (!connectionString) throw new Error("DATABASE_URL is required for seed");
-const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 
-async function hashPw(password: string): Promise<string> {
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is required for seed");
+}
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString }),
+});
+
+async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16).toString("hex");
-  const hash = ((await scryptAsync(password, salt, 64)) as Buffer).toString("hex");
+
+  const hash = (
+    (await scryptAsync(password, salt, 64)) as Buffer
+  ).toString("hex");
+
   return `scrypt:${salt}:${hash}`;
 }
 
-async function main() {
+async function main(): Promise<void> {
   console.log("🌱 Starting seed...");
 
-  const adminPhone = process.env.ADMIN_PHONE ?? "09000000001";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "Admin@12345";
-  const existingAdmin = await prisma.user.findUnique({ where: { phone: adminPhone } });
-  if (!existingAdmin) {
-    await prisma.user.create({
-      data: {
-        phone: adminPhone,
-        email: process.env.ADMIN_EMAIL ?? undefined,
-        firstName: "ادمین",
-        lastName: "La Femme",
-        passwordHash: await hashPw(adminPassword),
-        role: "ADMIN",
-        isActive: true,
-      },
-    });
-    console.log(`✅ Admin user created: phone=${adminPhone}`);
-  } else {
-    console.log(`ℹ️  Admin user already exists: ${adminPhone}`);
-  }
+  const adminPhone =
+    process.env.ADMIN_PHONE ?? "09000000001";
 
+  const adminEmail =
+    process.env.ADMIN_EMAIL ?? "admin@lafemme.ir";
+
+  const adminPassword =
+    process.env.ADMIN_PASSWORD ?? "Admin@12345";
+
+  const passwordHash = await hashPassword(adminPassword);
+
+  await prisma.user.upsert({
+    where: {
+      phone: adminPhone,
+    },
+
+    create: {
+      phone: adminPhone,
+      email: adminEmail,
+      firstName: "ادمین",
+      lastName: "La Femme",
+      passwordHash,
+      role: "ADMIN",
+      isActive: true,
+    },
+
+    update: {
+      email: adminEmail,
+      firstName: "ادمین",
+      lastName: "La Femme",
+      passwordHash,
+      role: "ADMIN",
+      isActive: true,
+    },
+  });
+
+  console.log(`✅ Admin user created or updated: phone=${adminPhone}`);
+  console.log("✅ No default products were created.");
   console.log("✅ Seed completed.");
 }
 
 main()
-  .then(() => prisma.$disconnect())
-  .catch(async (error) => {
-    console.error(error);
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (error: unknown) => {
+    console.error("❌ Seed failed:", error);
     await prisma.$disconnect();
     process.exit(1);
   });
