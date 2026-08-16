@@ -107,6 +107,15 @@ export const MetalType = {
 export type MetalType = (typeof MetalType)[keyof typeof MetalType]
 
 
+export const ReceiptStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ReceiptStatus = (typeof ReceiptStatus)[keyof typeof ReceiptStatus]
+
+
 export const DiscountType = {
   PERCENT: 'PERCENT',
   FIXED: 'FIXED',

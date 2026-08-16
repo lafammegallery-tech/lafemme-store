@@ -128,6 +128,21 @@ export type AuditLog = Prisma.AuditLogModel
  */
 export type PreOrder = Prisma.PreOrderModel
 /**
+ * Model PaymentMethodConfig
+ * روش‌های پرداخت قابل تنظیم توسط مدیر — کارت‌به‌کارت، نقدی و ... .
+ */
+export type PaymentMethodConfig = Prisma.PaymentMethodConfigModel
+/**
+ * Model ShippingMethodConfig
+ * روش‌های ارسال قابل تنظیم توسط مدیر — پیک، پست، تحویل حضوری و ... .
+ */
+export type ShippingMethodConfig = Prisma.ShippingMethodConfigModel
+/**
+ * Model PaymentReceipt
+ * رسید پرداخت کارت‌به‌کارت که مشتری آپلود می‌کند و مدیر تأیید یا رد می‌کند.
+ */
+export type PaymentReceipt = Prisma.PaymentReceiptModel
+/**
  * Model MarketSettings
  * 
  */

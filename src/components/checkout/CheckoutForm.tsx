@@ -1,17 +1,45 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button, Input, Textarea } from "@/components/ui";
 import { checkoutAction, type CheckoutState } from "@/app/actions/checkout";
 
 const initialState: CheckoutState = {};
 
-/** فرم تکمیل سفارش — اطلاعات آدرس و پرداخت. */
-export function CheckoutForm() {
+export interface PaymentMethodOption {
+  id: string;
+  name: string;
+  type: string;
+  description: string | null;
+  cardNumber: string | null;
+  cardHolder: string | null;
+  bankName: string | null;
+  requiresReceipt: boolean;
+}
+export interface ShippingMethodOption {
+  id: string;
+  name: string;
+  description: string | null;
+  cost: number;
+}
+
+const fmt = (n: number) => new Intl.NumberFormat("fa-IR").format(n);
+
+/** فرم تکمیل سفارش — اطلاعات آدرس، ارسال و پرداخت. */
+export function CheckoutForm({
+  paymentMethods,
+  shippingMethods,
+}: {
+  paymentMethods: PaymentMethodOption[];
+  shippingMethods: ShippingMethodOption[];
+}) {
   const [state, formAction, isPending] = useActionState(checkoutAction, initialState);
+  const [shippingId, setShippingId] = useState(shippingMethods[0]?.id ?? "");
+  const [paymentId, setPaymentId] = useState(paymentMethods[0]?.id ?? "");
+
+  const selectedPayment = paymentMethods.find((m) => m.id === paymentId);
 
   return (
     <form className="checkout-form" action={formAction}>
-      {/* نمایش خطای سرور */}
       {state.error && (
         <div className="checkout-error" role="alert" style={{ color: "#ff6b6b", padding: "12px", borderRadius: "8px", background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.3)" }}>
           {state.error}
@@ -55,6 +83,24 @@ export function CheckoutForm() {
       </fieldset>
 
       <fieldset className="checkout-fieldset">
+        <legend>روش ارسال</legend>
+        <input type="hidden" name="shippingMethodId" value={shippingId} />
+        {shippingMethods.length === 0 && <p className="checkout-hint">روش ارسالی تنظیم نشده است.</p>}
+        <div className="payment-methods">
+          {shippingMethods.map((m) => (
+            <label key={m.id} className={`payment-method${shippingId === m.id ? " selected" : ""}`}>
+              <input type="radio" name="shippingRadio" value={m.id} checked={shippingId === m.id} onChange={() => setShippingId(m.id)} />
+              <span className="method-body">
+                <span className="method-title">{m.name}</span>
+                {m.description && <span className="method-desc">{m.description}</span>}
+              </span>
+              <span className="method-cost">{m.cost === 0 ? "رایگان" : `${fmt(m.cost)} تومان`}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="checkout-fieldset">
         <legend>کد تخفیف</legend>
         <div className="form-group">
           <label htmlFor="coupon">کد تخفیف (اختیاری)</label>
@@ -64,10 +110,31 @@ export function CheckoutForm() {
 
       <fieldset className="checkout-fieldset">
         <legend>روش پرداخت</legend>
-        <label className="payment-method selected">
-          <input type="radio" name="paymentMethod" value="online" defaultChecked />
-          <span>پرداخت آنلاین</span>
-        </label>
+        <input type="hidden" name="paymentMethodId" value={paymentId} />
+        {paymentMethods.length === 0 && <p className="checkout-hint">روش پرداختی تنظیم نشده است.</p>}
+        <div className="payment-methods">
+          {paymentMethods.map((m) => (
+            <label key={m.id} className={`payment-method${paymentId === m.id ? " selected" : ""}`}>
+              <input type="radio" name="paymentRadio" value={m.id} checked={paymentId === m.id} onChange={() => setPaymentId(m.id)} />
+              <span className="method-body">
+                <span className="method-title">{m.name}</span>
+                {m.description && <span className="method-desc">{m.description}</span>}
+              </span>
+            </label>
+          ))}
+        </div>
+
+        {selectedPayment?.cardNumber && (
+          <div className="card-info-box">
+            <p className="card-info-title">اطلاعات کارت برای واریز</p>
+            <p className="card-info-number" dir="ltr">{selectedPayment.cardNumber}</p>
+            {selectedPayment.cardHolder && <p className="card-info-line">به نام: {selectedPayment.cardHolder}</p>}
+            {selectedPayment.bankName && <p className="card-info-line">بانک: {selectedPayment.bankName}</p>}
+            {selectedPayment.requiresReceipt && (
+              <p className="card-info-hint">پس از ثبت سفارش، تصویر رسید واریز را بارگذاری کنید تا سفارش تأیید شود.</p>
+            )}
+          </div>
+        )}
       </fieldset>
 
       <fieldset className="checkout-fieldset">

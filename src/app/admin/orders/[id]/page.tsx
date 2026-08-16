@@ -1,9 +1,10 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { updateOrderStatusAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Button, PriceDisplay } from "@/components/ui";
+import { Container, Card, Button, PriceDisplay, Badge } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +13,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const { id } = await params;
   const o = await getPrisma().order.findUnique({
     where: { id },
-    include: { items: true, payments: true, shipment: true, statusHistory: { orderBy: { createdAt: "desc" } } },
+    include: { items: true, payments: true, shipment: true, receipts: { orderBy: { createdAt: "desc" } }, statusHistory: { orderBy: { createdAt: "desc" } } },
   });
   if (!o) notFound();
 
@@ -28,12 +29,29 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
                 {o.customerName} • {o.customerPhone}
               </p>
               <PriceDisplay value={Number(o.totalAmount)} />
+              <p className="mt-3">روش پرداخت: {o.paymentMethodName ?? o.payments[0]?.method ?? "—"}</p>
+              <p>روش ارسال: {o.shippingMethod ?? "—"}</p>
               <h3 className="mt-5">اقلام</h3>
               {o.items.map((i) => (
                 <p key={i.id}>
                   {i.productName} × {i.quantity}
                 </p>
               ))}
+              {o.receipts.length > 0 && (
+                <div className="mt-5">
+                  <h3>رسیدهای پرداخت</h3>
+                  <div className="order-receipts">
+                    {o.receipts.map((r) => (
+                      <a key={r.id} href={r.imageUrl} target="_blank" rel="noreferrer" className="order-receipt-thumb">
+                        <Image src={r.imageUrl} alt="رسید" width={120} height={150} style={{ objectFit: "cover", width: "100%", height: "auto" }} unoptimized />
+                        <Badge tone={r.status === "APPROVED" ? "success" : r.status === "REJECTED" ? "danger" : "gold"}>
+                          {r.status === "APPROVED" ? "تأییدشده" : r.status === "REJECTED" ? "ردشده" : "در انتظار"}
+                        </Badge>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
             </Card>
             <Card className="p-6">
               <h2>تغییر وضعیت</h2>

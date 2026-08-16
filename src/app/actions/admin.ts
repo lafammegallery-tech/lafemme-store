@@ -5,7 +5,7 @@ import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
-import type { DiscountType, MetalType, OrderStatus, UserRole } from "@/generated/prisma/enums";
+import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 function toSlug(raw: string): string {
   return raw
@@ -238,7 +238,13 @@ export async function createCategoryAction(formData: FormData) {
   const name = text(formData.get("name"), 100);
   const slug = text(formData.get("slug"), 120).toLowerCase().replace(/\s+/g, "-");
   const x = await getPrisma().category.create({
-    data: { name, slug, description: text(formData.get("description"), 300) || null },
+    data: {
+      name,
+      slug,
+      description: text(formData.get("description"), 300) || null,
+      imageUrl: text(formData.get("imageUrl"), 500) || null,
+      sortOrder: Number(formData.get("sortOrder") || 0) || 0,
+    },
   });
   await writeAudit({
     actorId: s.userId,
@@ -321,6 +327,132 @@ export async function toggleCouponAction(formData: FormData) {
     newData: { isActive: !old.isActive },
   });
   revalidatePath("/admin/coupons");
+}
+
+/* ===================== روش‌های پرداخت ===================== */
+
+export async function createPaymentMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const p = getPrisma();
+  const name = text(formData.get("name"), 100);
+  if (!name) throw new Error("نام روش پرداخت الزامی است.");
+  const type = text(formData.get("type"), 30) as PaymentMethod;
+  const requiresReceipt = formData.get("requiresReceipt") === "on" || type === "CARD_TO_CARD";
+
+  const m = await p.paymentMethodConfig.create({
+    data: {
+      name,
+      type,
+      description: text(formData.get("description"), 500) || null,
+      cardNumber: text(formData.get("cardNumber"), 40).replace(/\s+/g, "") || null,
+      cardHolder: text(formData.get("cardHolder"), 120) || null,
+      bankName: text(formData.get("bankName"), 80) || null,
+      requiresReceipt,
+      sortOrder: Number(formData.get("sortOrder") || 0) || 0,
+    },
+  });
+  await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_CREATE", entityType: "PaymentMethodConfig", entityId: m.id, newData: { name, type } });
+  revalidatePath("/admin/payment-methods");
+}
+
+export async function togglePaymentMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const p = getPrisma();
+  const id = text(formData.get("id"), 100);
+  const old = await p.paymentMethodConfig.findUniqueOrThrow({ where: { id } });
+  await p.paymentMethodConfig.update({ where: { id }, data: { isActive: !old.isActive } });
+  await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_TOGGLE", entityType: "PaymentMethodConfig", entityId: id, newData: { isActive: !old.isActive } });
+  revalidatePath("/admin/payment-methods");
+}
+
+export async function deletePaymentMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const id = text(formData.get("id"), 100);
+  await getPrisma().paymentMethodConfig.delete({ where: { id } });
+  await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_DELETE", entityType: "PaymentMethodConfig", entityId: id });
+  revalidatePath("/admin/payment-methods");
+}
+
+/* ===================== روش‌های ارسال ===================== */
+
+export async function createShippingMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const p = getPrisma();
+  const name = text(formData.get("name"), 100);
+  if (!name) throw new Error("نام روش ارسال الزامی است.");
+  const m = await p.shippingMethodConfig.create({
+    data: {
+      name,
+      description: text(formData.get("description"), 500) || null,
+      cost: String(Math.max(0, Number(formData.get("cost") || 0))),
+      sortOrder: Number(formData.get("sortOrder") || 0) || 0,
+    },
+  });
+  await writeAudit({ actorId: s.userId, action: "SHIPPING_METHOD_CREATE", entityType: "ShippingMethodConfig", entityId: m.id, newData: { name } });
+  revalidatePath("/admin/shipping-methods");
+}
+
+export async function toggleShippingMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const p = getPrisma();
+  const id = text(formData.get("id"), 100);
+  const old = await p.shippingMethodConfig.findUniqueOrThrow({ where: { id } });
+  await p.shippingMethodConfig.update({ where: { id }, data: { isActive: !old.isActive } });
+  await writeAudit({ actorId: s.userId, action: "SHIPPING_METHOD_TOGGLE", entityType: "ShippingMethodConfig", entityId: id, newData: { isActive: !old.isActive } });
+  revalidatePath("/admin/shipping-methods");
+}
+
+export async function deleteShippingMethodAction(formData: FormData) {
+  const s = await requireAdmin();
+  const id = text(formData.get("id"), 100);
+  await getPrisma().shippingMethodConfig.delete({ where: { id } });
+  await writeAudit({ actorId: s.userId, action: "SHIPPING_METHOD_DELETE", entityType: "ShippingMethodConfig", entityId: id });
+  revalidatePath("/admin/shipping-methods");
+}
+
+/* ===================== بررسی رسید کارت‌به‌کارت ===================== */
+
+/** تأیید یا رد رسید کارت‌به‌کارت. تأیید، پرداخت را موفق و سفارش را تأییدشده می‌کند. */
+export async function reviewReceiptAction(formData: FormData) {
+  const s = await requireAdmin();
+  const p = getPrisma();
+  const id = text(formData.get("id"), 100);
+  const decision = text(formData.get("decision"), 20); // "approve" | "reject"
+  const note = text(formData.get("note"), 500) || null;
+  const approved = decision === "approve";
+
+  const receipt = await p.paymentReceipt.findUniqueOrThrow({ where: { id }, include: { order: true } });
+
+  await p.$transaction(async (tx) => {
+    await tx.paymentReceipt.update({
+      where: { id },
+      data: { status: approved ? "APPROVED" : "REJECTED", note, reviewedBy: s.userId, reviewedAt: new Date() },
+    });
+
+    const payment = await tx.payment.findFirst({ where: { orderId: receipt.orderId }, orderBy: { createdAt: "desc" } });
+    if (payment) {
+      await tx.payment.update({
+        where: { id: payment.id },
+        data: approved
+          ? { status: "SUCCESS", paidAt: new Date() }
+          : { status: "FAILED", failureReason: note ?? "رسید رد شد." },
+      });
+    }
+
+    if (approved && receipt.order.status === "PENDING") {
+      await tx.order.update({
+        where: { id: receipt.orderId },
+        data: {
+          status: "CONFIRMED",
+          statusHistory: { create: { fromStatus: "PENDING", toStatus: "CONFIRMED", note: "رسید کارت‌به‌کارت تأیید شد.", actorId: s.userId } },
+        },
+      });
+    }
+  });
+
+  await writeAudit({ actorId: s.userId, action: "RECEIPT_REVIEW", entityType: "PaymentReceipt", entityId: id, newData: { decision, note } });
+  revalidatePath("/admin/payment-receipts");
+  revalidatePath(`/admin/orders/${receipt.orderId}`);
 }
 
 export async function updateMarketOverrideAction(formData: FormData) {

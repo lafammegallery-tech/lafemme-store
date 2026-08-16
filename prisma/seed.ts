@@ -67,6 +67,45 @@ async function main(): Promise<void> {
 
   console.log(`✅ Admin user created or updated: phone=${adminPhone}`);
   console.log("✅ No default products were created.");
+
+  // روش‌های پرداخت پیش‌فرض — فقط در صورت خالی‌بودن جدول ساخته می‌شوند.
+  if ((await prisma.paymentMethodConfig.count()) === 0) {
+    await prisma.paymentMethodConfig.createMany({
+      data: [
+        {
+          name: "کارت به کارت",
+          type: "CARD_TO_CARD",
+          description: "مبلغ را به کارت زیر واریز و تصویر رسید را بارگذاری کنید.",
+          cardNumber: "6037991234567890",
+          cardHolder: "لافمگلد",
+          bankName: "بانک ملی",
+          requiresReceipt: true,
+          sortOrder: 0,
+        },
+        {
+          name: "پرداخت در محل (تحویل حضوری)",
+          type: "CASH_ON_DELIVERY",
+          description: "پرداخت هنگام تحویل حضوری در فروشگاه.",
+          requiresReceipt: false,
+          sortOrder: 1,
+        },
+      ],
+    });
+    console.log("✅ Default payment methods created.");
+  }
+
+  // روش‌های ارسال پیش‌فرض
+  if ((await prisma.shippingMethodConfig.count()) === 0) {
+    await prisma.shippingMethodConfig.createMany({
+      data: [
+        { name: "پیک امین", description: "ارسال امن با پیک اختصاصی", cost: "500000", sortOrder: 0 },
+        { name: "پست پیشتاز", description: "ارسال با پست به سراسر کشور", cost: "300000", sortOrder: 1 },
+        { name: "تحویل حضوری", description: "دریافت سفارش از فروشگاه", cost: "0", sortOrder: 2 },
+      ],
+    });
+    console.log("✅ Default shipping methods created.");
+  }
+
   console.log("✅ Seed completed.");
 }
 

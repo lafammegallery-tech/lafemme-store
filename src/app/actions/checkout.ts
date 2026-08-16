@@ -29,6 +29,14 @@ export async function checkoutAction(
 
   const prisma = getPrisma();
 
+  // روش پرداخت و ارسال انتخاب‌شده را از تنظیمات مدیر می‌خوانیم.
+  const paymentMethodId = String(formData.get("paymentMethodId") ?? "").trim();
+  const shippingMethodId = String(formData.get("shippingMethodId") ?? "").trim();
+  const [paymentMethod, shippingMethod] = await Promise.all([
+    paymentMethodId ? prisma.paymentMethodConfig.findFirst({ where: { id: paymentMethodId, isActive: true } }) : null,
+    shippingMethodId ? prisma.shippingMethodConfig.findFirst({ where: { id: shippingMethodId, isActive: true } }) : null,
+  ]);
+
   let orderNumber: string;
 
   try {
@@ -54,7 +62,9 @@ export async function checkoutAction(
         session?.userId,
       );
       const discountAmount = applied?.discount ?? 0;
-      const shippingAmount = subtotal >= 100_000_000 || applied?.freeShipping ? 0 : 500_000;
+      // هزینه ارسال از روش انتخاب‌شده؛ در نبود انتخاب، مقدار پیش‌فرض قبلی حفظ می‌شود.
+      const baseShipping = shippingMethod ? Number(shippingMethod.cost) : subtotal >= 100_000_000 ? 0 : 500_000;
+      const shippingAmount = applied?.freeShipping ? 0 : baseShipping;
       const totalAmount = subtotal - discountAmount + shippingAmount;
 
       // شماره سفارش یکتا با timestamp و random برای جلوگیری از تکرار
@@ -73,6 +83,8 @@ export async function checkoutAction(
           shippingAmount,
           totalAmount,
           shippingAddress: { province, city, addressLine, postalCode: String(formData.get("postalCode") ?? "") },
+          shippingMethod: shippingMethod?.name ?? null,
+          paymentMethodName: paymentMethod?.name ?? null,
           customerNote: String(formData.get("note") ?? "") || null,
           items: {
             create: cart.items.map((i) => ({
@@ -86,7 +98,7 @@ export async function checkoutAction(
               totalPrice: Number(i.unitPrice) * i.quantity,
             })),
           },
-          payments: { create: { amount: totalAmount, method: "ONLINE", status: "PENDING", gateway: "NOT_CONFIGURED" } },
+          payments: { create: { amount: totalAmount, method: paymentMethod?.type ?? "ONLINE", status: "PENDING", gateway: paymentMethod?.type === "CARD_TO_CARD" ? "CARD_TO_CARD" : "NOT_CONFIGURED" } },
           shipment: { create: { status: "PENDING" } },
           statusHistory: { create: { toStatus: "PENDING", note: "سفارش ایجاد شد." } },
         },

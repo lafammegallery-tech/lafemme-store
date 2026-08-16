@@ -80,6 +80,12 @@ enum MetalType {
   PLATINUM
 }
 
+enum ReceiptStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum DiscountType {
   PERCENT
   FIXED
@@ -357,11 +363,15 @@ model Order {
   updatedAt       DateTime    @updatedAt
   deletedAt       DateTime?
 
+  shippingMethod String?
+  paymentMethodName String?
+
   user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   address  Address?  @relation(fields: [addressId], references: [id], onDelete: SetNull)
   items    OrderItem[]
   shipment Shipment?
   payments Payment[]
+  receipts PaymentReceipt[]
   statusHistory OrderStatusHistory[]
   couponUsages  CouponUsage[]
 
@@ -537,6 +547,56 @@ model PreOrder {
   @@index([productId, status])
   @@index([variantId])
   @@index([deletedAt])
+}
+
+/// روش‌های پرداخت قابل تنظیم توسط مدیر — کارت‌به‌کارت، نقدی و ... .
+model PaymentMethodConfig {
+  id              String        @id @default(cuid())
+  name            String
+  type            PaymentMethod @default(CARD_TO_CARD)
+  description     String?
+  cardNumber      String?
+  cardHolder      String?
+  bankName        String?
+  requiresReceipt Boolean       @default(false)
+  isActive        Boolean       @default(true)
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+/// روش‌های ارسال قابل تنظیم توسط مدیر — پیک، پست، تحویل حضوری و ... .
+model ShippingMethodConfig {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  cost        Decimal  @default(0) @db.Decimal(18, 0)
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+/// رسید پرداخت کارت‌به‌کارت که مشتری آپلود می‌کند و مدیر تأیید یا رد می‌کند.
+model PaymentReceipt {
+  id         String        @id @default(cuid())
+  orderId    String
+  imageUrl   String
+  status     ReceiptStatus @default(PENDING)
+  note       String?
+  reviewedBy String?
+  reviewedAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([status, createdAt])
 }
 
 model MarketSettings {

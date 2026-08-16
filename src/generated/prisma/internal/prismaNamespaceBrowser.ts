@@ -73,6 +73,9 @@ export const ModelName = {
   Notification: 'Notification',
   AuditLog: 'AuditLog',
   PreOrder: 'PreOrder',
+  PaymentMethodConfig: 'PaymentMethodConfig',
+  ShippingMethodConfig: 'ShippingMethodConfig',
+  PaymentReceipt: 'PaymentReceipt',
   MarketSettings: 'MarketSettings'
 } as const
 
@@ -302,7 +305,9 @@ export const OrderScalarFieldEnum = {
   customerNote: 'customerNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  deletedAt: 'deletedAt',
+  shippingMethod: 'shippingMethod',
+  paymentMethodName: 'paymentMethodName'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -452,6 +457,53 @@ export const PreOrderScalarFieldEnum = {
 } as const
 
 export type PreOrderScalarFieldEnum = (typeof PreOrderScalarFieldEnum)[keyof typeof PreOrderScalarFieldEnum]
+
+
+export const PaymentMethodConfigScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  description: 'description',
+  cardNumber: 'cardNumber',
+  cardHolder: 'cardHolder',
+  bankName: 'bankName',
+  requiresReceipt: 'requiresReceipt',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentMethodConfigScalarFieldEnum = (typeof PaymentMethodConfigScalarFieldEnum)[keyof typeof PaymentMethodConfigScalarFieldEnum]
+
+
+export const ShippingMethodConfigScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  cost: 'cost',
+  isActive: 'isActive',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShippingMethodConfigScalarFieldEnum = (typeof ShippingMethodConfigScalarFieldEnum)[keyof typeof ShippingMethodConfigScalarFieldEnum]
+
+
+export const PaymentReceiptScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  imageUrl: 'imageUrl',
+  status: 'status',
+  note: 'note',
+  reviewedBy: 'reviewedBy',
+  reviewedAt: 'reviewedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PaymentReceiptScalarFieldEnum = (typeof PaymentReceiptScalarFieldEnum)[keyof typeof PaymentReceiptScalarFieldEnum]
 
 
 export const MarketSettingsScalarFieldEnum = {
