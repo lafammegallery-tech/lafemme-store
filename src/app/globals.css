@@ -4377,3 +4377,77 @@ button:disabled{cursor:not-allowed;opacity:.55}
   .admin-order-row { grid-template-columns: 1fr auto; row-gap: 4px; }
   .admin-order-row .order-cust { display: none; }
 }
+
+/* ============================================================
+   ADMIN — multi-image product uploader
+   ============================================================ */
+.multi-uploader { display: flex; flex-direction: column; gap: 0.9rem; }
+.multi-uploader-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+.multi-uploader-item {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+}
+.multi-uploader-item.is-primary { border: 2px solid var(--color-gold); }
+.multi-uploader-badge {
+  position: absolute;
+  top: 6px;
+  inset-inline-start: 6px;
+  background: var(--color-gold);
+  color: var(--color-black);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  z-index: 2;
+}
+.multi-uploader-controls {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent);
+  opacity: 0;
+  transition: var(--transition);
+}
+.multi-uploader-item:hover .multi-uploader-controls { opacity: 1; }
+.multi-uploader-controls button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.9);
+  color: #111;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.multi-uploader-controls button:disabled { opacity: .35; cursor: default; }
+.multi-uploader-controls .multi-uploader-remove { background: var(--color-danger); color: #fff; }
+.multi-uploader-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px 20px;
+  background: var(--color-surface-raised);
+  border: 1px dashed var(--color-border);
+  border-radius: 10px;
+  color: var(--color-white);
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: fit-content;
+}
+.multi-uploader-add.uploading { opacity: 0.6; cursor: wait; }

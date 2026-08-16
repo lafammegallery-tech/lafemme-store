@@ -14,10 +14,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   const product = await getPrisma().product.findUnique({
     where: { id, deletedAt: null },
-    include: { category: true, inventory: true },
+    include: { category: true, inventory: true, images: true },
   });
 
   if (!product) notFound();
+
+  const imageUrls = [...product.images]
+    .sort((a, b) => (a.isPrimary === b.isPrimary ? a.sortOrder - b.sortOrder : a.isPrimary ? -1 : 1))
+    .map((img) => img.url);
 
   const cats = await getPrisma().category.findMany({
     where: { isActive: true, deletedAt: null },
@@ -50,6 +54,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             shortDescription: product.shortDescription ?? "",
             isFeatured: product.isFeatured,
             imageUrl: product.image ?? "",
+            imageUrls: imageUrls.length ? imageUrls : product.image ? [product.image] : [],
           }}
         />
       </Container>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input, Textarea, Button } from "@/components/ui";
-import ImageUploader from "./ImageUploader";
+import MultiImageUploader from "./MultiImageUploader";
 import PriceCalculator from "./PriceCalculator";
 
 interface Category {
@@ -30,6 +30,7 @@ interface Props {
     shortDescription?: string;
     isFeatured?: boolean;
     imageUrl?: string;
+    imageUrls?: string[];
   };
   submitLabel?: string;
 }
@@ -144,10 +145,13 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
         <Textarea name="shortDescription" placeholder="توضیح کوتاه محصول" rows={3} defaultValue={defaults.shortDescription ?? ""} />
       </fieldset>
 
-      {/* تصویر */}
+      {/* تصاویر */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>تصویر</legend>
-        <ImageUploader name="imageUrl" defaultUrl={defaults.imageUrl ?? ""} />
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>تصاویر محصول</legend>
+        <MultiImageUploader
+          name="imageUrls"
+          defaultUrls={defaults.imageUrls ?? (defaults.imageUrl ? [defaults.imageUrl] : [])}
+        />
       </fieldset>
 
       {/* گزینه‌های نمایش */}

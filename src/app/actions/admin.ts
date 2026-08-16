@@ -7,6 +7,23 @@ import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
 import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
+/** آرایه‌ی URL تصاویر را از فیلد JSON فرم می‌خواند؛ در صورت نبود، به imageUrl تکی برمی‌گردد. */
+function parseImageUrls(formData: FormData): string[] {
+  const raw = String(formData.get("imageUrls") ?? "").trim();
+  if (raw) {
+    try {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        return arr.map((u) => String(u).trim()).filter((u) => u && u.length <= 500).slice(0, 12);
+      }
+    } catch {
+      // فرمت نامعتبر — نادیده می‌گیریم و به مقدار تکی برمی‌گردیم
+    }
+  }
+  const single = text(formData.get("imageUrl"), 500);
+  return single ? [single] : [];
+}
+
 function toSlug(raw: string): string {
   return raw
     .toLowerCase()
@@ -114,7 +131,8 @@ export async function createProductAction(formData: FormData) {
   const fixedPremium = String(Math.max(0, Number(formData.get("fixedPremium") || 0)));
   const isFeatured = formData.get("isFeatured") === "on";
 
-  const imageUrl = text(formData.get("imageUrl"), 500) || null;
+  const imageUrls = parseImageUrls(formData);
+  const primaryUrl = imageUrls[0] ?? null;
 
   const product = await p.product.create({
     data: {
@@ -131,19 +149,19 @@ export async function createProductAction(formData: FormData) {
       fixedPremium,
       isFeatured,
       stock,
-      image: imageUrl,
+      image: primaryUrl,
       status: "ACTIVE",
       shortDescription: text(formData.get("shortDescription"), 300) || null,
       inventory: { create: { quantity: stock, lowStockAt: 5 } },
-      ...(imageUrl
+      ...(imageUrls.length
         ? {
             images: {
-              create: {
-                url: imageUrl,
+              create: imageUrls.map((url, idx) => ({
+                url,
                 altText: name,
-                isPrimary: true,
-                sortOrder: 0,
-              },
+                isPrimary: idx === 0,
+                sortOrder: idx,
+              })),
             },
           }
         : {}),
@@ -174,7 +192,8 @@ export async function updateProductAction(formData: FormData) {
   const isFeatured = formData.get("isFeatured") === "on";
   const categoryId = text(formData.get("categoryId"), 100) || undefined;
 
-  const imageUrl = text(formData.get("imageUrl"), 500) || null;
+  const imageUrls = parseImageUrls(formData);
+  const primaryUrl = imageUrls[0] ?? null;
 
   await p.$transaction(async (tx) => {
     await tx.product.update({
@@ -192,7 +211,7 @@ export async function updateProductAction(formData: FormData) {
         premiumPercent,
         fixedPremium,
         isFeatured,
-        image: imageUrl,
+        image: primaryUrl,
         shortDescription: text(formData.get("shortDescription"), 300) || null,
       },
     });
@@ -203,10 +222,11 @@ export async function updateProductAction(formData: FormData) {
       update: { quantity: stock },
     });
 
-    if (imageUrl) {
-      await tx.productImage.updateMany({ where: { productId: id, isPrimary: true }, data: { isPrimary: false } });
-      await tx.productImage.create({
-        data: { productId: id, url: imageUrl, altText: name, isPrimary: true, sortOrder: 0 },
+    // گالری با مجموعه‌ی جدید جایگزین می‌شود (ترتیب و تصویر اصلی از فرم می‌آید).
+    await tx.productImage.deleteMany({ where: { productId: id } });
+    if (imageUrls.length) {
+      await tx.productImage.createMany({
+        data: imageUrls.map((url, idx) => ({ productId: id, url, altText: name, isPrimary: idx === 0, sortOrder: idx })),
       });
     }
   });
