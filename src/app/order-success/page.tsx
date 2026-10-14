@@ -25,12 +25,18 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
   const hasReceipt = orderRow.receipts.some((receipt) => receipt.status === "PENDING" || receipt.status === "APPROVED");
   const finalAmount = Number(orderRow.totalAmount).toLocaleString("fa-IR");
 
-  const cardConfig = isCardToCard
+  const snapshot = payment?.metadata && typeof payment.metadata === "object" && !Array.isArray(payment.metadata) ? payment.metadata : null;
+  const legacyConfig = isCardToCard && !snapshot
     ? await getPrisma().paymentMethodConfig.findFirst({
         where: { type: "CARD_TO_CARD", isActive: true, ...(orderRow?.paymentMethodName ? { name: orderRow.paymentMethodName } : {}) },
         orderBy: { sortOrder: "asc" },
       })
     : null;
+  const cardConfig = snapshot ? {
+    cardNumber: typeof snapshot.cardNumber === "string" ? snapshot.cardNumber : null,
+    cardHolder: typeof snapshot.cardHolder === "string" ? snapshot.cardHolder : null,
+    bankName: typeof snapshot.bankName === "string" ? snapshot.bankName : null,
+  } : legacyConfig;
 
   return (
     <PageLayout>

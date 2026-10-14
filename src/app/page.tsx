@@ -3,6 +3,7 @@ import { FeaturedProductsSection, HeroSection, WhyUsSection } from "@/components
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MarketOverview } from "@/components/market/MarketOverview";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "شمش طلا و نقره",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/assets/images/hero-gold-bar.png",
+        url: "/assets/images/hero-gold-bar.webp",
         alt: "شمش طلای La Femme",
       },
     ],
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "La Femme | شمش طلا و نقره",
     description: "مجموعه منتخب شمش‌های طلا و نقره La Femme.",
-    images: ["/assets/images/hero-gold-bar.png"],
+    images: ["/assets/images/hero-gold-bar.webp"],
   },
 };
 

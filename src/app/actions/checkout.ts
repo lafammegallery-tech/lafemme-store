@@ -119,7 +119,7 @@ export async function checkoutAction(
               totalPrice: Number(i.unitPrice) * i.quantity,
             })),
           },
-          payments: { create: { amount: totalAmount, method: paymentMethod?.type ?? "ONLINE", status: "PENDING", gateway: paymentMethod?.type === "CARD_TO_CARD" ? "CARD_TO_CARD" : "NOT_CONFIGURED" } },
+          payments: { create: { amount: totalAmount, method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } } },
           shipment: { create: { status: "PENDING" } },
           statusHistory: { create: { toStatus: "PENDING", note: "سفارش ایجاد شد." } },
         },

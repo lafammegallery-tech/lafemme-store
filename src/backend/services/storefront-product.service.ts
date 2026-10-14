@@ -44,7 +44,7 @@ async function loadDbProducts(): Promise<Product[] | null> {
         slug: row.slug,
         description: row.description ?? row.shortDescription ?? "",
         price: Number(row.price),
-        imageSrc: primary?.url ?? row.image ?? "/assets/images/hero-gold-bar.png",
+        imageSrc: primary?.url ?? row.image ?? "/assets/images/hero-gold-bar.webp",
         images: row.images.map((img) => ({
           id: img.id,
           url: img.url,

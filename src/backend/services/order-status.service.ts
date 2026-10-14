@@ -26,6 +26,12 @@ export async function changeOrderStatus(id: string, status: OrderStatus, actorId
       }
     }
     const order = await tx.order.update({ where: { id }, data: { status, statusHistory: { create: { fromStatus: old.status, toStatus: status, note, actorId } } } });
+    if (status === "CANCELLED") {
+      await tx.payment.updateMany({ where: { orderId: id, status: { in: ["PENDING", "PROCESSING"] } }, data: { status: "CANCELLED" } });
+      await tx.couponUsage.deleteMany({ where: { orderId: id } });
+    }
+    if (status === "SHIPPED") await tx.shipment.updateMany({ where: { orderId: id }, data: { status: "SHIPPED", shippedAt: new Date() } });
+    if (status === "DELIVERED") await tx.shipment.updateMany({ where: { orderId: id }, data: { status: "DELIVERED", deliveredAt: new Date() } });
     return { old, order };
   }, { isolationLevel: "Serializable" });
 }
@@ -44,6 +50,7 @@ export async function expireUnpaidOrders() {
       }
       await tx.order.update({ where: { id: current.id }, data: { status: "CANCELLED", statusHistory: { create: { fromStatus: "PENDING", toStatus: "CANCELLED", note: "مهلت ۲۴ ساعته ارسال رسید به پایان رسید." } } } });
       await tx.payment.updateMany({ where: { orderId: current.id, status: { in: ["PENDING", "PROCESSING"] } }, data: { status: "CANCELLED" } });
+      await tx.couponUsage.deleteMany({ where: { orderId: current.id } });
     }, { isolationLevel: "Serializable" });
   }
 }

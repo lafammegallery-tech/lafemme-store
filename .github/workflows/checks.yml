@@ -5,6 +5,18 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: lafemme_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test -d lafemme_test"
+          --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -13,6 +25,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
-      - run: npx tsx --test tests/security.test.ts
+      - run: npm test
+      - run: npm run db:deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/lafemme_test
+      - run: npm run test:integration
+        env:
+          TEST_DATABASE_URL: postgresql://test:test@localhost:5432/lafemme_test
       - run: node scripts/audit-routes.mjs
       - run: npm run build
