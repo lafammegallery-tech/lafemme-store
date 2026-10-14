@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { getPrisma } from "../src/backend/database/prisma";
 import { changeOrderStatus, expireUnpaidOrders } from "../src/backend/services/order-status.service";
+import { reviewPaymentReceipt } from "../src/backend/services/receipt-review.service";
 
 const url = process.env.TEST_DATABASE_URL;
 if (url) process.env.DATABASE_URL = url;
@@ -40,6 +41,23 @@ test("order lifecycle preserves inventory and cancellation is idempotent", { ski
     await expireUnpaidOrders(); await expireUnpaidOrders();
     assert.equal((await db.order.findUniqueOrThrow({ where: { id: expired.id } })).status, "CANCELLED");
     assert.equal((await db.inventory.findUniqueOrThrow({ where: { productId: product.id } })).reserved, 0);
+    const reviewOrder = await makeOrder(`review-${suffix}`);
+    const receipt = await db.paymentReceipt.create({ data: { orderId: reviewOrder.id, imageUrl: "/uploads/receipts/test.png" } });
+    await reviewPaymentReceipt(receipt.id, false, user.id, "Unreadable");
+    assert.equal((await db.order.findUniqueOrThrow({ where: { id: reviewOrder.id } })).status, "PENDING");
+    await assert.rejects(reviewPaymentReceipt(receipt.id, true, user.id, null));
+    const retry = await db.paymentReceipt.create({ data: { orderId: reviewOrder.id, imageUrl: "/uploads/receipts/retry.png" } });
+    await reviewPaymentReceipt(retry.id, true, user.id, null);
+    const approvedPayment = await db.payment.findFirstOrThrow({ where: { orderId: reviewOrder.id } });
+    assert.equal(approvedPayment.status, "SUCCESS"); assert.equal(approvedPayment.failureReason, null);
+    assert.equal((await db.order.findUniqueOrThrow({ where: { id: reviewOrder.id } })).status, "CONFIRMED");
+    await assert.rejects(reviewPaymentReceipt(retry.id, true, user.id, null));
+    const broken = await makeOrder(`broken-${suffix}`);
+    await db.payment.deleteMany({ where: { orderId: broken.id } });
+    const brokenReceipt = await db.paymentReceipt.create({ data: { orderId: broken.id, imageUrl: "/uploads/receipts/broken.png" } });
+    await assert.rejects(reviewPaymentReceipt(brokenReceipt.id, true, user.id, null));
+    assert.equal((await db.paymentReceipt.findUniqueOrThrow({ where: { id: brokenReceipt.id } })).status, "PENDING");
+    assert.equal((await db.order.findUniqueOrThrow({ where: { id: broken.id } })).status, "PENDING");
   } finally {
     await db.order.deleteMany({ where: { userId: user.id } });
     await db.product.delete({ where: { id: product.id } });

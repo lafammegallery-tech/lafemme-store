@@ -6,6 +6,7 @@ import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
 import { changeOrderStatus } from "@/backend/services/order-status.service";
+import { reviewPaymentReceipt } from "@/backend/services/receipt-review.service";
 import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 /** آرایه‌ی URL تصاویر را از فیلد JSON فرم می‌خواند؛ در صورت نبود، به imageUrl تکی برمی‌گردد. */
@@ -421,48 +422,17 @@ export async function deleteShippingMethodAction(formData: FormData) {
 /** تأیید یا رد رسید کارت‌به‌کارت. تأیید، پرداخت را موفق و سفارش را تأییدشده می‌کند. */
 export async function reviewReceiptAction(formData: FormData) {
   const s = await requireAdmin();
-  const p = getPrisma();
   const id = text(formData.get("id"), 100);
   const decision = text(formData.get("decision"), 20); // "approve" | "reject"
   const note = text(formData.get("note"), 500) || null;
   const approved = decision === "approve";
   if (decision !== "approve" && decision !== "reject") throw new Error("تصمیم معتبر نیست.");
 
-  const receipt = await p.paymentReceipt.findUniqueOrThrow({ where: { id }, include: { order: true } });
-
-  await p.$transaction(async (tx) => {
-    const current = await tx.paymentReceipt.findUniqueOrThrow({ where: { id }, include: { order: true } });
-    if (current.status !== "PENDING" || current.order.status !== "PENDING") throw new Error("این رسید قبلاً بررسی شده یا سفارش قابل پرداخت نیست.");
-    await tx.paymentReceipt.update({
-      where: { id },
-      data: { status: approved ? "APPROVED" : "REJECTED", note, reviewedBy: s.userId, reviewedAt: new Date() },
-    });
-
-    const payment = await tx.payment.findFirst({ where: { orderId: receipt.orderId }, orderBy: { createdAt: "desc" } });
-    if (payment) {
-      if (payment.method !== "CARD_TO_CARD" || payment.status === "SUCCESS") throw new Error("پرداخت قابل بررسی نیست.");
-      await tx.payment.update({
-        where: { id: payment.id },
-        data: approved
-          ? { status: "SUCCESS", paidAt: new Date() }
-          : { status: "PENDING", failureReason: note ?? "رسید رد شد." },
-      });
-    }
-
-    if (approved && current.order.status === "PENDING") {
-      await tx.order.update({
-        where: { id: receipt.orderId },
-        data: {
-          status: "CONFIRMED",
-          statusHistory: { create: { fromStatus: "PENDING", toStatus: "CONFIRMED", note: "رسید کارت‌به‌کارت تأیید شد.", actorId: s.userId } },
-        },
-      });
-    }
-  }, { isolationLevel: "Serializable" });
+  const orderId = await reviewPaymentReceipt(id, approved, s.userId, note);
 
   await writeAudit({ actorId: s.userId, action: "RECEIPT_REVIEW", entityType: "PaymentReceipt", entityId: id, newData: { decision, note } });
   revalidatePath("/admin/payment-receipts");
-  revalidatePath(`/admin/orders/${receipt.orderId}`);
+  revalidatePath(`/admin/orders/${orderId}`);
 }
 
 export async function updateMarketOverrideAction(formData: FormData) {
