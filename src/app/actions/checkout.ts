@@ -51,6 +51,7 @@ export async function checkoutAction(
     const products = await getStorefrontProducts();
     const pricedItems = cart.items.map((item) => {
       const product = products.find((entry) => entry.id === item.productId);
+      if (product && !product.isLivePrice) throw new Error("قیمت معتبر این محصول فعلاً در دسترس نیست؛ خرید تا دریافت قیمت جدید یا تعیین قیمت دستی متوقف شده است.");
       if (!product || product.price <= 0 || !Number.isInteger(item.quantity) || item.quantity < 1) throw new Error("محصول یا قیمت سفارش معتبر نیست.");
       if (product.price !== Number(item.unitPrice)) throw new Error("قیمت محصول تغییر کرده؛ محصول را از سبد حذف و دوباره اضافه کنید.");
       return { ...item, unitPrice: product.price };

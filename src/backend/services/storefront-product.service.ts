@@ -77,8 +77,8 @@ export async function getStorefrontProducts(): Promise<Product[]> {
   const [dbProducts, quotes] = await Promise.all([loadDbProducts(), getMarketQuotes()]);
   return applyLivePrices(
     dbProducts?.length ? dbProducts : fallbackProducts,
-    quotes.gold995.price,
-    quotes.silver999.price,
+    quotes.gold995.stale ? 0 : quotes.gold995.price,
+    quotes.silver999.stale ? 0 : quotes.silver999.price,
   );
 }
 

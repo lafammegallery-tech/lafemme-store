@@ -377,7 +377,7 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
       change24h:rawGold.change24h,
       source:fallback.source,
       updatedAt:fallback.recordedAt,
-      stale:fallback.price<=0,
+       stale:true,
       isFallback:fallback.price>0
     };
 
@@ -405,6 +405,8 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
     source: "محاسبه از ۷۵۰",
     updatedAt: gold750Quote.updatedAt,
     stale: gold750Quote.stale,
+    isFallback: gold750Quote.isFallback,
+    isManual: gold750Quote.isManual,
   };
 
 
