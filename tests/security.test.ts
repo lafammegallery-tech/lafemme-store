@@ -4,6 +4,20 @@ import { validateImage } from "../src/backend/security/image-upload";
 import { positiveInt } from "../src/backend/security/validation";
 import { assertRateLimit } from "../src/backend/security/rate-limit";
 import sharp from "sharp";
+import { isAllowedRequestOrigin } from "../src/backend/security/request-origin";
+
+test("configured origin permits Docker uploads without trusting forged forwarded headers", () => {
+  const headers = new Headers({ origin: "http://localhost:8091", host: "localhost:3000" });
+  assert.equal(isAllowedRequestOrigin(headers, "http://localhost:8091"), true);
+  headers.set("origin", "http://attacker.example");
+  headers.set("x-forwarded-host", "attacker.example");
+  assert.equal(isAllowedRequestOrigin(headers, "http://localhost:8091"), false);
+  assert.equal(isAllowedRequestOrigin(headers, ""), false);
+  headers.set("origin", "null");
+  assert.equal(isAllowedRequestOrigin(headers, "http://localhost:8091"), false);
+  headers.delete("origin");
+  assert.equal(isAllowedRequestOrigin(headers, "http://localhost:8091"), false);
+});
 
 test("quantity rejects invalid, negative and fractional inputs", () => {
   for (const value of ["-1", "1.2", "NaN", "100"]) assert.throws(() => positiveInt(value, 99));

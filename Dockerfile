@@ -30,7 +30,7 @@ COPY docker/entrypoint.sh ./entrypoint.sh
 RUN sed -i 's/\r$//' ./entrypoint.sh \
     && chmod +x ./entrypoint.sh \
     && mkdir -p /app/storage/products /app/storage/receipts \
-    && chown -R nextjs:nodejs /app
+    && chown -R nextjs:nodejs /app/storage
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \

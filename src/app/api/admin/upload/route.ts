@@ -4,11 +4,12 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { validateImage } from "@/backend/security/image-upload";
 import { assertRateLimit } from "@/backend/security/rate-limit";
+import { isAllowedRequestOrigin } from "@/backend/security/request-origin";
 
 export async function POST(request: Request) {
   const auth = await requireAdminApi();
   if (auth instanceof NextResponse) return auth;
-  if (request.headers.get("origin") !== new URL(request.url).origin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!isAllowedRequestOrigin(request.headers)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   if (Number(request.headers.get("content-length")) > 6 * 1024 * 1024) return NextResponse.json({ error: "File too large" }, { status: 413 });
   try {
     assertRateLimit(`product-upload:${auth.userId}`, 30);
