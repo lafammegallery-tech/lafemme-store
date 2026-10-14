@@ -20,15 +20,15 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 COPY --from=prod-deps /app/node_modules ./node_modules
-COPY --from=builder /app/public ./public
+COPY --from=builder --chmod=0755 /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/src/generated ./src/generated
-COPY docker/entrypoint.sh ./entrypoint.sh
+COPY --from=builder --chmod=0644 /app/package.json ./package.json
+COPY --from=builder --chmod=0644 /app/prisma.config.ts ./prisma.config.ts
+COPY --from=builder --chmod=0755 /app/prisma ./prisma
+COPY --from=builder --chmod=0755 /app/src/generated ./src/generated
+COPY --chmod=0755 docker/entrypoint.sh ./entrypoint.sh
 RUN sed -i 's/\r$//' ./entrypoint.sh \
-    && chmod +x ./entrypoint.sh \
+    && chmod 755 ./entrypoint.sh \
     && mkdir -p /app/storage/products /app/storage/receipts \
     && chown -R nextjs:nodejs /app/storage
 USER nextjs

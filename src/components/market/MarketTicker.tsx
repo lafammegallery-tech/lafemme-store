@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { formatMoney } from "@/lib/format-money";
 
 interface Quote {
   price: number;
@@ -21,7 +22,7 @@ const initial: MarketData = { gold750: zero, gold995: zero, silver999: zero };
 
 function formatIRR(v: number): string {
   return v > 0
-    ? new Intl.NumberFormat("fa-IR").format(v) + " تومان"
+    ? formatMoney(v) + " تومان"
     : "در حال دریافت";
 }
 

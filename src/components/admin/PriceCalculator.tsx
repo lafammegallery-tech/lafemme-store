@@ -80,7 +80,7 @@ export default function PriceCalculator({ metalType, weightValue, premiumPercent
             قیمت بازار ({metalType === "SILVER" ? "نقره" : "طلا ۷۵۰"}):
             {" "}
             <strong style={{ color: "var(--color-gold)" }}>
-              {quote.priceToman.toLocaleString("fa-IR")} تومان
+              {quote.priceToman.toLocaleString("fa-IR", { maximumFractionDigits: 0 })} تومان
             </strong>
             {" "}— منبع: {quote.source}
           </span>

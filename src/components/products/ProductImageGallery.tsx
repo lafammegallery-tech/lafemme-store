@@ -85,7 +85,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
                 src={img.url}
                 alt={img.altText ?? productName}
                 fill
-                style={{ objectFit: "cover" }}
+                style={{ objectFit: "contain" }}
                 sizes="72px"
               />
             </button>

@@ -10,18 +10,17 @@ import type { Product } from "@/types/product";
 export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="product-card">
-      <div className="product-image">
+      <Link href={`/products/${product.id}`} className="product-image" aria-label={`مشاهده ${product.name}`}>
         {product.badge ? <span className="product-badge">{product.badge}</span> : null}
 
         <Image
           src={product.imageSrc}
           alt={product.name}
-          width={420}
-          height={420}
+          fill
           sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
           className="product-card-image"
         />
-      </div>
+      </Link>
 
       <div className="product-content">
         <h3>{product.name}</h3>
@@ -31,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="product-price" aria-label={`قیمت ${product.name}`}>
           {new Intl.NumberFormat("fa-IR").format(product.price)} تومان
         </div>
-        <span className="price-source-badge">{product.isLivePrice ? "قیمت لحظه‌ای" : "قیمت پشتیبان"}</span>
+        <span className="price-source-badge">{product.isLivePrice ? "قیمت به‌روز" : "قیمت موقت · خرید متوقف"}</span>
 
         <Link href={`/products/${product.id}`} className="btn btn-primary">
           مشاهده محصول

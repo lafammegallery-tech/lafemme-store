@@ -1,6 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseCustomPrices } from "../src/backend/services/custom-price-parser";
+import { formatMoney } from "../src/lib/format-money";
+
+test("money display has no decimals without changing conversion precision", () => {
+  const quote = parseCustomPrices(payload(), now).gold.priceToman;
+  assert.equal(formatMoney(quote, "en-US"), Math.round(quote).toLocaleString("en-US"));
+  assert.equal(formatMoney(12345.678, "en-US"), "12,346");
+  assert.notEqual(quote, Math.round(quote));
+});
 
 const now = Date.parse("2026-10-14T15:22:53Z");
 const payload = () => ({ prices: [

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Container } from "@/components/ui";
+import { formatMoney } from "@/lib/format-money";
 
 interface Quote {
   metal: "GOLD" | "SILVER";
@@ -24,7 +25,7 @@ const emptyQuote = (metal: Quote["metal"]): Quote => ({
 
 function formatPrice(value: number): string {
   if (value <= 0) return "در حال دریافت";
-  return new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 2 }).format(value);
+  return formatMoney(value);
 }
 
 function QuoteCard({ quote, title }: { quote: Quote; title: string }) {
