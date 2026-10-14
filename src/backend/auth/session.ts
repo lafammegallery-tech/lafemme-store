@@ -38,7 +38,7 @@ export async function createSession(userId: string, role: UserRole) {
   const store = await cookies();
   const cookieOptions = {
     sameSite: "lax" as const,
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     path: "/",
     maxAge: MAX_AGE_SECONDS,
   };
