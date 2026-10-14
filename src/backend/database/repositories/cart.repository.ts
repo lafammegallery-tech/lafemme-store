@@ -93,17 +93,17 @@ export const cartRepository = {
   },
 
   /** حذف آیتم از سبد خرید. */
-  removeItem(itemId: string) {
-    return getPrisma().cartItem.delete({ where: { id: itemId } });
+  removeItem(itemId: string, cartId: string) {
+    return getPrisma().cartItem.deleteMany({ where: { id: itemId, cartId } });
   },
 
   /** به‌روزرسانی تعداد آیتم. */
-  updateQuantity(itemId: string, quantity: number) {
+  updateQuantity(itemId: string, quantity: number, cartId: string) {
     if (quantity <= 0) {
-      return getPrisma().cartItem.delete({ where: { id: itemId } });
+      return getPrisma().cartItem.deleteMany({ where: { id: itemId, cartId } });
     }
-    return getPrisma().cartItem.update({
-      where: { id: itemId },
+    return getPrisma().cartItem.updateMany({
+      where: { id: itemId, cartId },
       data: { quantity },
     });
   },

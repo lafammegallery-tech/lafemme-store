@@ -11,6 +11,7 @@ export type ProductType = "gold" | "silver";
  * شامل فیلدهای اصلی (مشخصات کاربردی) و فیلدهای غنی‌سازی نمایشی است.
  */
 export interface Product {
+  createdAt?: string;
   /** شناسه یکتای محصول */
   id: string;
   /** نام نمایشی محصول */

@@ -49,11 +49,11 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
 
       <div className="order-summary-row">
         <span>هزینه ارسال</span>
-        <span>{shippingCost === 0 ? "رایگان" : `${new Intl.NumberFormat("fa-IR").format(shippingCost)} تومان`}</span>
+        <span>طبق روش ارسال انتخاب‌شده؛ به مبلغ کالاها اضافه می‌شود</span>
       </div>
 
       <div className="order-summary-total">
-        <span>مبلغ قابل پرداخت</span>
+        <span>جمع کالاها، پیش از ارسال و تخفیف</span>
         <span>{new Intl.NumberFormat("fa-IR").format(grandTotal)} تومان</span>
       </div>
     </aside>

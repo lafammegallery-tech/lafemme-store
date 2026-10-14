@@ -1,9 +1,10 @@
 import { getPrisma } from "@/backend/database/prisma";
+import type { Prisma } from "@/generated/prisma/client";
 
-export async function evaluateCoupon(code: string, subtotal: number, userId?: string) {
+export async function evaluateCoupon(code: string, subtotal: number, userId?: string, client?: Prisma.TransactionClient) {
   if (!code) return null;
 
-  const prisma = getPrisma();
+  const prisma = client ?? getPrisma();
   const coupon = await prisma.coupon.findUnique({
     where: { code: code.trim().toUpperCase() },
     include: { _count: { select: { usages: true } } },

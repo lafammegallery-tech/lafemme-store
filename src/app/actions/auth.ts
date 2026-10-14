@@ -13,7 +13,7 @@ const normalizePhone = (value: FormDataEntryValue | null) =>
 /** فقط مسیرهای داخلی امن (نه URL خارجی) به‌عنوان مقصد next پذیرفته می‌شوند. */
 const safeNext = (value: FormDataEntryValue | null) => {
   const next = String(value ?? "");
-  return next.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  return next.startsWith("/") && !next.startsWith("//") && !/[\\\u0000-\u001f]/.test(next) ? next : "/dashboard";
 };
 
 /** این تابع کاربر جدید را در سیستم ثبت می‌کند. */
@@ -30,6 +30,7 @@ export async function registerAction(_: AuthState, formData: FormData): Promise<
 
   if (!/^09\d{9}$/.test(phone)) return { error: "شماره موبایل معتبر وارد کنید." };
   if (password.length < 8) return { error: "رمز عبور باید حداقل ۸ کاراکتر باشد." };
+  if (password.length > 256 || fullName.length > 120) return { error: "اطلاعات واردشده بیش از حد طولانی است." };
   if (!fullName) return { error: "نام و نام خانوادگی را وارد کنید." };
   if (await userRepository.findByPhone(phone)) return { error: "این شماره موبایل قبلاً ثبت شده است." };
 
@@ -61,6 +62,7 @@ export async function loginAction(_: AuthState, formData: FormData): Promise<Aut
   const user = await userRepository.findByPhone(phone);
   if (!user?.passwordHash || !user.isActive) return { error: "شماره موبایل یا رمز عبور نادرست است." };
 
+  if (password.length > 256) return { error: "رمز عبور معتبر نیست." };
   const valid = await verifyPassword(password, user.passwordHash);
   if (!valid) return { error: "شماره موبایل یا رمز عبور نادرست است." };
 

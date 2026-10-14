@@ -1,10 +1,11 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/backend/auth/session";
+import { requireAdmin, requireOwnerAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
+import { changeOrderStatus } from "@/backend/services/order-status.service";
 import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 /** آرایه‌ی URL تصاویر را از فیلد JSON فرم می‌خواند؛ در صورت نبود، به imageUrl تکی برمی‌گردد. */
@@ -35,30 +36,11 @@ function toSlug(raw: string): string {
 
 export async function updateOrderStatusAction(formData: FormData) {
   const session = await requireAdmin();
-  const prisma = getPrisma();
   const id = text(formData.get("id"), 100);
   const status = text(formData.get("status"), 30) as OrderStatus;
   const note = text(formData.get("note"), 500);
 
-  const old = await prisma.order.findUniqueOrThrow({ where: { id } });
-  await prisma.order.update({
-    where: { id },
-    data: {
-      status,
-      statusHistory: { create: { fromStatus: old.status, toStatus: status, note, actorId: session.userId } },
-    },
-  });
-
-  if (status === "CANCELLED") {
-    for (const item of await prisma.orderItem.findMany({ where: { orderId: id } })) {
-      if (item.productId) {
-        await prisma.inventory.updateMany({
-          where: { productId: item.productId },
-          data: { reserved: { decrement: item.quantity } },
-        });
-      }
-    }
-  }
+  const { old } = await changeOrderStatus(id, status, session.userId, note);
 
   await writeAudit({
     actorId: session.userId,
@@ -79,6 +61,7 @@ export async function updateInventoryAction(formData: FormData) {
   const lowStockAt = positiveInt(formData.get("lowStockAt"), 1000);
   const p = getPrisma();
   const old = await p.inventory.findFirst({ where: { productId } });
+  if (old && quantity < old.reserved) throw new Error("موجودی نمی‌تواند کمتر از رزرو سفارش‌ها باشد.");
   await p.inventory.upsert({
     where: { productId },
     create: { productId, quantity, lowStockAt },
@@ -294,7 +277,7 @@ export async function toggleCategoryAction(formData: FormData) {
 
 /** ارتقا یا تنزل نقش کاربر بین مشتری و مدیر — یک ادمین نمی‌تواند نقش خودش را تغییر دهد. */
 export async function toggleUserAdminAction(formData: FormData) {
-  const s = await requireAdmin();
+  const s = await requireOwnerAdmin();
   const id = text(formData.get("id"), 100);
   if (id === s.userId) throw new Error("امکان تغییر نقش حساب خودتان وجود ندارد.");
 
@@ -358,6 +341,8 @@ export async function createPaymentMethodAction(formData: FormData) {
   if (!name) throw new Error("نام روش پرداخت الزامی است.");
   const type = text(formData.get("type"), 30) as PaymentMethod;
   const requiresReceipt = formData.get("requiresReceipt") === "on" || type === "CARD_TO_CARD";
+  if (type !== "CARD_TO_CARD") throw new Error("فعلاً فقط کارت‌به‌کارت فعال است.");
+  if (!/^\d{16}$/.test(text(formData.get("cardNumber"), 40).replace(/\s+/g, ""))) throw new Error("شماره کارت ۱۶ رقمی وارد کنید.");
 
   const m = await p.paymentMethodConfig.create({
     data: {
@@ -380,6 +365,7 @@ export async function togglePaymentMethodAction(formData: FormData) {
   const p = getPrisma();
   const id = text(formData.get("id"), 100);
   const old = await p.paymentMethodConfig.findUniqueOrThrow({ where: { id } });
+  if (!old.isActive && (old.type !== "CARD_TO_CARD" || !old.cardNumber || !/^\d{16}$/.test(old.cardNumber))) throw new Error("روش کارت‌به‌کارت معتبر لازم است.");
   await p.paymentMethodConfig.update({ where: { id }, data: { isActive: !old.isActive } });
   await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_TOGGLE", entityType: "PaymentMethodConfig", entityId: id, newData: { isActive: !old.isActive } });
   revalidatePath("/admin/payment-methods");
@@ -440,10 +426,13 @@ export async function reviewReceiptAction(formData: FormData) {
   const decision = text(formData.get("decision"), 20); // "approve" | "reject"
   const note = text(formData.get("note"), 500) || null;
   const approved = decision === "approve";
+  if (decision !== "approve" && decision !== "reject") throw new Error("تصمیم معتبر نیست.");
 
   const receipt = await p.paymentReceipt.findUniqueOrThrow({ where: { id }, include: { order: true } });
 
   await p.$transaction(async (tx) => {
+    const current = await tx.paymentReceipt.findUniqueOrThrow({ where: { id }, include: { order: true } });
+    if (current.status !== "PENDING" || current.order.status !== "PENDING") throw new Error("این رسید قبلاً بررسی شده یا سفارش قابل پرداخت نیست.");
     await tx.paymentReceipt.update({
       where: { id },
       data: { status: approved ? "APPROVED" : "REJECTED", note, reviewedBy: s.userId, reviewedAt: new Date() },
@@ -451,15 +440,16 @@ export async function reviewReceiptAction(formData: FormData) {
 
     const payment = await tx.payment.findFirst({ where: { orderId: receipt.orderId }, orderBy: { createdAt: "desc" } });
     if (payment) {
+      if (payment.method !== "CARD_TO_CARD" || payment.status === "SUCCESS") throw new Error("پرداخت قابل بررسی نیست.");
       await tx.payment.update({
         where: { id: payment.id },
         data: approved
           ? { status: "SUCCESS", paidAt: new Date() }
-          : { status: "FAILED", failureReason: note ?? "رسید رد شد." },
+          : { status: "PENDING", failureReason: note ?? "رسید رد شد." },
       });
     }
 
-    if (approved && receipt.order.status === "PENDING") {
+    if (approved && current.order.status === "PENDING") {
       await tx.order.update({
         where: { id: receipt.orderId },
         data: {
@@ -468,7 +458,7 @@ export async function reviewReceiptAction(formData: FormData) {
         },
       });
     }
-  });
+  }, { isolationLevel: "Serializable" });
 
   await writeAudit({ actorId: s.userId, action: "RECEIPT_REVIEW", entityType: "PaymentReceipt", entityId: id, newData: { decision, note } });
   revalidatePath("/admin/payment-receipts");

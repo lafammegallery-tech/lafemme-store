@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const LINKS = [
+  { href: "/admin/messages", label: "پیام‌های تماس", icon: "✉" },
   { href: "/admin", label: "داشبورد", icon: "📊" },
   { href: "/admin/products", label: "محصولات", icon: "💍" },
   { href: "/admin/categories", label: "دسته‌بندی", icon: "🗂" },

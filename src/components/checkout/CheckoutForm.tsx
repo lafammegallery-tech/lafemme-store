@@ -28,15 +28,18 @@ const fmt = (n: number) => new Intl.NumberFormat("fa-IR").format(n);
 export function CheckoutForm({
   paymentMethods,
   shippingMethods,
+  subtotal,
 }: {
   paymentMethods: PaymentMethodOption[];
   shippingMethods: ShippingMethodOption[];
+  subtotal: number;
 }) {
   const [state, formAction, isPending] = useActionState(checkoutAction, initialState);
   const [shippingId, setShippingId] = useState(shippingMethods[0]?.id ?? "");
   const [paymentId, setPaymentId] = useState(paymentMethods[0]?.id ?? "");
 
   const selectedPayment = paymentMethods.find((m) => m.id === paymentId);
+  const shippingCost = shippingMethods.find((m) => m.id === shippingId)?.cost ?? 0;
 
   return (
     <form className="checkout-form" action={formAction}>
@@ -142,7 +145,8 @@ export function CheckoutForm({
         <Textarea name="note" rows={3} />
       </fieldset>
 
-      <Button type="submit" className="btn btn-primary w-full" disabled={isPending}>
+      <p role="status">جمع با ارسال: {fmt(subtotal + shippingCost)} تومان (تخفیف معتبر هنگام ثبت سفارش اعمال می‌شود)</p>
+      <Button type="submit" className="btn btn-primary w-full" disabled={isPending || paymentMethods.length === 0 || shippingMethods.length === 0}>
         {isPending ? "در حال ثبت سفارش..." : "ثبت سفارش"}
       </Button>
     </form>

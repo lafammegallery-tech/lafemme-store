@@ -409,7 +409,9 @@ export async function getMarketQuotes():Promise<MarketQuotes>{
 
 
 
-  const silverQuote = rawSilver;
+  const silverQuote: MarketQuote = override.isManual && override.silver999 && override.silver999 > 0
+    ? { metal: "SILVER", price: override.silver999, priceToman: override.silver999, priceRial: override.silver999 * 10, change24h: 0, source: "manual", updatedAt: new Date().toISOString(), stale: false, isManual: true }
+    : rawSilver;
 
 
   return {

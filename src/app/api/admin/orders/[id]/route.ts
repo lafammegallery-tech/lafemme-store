@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireAdminApi } from "@/backend/auth/api-guard";
 import { getPrisma } from "@/backend/database/prisma";
 import { writeAudit } from "@/backend/services/audit.service";
+import { changeOrderStatus } from "@/backend/services/order-status.service";
 import { text } from "@/backend/security/validation";
 import type { OrderStatus } from "@/generated/prisma/enums";
 
@@ -38,24 +39,9 @@ export async function PATCH(request: Request, { params }: Params) {
   const old = await prisma.order.findUnique({ where: { id } });
   if (!old) return NextResponse.json({ error: "سفارش پیدا نشد." }, { status: 404 });
 
-  const order = await prisma.order.update({
-    where: { id },
-    data: {
-      status,
-      statusHistory: { create: { fromStatus: old.status, toStatus: status, note, actorId: auth.userId } },
-    },
-  });
-
-  if (status === "CANCELLED") {
-    for (const item of await prisma.orderItem.findMany({ where: { orderId: id } })) {
-      if (item.productId) {
-        await prisma.inventory.updateMany({
-          where: { productId: item.productId },
-          data: { reserved: { decrement: item.quantity } },
-        });
-      }
-    }
-  }
+  let order;
+  try { ({ order } = await changeOrderStatus(id, status, auth.userId, note)); }
+  catch (error) { return NextResponse.json({ error: error instanceof Error ? error.message : "Invalid transition" }, { status: 400 }); }
 
   await writeAudit({
     actorId: auth.userId,

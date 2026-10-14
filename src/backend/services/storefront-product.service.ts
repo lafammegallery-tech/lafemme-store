@@ -39,6 +39,7 @@ async function loadDbProducts(): Promise<Product[] | null> {
       const inventory = row.inventory?.quantity ?? row.stock;
       return {
         id: row.id,
+        createdAt: row.createdAt.toISOString(),
         name: row.name,
         slug: row.slug,
         description: row.description ?? row.shortDescription ?? "",

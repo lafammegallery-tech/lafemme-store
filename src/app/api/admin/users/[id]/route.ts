@@ -12,6 +12,7 @@ type Params = { params: Promise<{ id: string }> };
 export async function PATCH(_request: Request, { params }: Params) {
   const auth = await requireAdminApi();
   if (auth instanceof NextResponse) return auth;
+  if (auth.role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { id } = await params;
   if (id === auth.userId) {

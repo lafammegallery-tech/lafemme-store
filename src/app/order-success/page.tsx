@@ -4,6 +4,8 @@ import { PageLayout, PageHero } from "@/components/common";
 import { Container, Card, Button } from "@/components/ui";
 import { ReceiptUploader } from "@/components/checkout";
 import { getPrisma } from "@/backend/database/prisma";
+import { canAccessOrder } from "@/backend/auth/order-access";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -18,8 +20,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
     : null;
 
   const payment = orderRow?.payments[0];
+  if (!orderRow || !(await canAccessOrder(orderRow, true))) notFound();
   const isCardToCard = payment?.method === "CARD_TO_CARD";
-  const hasReceipt = (orderRow?.receipts.length ?? 0) > 0;
+  const hasReceipt = orderRow.receipts.some((receipt) => receipt.status === "PENDING" || receipt.status === "APPROVED");
+  const finalAmount = Number(orderRow.totalAmount).toLocaleString("fa-IR");
 
   const cardConfig = isCardToCard
     ? await getPrisma().paymentMethodConfig.findFirst({
@@ -34,6 +38,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
       <section className="py-16">
         <Container>
           <Card className="p-8 text-center order-success-card">
+            <p>مبلغ نهایی: {finalAmount} تومان</p>
+            <p>لطفاً رسید را تا ۲۴ ساعت ارسال کنید. پرداخت فقط پس از بررسی ادمین تأیید می‌شود.</p>
             <p>
               شماره سفارش: <strong dir="ltr">{order || "-"}</strong>
             </p>

@@ -12,7 +12,7 @@ export default async function CheckoutPage() {
   const prisma = getPrisma();
   const [cart, paymentMethodsRaw, shippingMethodsRaw] = await Promise.all([
     getCurrentCart(),
-    prisma.paymentMethodConfig.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
+    prisma.paymentMethodConfig.findMany({ where: { isActive: true, type: "CARD_TO_CARD", cardNumber: { not: null } }, orderBy: { sortOrder: "asc" } }),
     prisma.shippingMethodConfig.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
   ]);
   const items = cartToView(cart);
@@ -43,7 +43,7 @@ export default async function CheckoutPage() {
           <CheckoutSteps currentStep={1} />
           <div className="checkout-layout">
             <div className="checkout-form-section">
-              <CheckoutForm paymentMethods={paymentMethods} shippingMethods={shippingMethods} />
+              <CheckoutForm paymentMethods={paymentMethods} shippingMethods={shippingMethods} subtotal={total} />
             </div>
             <div className="checkout-summary-section">
               <OrderSummary items={items} total={total} />

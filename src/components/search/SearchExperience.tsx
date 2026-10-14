@@ -2,10 +2,10 @@
 import { useMemo, useState } from "react";
 import { Container, EmptyState, SearchBar, Select, Skeleton } from "@/components/ui";
 import { ProductCard } from "@/components/products";
-import { products } from "@/data/products";
+import type { Product } from "@/types/product";
 
 /** رابط جست‌وجو، فیلتر و مرتب‌سازی فقط با داده Mock. */
-export function SearchExperience() {
+export function SearchExperience({ products }: { products: Product[] }) {
   const [query, setQuery] = useState("");
   const [metal, setMetal] = useState("all");
   const [sort, setSort] = useState("default");
@@ -17,12 +17,12 @@ export function SearchExperience() {
           (p) =>
             p.name.includes(query) &&
             (metal === "all" ||
-              (metal === "gold" ? p.name.includes("طلا") : p.name.includes("نقره"))),
+              p.type === metal),
         )
         .sort((a, b) =>
           sort === "price-asc" ? a.price - b.price : sort === "price-desc" ? b.price - a.price : 0,
         ),
-    [query, metal, sort],
+    [query, metal, sort, products],
   );
   return (
     <section className="py-16">

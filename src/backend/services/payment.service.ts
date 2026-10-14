@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { getPrisma } from "@/backend/database/prisma";
 
 export async function createMockPayment(orderId: string) {
+  if (process.env.NODE_ENV === "production" || process.env.PAYMENT_PROVIDER !== "MOCK") throw new Error("Mock payments are disabled.");
   const prisma = getPrisma();
   const order = await prisma.order.findUnique({ where: { id: orderId }, include: { payments: true } });
   if (!order) throw new Error("سفارش پیدا نشد.");
@@ -25,6 +26,7 @@ export async function createMockPayment(orderId: string) {
 }
 
 export async function verifyMockPayment(authority: string, success: boolean) {
+  if (process.env.NODE_ENV === "production" || process.env.PAYMENT_PROVIDER !== "MOCK") throw new Error("Mock payments are disabled.");
   const prisma = getPrisma();
   return prisma.$transaction(async (tx) => {
     const payment = await tx.payment.findFirst({ where: { authority }, include: { order: true } });

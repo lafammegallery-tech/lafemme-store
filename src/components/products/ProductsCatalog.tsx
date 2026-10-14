@@ -30,12 +30,12 @@ export function ProductsCatalog({ items }: { items: Product[] }) {
     });
 
     return [...result].sort((first, second) => {
-      if (sort === "newest") return Number(second.id) - Number(first.id);
+      if (sort === "newest") return Date.parse(second.createdAt ?? "1970-01-01") - Date.parse(first.createdAt ?? "1970-01-01");
       if (sort === "price-low") return first.price - second.price;
       if (sort === "price-high") return second.price - first.price;
       if (sort === "weight-low") return first.weightValue - second.weightValue;
       if (sort === "weight-high") return second.weightValue - first.weightValue;
-      return Number(first.id) - Number(second.id);
+      return 0;
     });
   }, [filter, items, search, sort]);
 

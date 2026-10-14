@@ -29,7 +29,7 @@ COPY --from=builder /app/src/generated ./src/generated
 COPY docker/entrypoint.sh ./entrypoint.sh
 RUN sed -i 's/\r$//' ./entrypoint.sh \
     && chmod +x ./entrypoint.sh \
-    && mkdir -p /app/public/uploads/products \
+    && mkdir -p /app/storage/products /app/storage/receipts \
     && chown -R nextjs:nodejs /app
 USER nextjs
 EXPOSE 3000

@@ -10,7 +10,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const secret = process.env.MARKET_SYNC_SECRET;
-  if (secret && request.headers.get("authorization") !== `Bearer ${secret}`) {
+  const { getSession } = await import("@/backend/auth/session");
+  const session = await getSession();
+  if (!(secret && request.headers.get("authorization") === `Bearer ${secret}`) && session?.role !== "ADMIN" && session?.role !== "STAFF") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   const result = await persistMarketQuotes();

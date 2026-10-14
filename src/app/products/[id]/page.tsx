@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: product.description,
     alternates: { canonical: `/products/${product.id}` },
     openGraph: { title: product.name, description: product.description, url: `/products/${product.id}`, type: "website", images: [{ url: product.imageSrc, alt: product.name }] },
-    other: { "product:price:amount": String(product.price), "product:price:currency": "IRR" },
+    other: { "product:price:amount": String(product.price * 10), "product:price:currency": "IRR" },
   };
 }
 
@@ -35,13 +35,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const productJsonLd = {
     "@context": "https://schema.org", "@type": "Product", name: product.name, image: [product.imageSrc], description: product.description,
     sku: product.slug, brand: { "@type": "Brand", name: product.brand ?? "La Femme" },
-    offers: { "@type": "Offer", priceCurrency: "IRR", price: product.price, availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", url: `/products/${product.id}` },
+    offers: { "@type": "Offer", priceCurrency: "IRR", price: product.price * 10, availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", url: `/products/${product.id}` },
   };
   return (
     <>
       <SiteHeader />
       <main dir="rtl">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\u003c") }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
         <section className="breadcrumb-section" aria-label="مسیر صفحه"><Container><nav className="breadcrumb"><Link href="/">خانه</Link><span>/</span><Link href="/products">محصولات</Link><span>/</span><span aria-current="page">{product.name}</span></nav></Container></section>
         <section className="product-detail"><Container><div className="product-detail-wrapper"><ProductGallery product={product} /><div className="product-detail-info"><ProductInfo product={product} /><ProductPrice value={product.price} />
           <div className="live-price-note" role="status">{product.isLivePrice ? `قیمت بر پایه نرخ لحظه‌ای هر گرم ${product.type === "gold" ? "طلا" : "نقره"} محاسبه شده است.` : "قیمت موقت فروشگاه نمایش داده می‌شود؛ نرخ بازار در دسترس نیست."}</div>

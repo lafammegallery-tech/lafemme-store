@@ -6,6 +6,8 @@ const SILVER_URL =
   "https://api.noghresea.ir/api/market/getSilverPrice";
 
 const FETCH_TIMEOUT_MS = 8_000;
+let cooldownUntil = 0;
+let cachedQuote: MarketQuote | null = null;
 
 function parseNumber(v: unknown): number {
   const n = Number(
@@ -52,6 +54,7 @@ async function fetchWithCookieChallenge(url: string): Promise<Response> {
 }
 
 export async function getSilverQuote(): Promise<MarketQuote> {
+  if (cachedQuote && Date.now() < cooldownUntil) return cachedQuote;
   const stale: MarketQuote = {
     metal: "SILVER",
     price: 0,
@@ -77,7 +80,7 @@ export async function getSilverQuote(): Promise<MarketQuote> {
     // noghresea.ir returns price per gram in thousands of Rial (same unit as talasea.ir gold)
     const priceToman = Math.round(rawPrice * 1000);
 
-    return {
+    cachedQuote = {
       metal: "SILVER",
       price: priceToman,
       priceToman,
@@ -87,7 +90,11 @@ export async function getSilverQuote(): Promise<MarketQuote> {
       updatedAt: new Date().toISOString(),
       stale: false,
     };
+    cooldownUntil = Date.now() + 300_000;
+    return cachedQuote;
   } catch {
+    cooldownUntil = Date.now() + 60_000;
+    cachedQuote = { ...stale };
     return stale;
   }
 }

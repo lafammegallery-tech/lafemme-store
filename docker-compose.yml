@@ -5,11 +5,9 @@ services:
     environment:
       POSTGRES_DB: lafemme
       POSTGRES_USER: lafemme
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     volumes:
       - lafemme_postgres:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U lafemme -d lafemme"]
       interval: 10s
@@ -22,13 +20,14 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://lafemme:${POSTGRES_PASSWORD:-change-me}@postgres:5432/lafemme
+      DATABASE_URL: postgresql://lafemme:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/lafemme
       GOLD_PRICE_API_URL: ${GOLD_PRICE_API_URL:-https://api.talasea.ir/api/market/getGoldPrice}
       SILVER_PRICE_API_URL: ${SILVER_PRICE_API_URL:-https://api.noghresea.ir/api/market/getSilverPrice}
-      MARKET_SYNC_SECRET: ${MARKET_SYNC_SECRET:-replace-with-a-long-random-secret}
+      MARKET_SYNC_SECRET: ${MARKET_SYNC_SECRET:?Set MARKET_SYNC_SECRET in .env}
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
-      AUTH_SECRET: ${AUTH_SECRET:-change-this-to-a-long-random-secret}
-      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-MOCK}
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in .env}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      PAYMENT_PROVIDER: CARD_TO_CARD
       PAYMENT_CALLBACK_URL: ${PAYMENT_CALLBACK_URL:-http://localhost:3000/api/payment/callback}
       ADMIN_PHONE: ${ADMIN_PHONE:-}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-}
@@ -36,7 +35,7 @@ services:
     ports:
       - "8090:3000"
     volumes:
-      - lafemme_uploads:/app/public/uploads
+      - lafemme_uploads:/app/storage
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s

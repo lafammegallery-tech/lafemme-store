@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { UserRole } from "@/generated/prisma/client";
+import { getPrisma } from "@/backend/database/prisma";
 
 const COOKIE_NAME = "lafemme_session";
 /**
@@ -17,14 +18,21 @@ export interface Session {
   role: UserRole;
 }
 
-function secretKey() {
+export function secretKey() {
   const s = process.env.AUTH_SECRET;
   if (!s) {
     // در محیط production بدون AUTH_SECRET سرور باید اجرا نشود
     if (process.env.NODE_ENV === "production") throw new Error("AUTH_SECRET must be set in production.");
     return new TextEncoder().encode("development-only-change-me");
   }
+  if (process.env.NODE_ENV === "production" && (s.length < 32 || s.startsWith("change-") || s.startsWith("replace-"))) {
+    throw new Error("AUTH_SECRET must be a unique random secret of at least 32 characters.");
+  }
   return new TextEncoder().encode(s);
+}
+
+export function secureCookies() {
+  return process.env.COOKIE_SECURE === "true" || process.env.NEXT_PUBLIC_SITE_URL?.startsWith("https://") === true;
 }
 
 /** ساخت نشست کاربر به‌صورت JWT استاندارد (HS256) و ذخیره آن در کوکی httpOnly. */
@@ -38,7 +46,7 @@ export async function createSession(userId: string, role: UserRole) {
   const store = await cookies();
   const cookieOptions = {
     sameSite: "lax" as const,
-    secure: false,
+    secure: secureCookies(),
     path: "/",
     maxAge: MAX_AGE_SECONDS,
   };
@@ -57,10 +65,11 @@ export async function getSession(): Promise<Session | null> {
   const token = store.get(COOKIE_NAME)?.value;
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secretKey());
+    const { payload } = await jwtVerify(token, secretKey(), { algorithms: ["HS256"] });
     const { userId, role } = payload as { userId?: unknown; role?: unknown };
     if (typeof userId !== "string" || typeof role !== "string") return null;
-    return { userId, role: role as UserRole };
+    const user = await getPrisma().user.findFirst({ where: { id: userId, isActive: true, deletedAt: null }, select: { id: true, role: true } });
+    return user ? { userId: user.id, role: user.role } : null;
   } catch {
     // امضای نامعتبر یا منقضی‌شده — jwtVerify در هر دو حالت خطا می‌دهد
     return null;
@@ -76,5 +85,11 @@ export async function requireSession(next: string = "/dashboard") {
 export async function requireAdmin(next: string = "/admin") {
   const session = await requireSession(next);
   if (session.role !== "ADMIN" && session.role !== "STAFF") redirect("/dashboard");
+  return session;
+}
+
+export async function requireOwnerAdmin() {
+  const session = await requireSession("/admin");
+  if (session.role !== "ADMIN") throw new Error("Only an administrator can manage user roles.");
   return session;
 }

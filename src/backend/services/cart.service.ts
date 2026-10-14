@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
 import { getSession } from "@/backend/auth/session";
+import { secureCookies } from "@/backend/auth/session";
 import { cartRepository } from "@/backend/database/repositories/cart.repository";
 import { getPrisma } from "@/backend/database/prisma";
 import { getStorefrontProduct } from "./storefront-product.service";
@@ -13,7 +14,7 @@ export async function getCartIdentity(): Promise<CartIdentity> {
   if (!sessionId) {
     sessionId = randomUUID();
     try {
-      store.set(CART_COOKIE, sessionId, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60*60*24*30 });
+      store.set(CART_COOKIE, sessionId, { httpOnly: true, secure: secureCookies(), sameSite: "lax", path: "/", maxAge: 60*60*24*30 });
     } catch {
       // Reading the cart during a plain page render (e.g. GET /cart) can't set cookies —
       // the cookie is created for real the next time a cart-mutating Server Action runs.

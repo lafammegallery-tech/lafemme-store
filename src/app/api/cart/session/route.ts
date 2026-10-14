@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { randomUUID } from "crypto";
 import { NextResponse } from "next/server";
+import { secureCookies } from "@/backend/auth/session";
 
 const CART_COOKIE = "lafemme_cart";
 
@@ -14,6 +15,7 @@ export async function GET() {
 
     cookieStore.set(CART_COOKIE, sessionId, {
       httpOnly: true,
+      secure: secureCookies(),
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 30,

@@ -1,1 +1,4 @@
-import { NextRequest,NextResponse } from "next/server";import { verifyMockPayment } from "@/backend/services/payment.service";export async function GET(req:NextRequest){const authority=req.nextUrl.searchParams.get("authority");const result=req.nextUrl.searchParams.get("result");if(!authority)return NextResponse.redirect(new URL('/payment-result?status=invalid',req.url));await verifyMockPayment(authority,result!=="failed");return NextResponse.redirect(new URL(`/payment-result?status=${result==="failed"?"failed":"success"}`,req.url));}
+import { NextResponse } from "next/server";
+export async function GET() {
+  return NextResponse.json({ error: "پرداخت آزمایشی غیرفعال است." }, { status: 410 });
+}

@@ -607,3 +607,12 @@ model MarketSettings {
   updatedAt       DateTime @updatedAt
   updatedBy       String?
 }
+
+model ContactMessage {
+  id String @id @default(cuid())
+  name String
+  email String
+  message String
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}

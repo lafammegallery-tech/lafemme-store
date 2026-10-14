@@ -30,13 +30,15 @@ async function main(): Promise<void> {
   console.log("🌱 Starting seed...");
 
   const adminPhone =
-    process.env.ADMIN_PHONE ?? "09000000001";
+    process.env.ADMIN_PHONE;
+  if (!adminPhone || !/^09\d{9}$/.test(adminPhone)) throw new Error("Set a valid ADMIN_PHONE.");
 
   const adminEmail =
-    process.env.ADMIN_EMAIL ?? "admin@lafemme.ir";
+    process.env.ADMIN_EMAIL || null;
 
   const adminPassword =
-    process.env.ADMIN_PASSWORD ?? "Admin@12345";
+    process.env.ADMIN_PASSWORD;
+  if (!adminPassword || adminPassword.length < 12 || adminPassword.startsWith("change-")) throw new Error("Set a unique ADMIN_PASSWORD of at least 12 characters.");
 
   const passwordHash = await hashPassword(adminPassword);
 
@@ -56,12 +58,7 @@ async function main(): Promise<void> {
     },
 
     update: {
-      email: adminEmail,
-      firstName: "ادمین",
-      lastName: "La Femme",
-      passwordHash,
-      role: "ADMIN",
-      isActive: true,
+      ...(process.env.RESET_ADMIN_PASSWORD === "true" ? { passwordHash } : {}),
     },
   });
 
@@ -76,7 +73,8 @@ async function main(): Promise<void> {
           name: "کارت به کارت",
           type: "CARD_TO_CARD",
           description: "مبلغ را به کارت زیر واریز و تصویر رسید را بارگذاری کنید.",
-          cardNumber: "6037991234567890",
+          cardNumber: null,
+          isActive: false,
           cardHolder: "لافمگلد",
           bankName: "بانک ملی",
           requiresReceipt: true,
@@ -85,6 +83,7 @@ async function main(): Promise<void> {
         {
           name: "پرداخت در محل (تحویل حضوری)",
           type: "CASH_ON_DELIVERY",
+          isActive: false,
           description: "پرداخت هنگام تحویل حضوری در فروشگاه.",
           requiresReceipt: false,
           sortOrder: 1,

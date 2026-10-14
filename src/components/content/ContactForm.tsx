@@ -1,41 +1,15 @@
 "use client";
-import { Button, Input, Textarea, ToastProvider, useToast } from "@/components/ui";
-
-/** فرم تماس نمایشی؛ پیام را فقط در Toast محلی نشان می‌دهد. */
-function ContactFormContent() {
-  const { push } = useToast();
-  return (
-    <form
-      className="space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault();
-        push({
-          title: "پیام ثبت شد",
-          description: "در نسخه نهایی این پیام برای پشتیبانی ارسال می‌شود.",
-          tone: "success",
-        });
-      }}
-    >
-      <div>
-        <label htmlFor="contact-name">نام و نام خانوادگی</label>
-        <Input id="contact-name" autoComplete="name" />
-      </div>
-      <div>
-        <label htmlFor="contact-email">ایمیل</label>
-        <Input id="contact-email" type="email" autoComplete="email" dir="ltr" />
-      </div>
-      <div>
-        <label htmlFor="contact-message">متن پیام</label>
-        <Textarea id="contact-message" rows={6} />
-      </div>
-      <Button type="submit">ارسال پیام</Button>
-    </form>
-  );
-}
+import { useActionState } from "react";
+import { Button, Input, Textarea } from "@/components/ui";
+import { contactAction, type ContactState } from "@/app/actions/contact";
 export function ContactForm() {
-  return (
-    <ToastProvider>
-      <ContactFormContent />
-    </ToastProvider>
-  );
+  const [state, action, pending] = useActionState(contactAction, {} as ContactState);
+  return <form action={action} className="space-y-4">
+    {state.error && <p role="alert">{state.error}</p>}
+    {state.success && <p role="status">پیام شما ثبت شد و در پنل پشتیبانی قابل مشاهده است.</p>}
+    <label htmlFor="contact-name">نام و نام خانوادگی</label><Input name="name" id="contact-name" required maxLength={120} autoComplete="name" />
+    <label htmlFor="contact-email">ایمیل</label><Input name="email" id="contact-email" required maxLength={200} type="email" autoComplete="email" dir="ltr" />
+    <label htmlFor="contact-message">متن پیام</label><Textarea name="message" id="contact-message" required minLength={10} maxLength={5000} rows={6} />
+    <Button type="submit" disabled={pending}>{pending ? "در حال ارسال..." : "ارسال پیام"}</Button>
+  </form>;
 }
