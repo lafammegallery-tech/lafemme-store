@@ -3,6 +3,7 @@ import { FeaturedProductsSection, HeroSection, WhyUsSection } from "@/components
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MarketOverview } from "@/components/market/MarketOverview";
+import { InvestmentCalculator } from "@/components/home/InvestmentCalculator";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -53,6 +54,8 @@ export default function HomePage() {
         <HeroSection />
 
         <MarketOverview />
+
+        <InvestmentCalculator />
 
         {/* FEATURED PRODUCTS — ویترین محصولات منتخب */}
         <FeaturedProductsSection />
