@@ -104,3 +104,38 @@ test("does not invent alternatives by splitting the same weight into smaller bar
   assert.equal(plans.length, 1);
   assert.equal(plans[0].count, 1);
 });
+
+test("new heavier products are used automatically only when affordable and available", () => {
+  const existing = [product("100g", "silver", 60, 100, 5), product("10g", "silver", 7, 10, 100)];
+  const added = product("new-250g", "silver", 140, 250, 2);
+  assert.equal(buildInvestmentPlans(existing, 150, "silver")[0].items[0].product.id, "100g");
+  const expanded = [...existing, added];
+  assert.equal(buildInvestmentPlans(expanded, 150, "silver")[0].items[0].product.id, "new-250g");
+  assert.equal(buildInvestmentPlans(expanded, 100, "silver")[0].items[0].product.id, "100g");
+  assert.equal(buildInvestmentPlans([...existing, { ...added, stock: 0 }], 150, "silver")[0].items[0].product.id, "100g");
+  assert.equal(buildInvestmentPlans([...expanded].reverse(), 150, "silver")[0].key, buildInvestmentPlans(expanded, 150, "silver")[0].key);
+});
+
+test("varied newly added denominations preserve budget, availability and descending weights", () => {
+  let seed = 71;
+  const random = (limit: number) => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed % limit; };
+  for (let trial = 0; trial < 150; trial++) {
+    const items = Array.from({ length: 20 }, (_, i) => product(`p${i}`, i % 2 ? "gold" : "silver", 1 + random(1000), (1 + random(1000)) / 10, random(20)));
+    const budget = 1 + random(10000);
+    for (const mode of ["gold", "silver", "mixed"] as const) {
+      const plans = buildInvestmentPlans(items, budget, mode);
+      assert.ok(plans.length <= 3);
+      assert.equal(new Set(plans.map(p => p.key)).size, plans.length);
+      for (const plan of plans) {
+        assert.ok(plan.total > 0 && plan.total <= budget);
+        assert.equal(plan.remaining, budget - plan.total);
+        for (const [index, item] of plan.items.entries()) {
+          assert.ok(item.quantity > 0 && item.quantity <= item.product.stock);
+          assert.ok(mode === "mixed" || item.product.type === mode);
+          const previous = plan.items[index - 1];
+          if (previous?.product.type === item.product.type) assert.ok(previous.product.weightValue >= item.product.weightValue);
+        }
+      }
+    }
+  }
+});
