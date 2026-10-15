@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { formatMoney } from "@/lib/format-money";
 import type { CartItemData } from "@/types/cart";
 
 interface OrderSummaryProps {
@@ -34,7 +35,7 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
               </span>
             </div>
             <div className="order-summary-item-price">
-              {new Intl.NumberFormat("fa-IR").format(item.price * item.quantity)} تومان
+              {formatMoney(item.price * item.quantity)} تومان
             </div>
           </div>
         ))}
@@ -44,7 +45,7 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
 
       <div className="order-summary-row">
         <span>جمع کالاها</span>
-        <span>{new Intl.NumberFormat("fa-IR").format(total)} تومان</span>
+        <span>{formatMoney(total)} تومان</span>
       </div>
 
       <div className="order-summary-row">
@@ -54,7 +55,7 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
 
       <div className="order-summary-total">
         <span>جمع کالاها، پیش از ارسال و تخفیف</span>
-        <span>{new Intl.NumberFormat("fa-IR").format(grandTotal)} تومان</span>
+        <span>{formatMoney(grandTotal)} تومان</span>
       </div>
     </aside>
   );

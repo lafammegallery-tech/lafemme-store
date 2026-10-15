@@ -77,3 +77,30 @@ test("large inventories stay bounded and deterministic", () => {
   assert.deepEqual(first, buildInvestmentPlans(large, MAX_INVESTMENT_BUDGET, "mixed"));
   assert.ok(first.length > 0 && first.every(p => p.total <= MAX_INVESTMENT_BUDGET));
 });
+
+test("all single-metal scenarios retain an affordable 100g bar instead of ten 10g bars", () => {
+  for (const metal of ["gold", "silver"] as const) {
+    const items = [product("small", metal, 9_000_000, 10, 100), product("large", metal, 90_000_000, 100, 2)];
+    const plans = buildInvestmentPlans(items, 100_000_000, metal);
+    assert.ok(plans.length > 0);
+    for (const plan of plans) {
+      assert.equal(plan.items[0].product.id, "large");
+      assert.ok(plan.count <= 2);
+    }
+    assert.ok(plans.some(p => p.count === 1 && p.items[0].product.weightValue === 100));
+  }
+});
+
+test("descends through denominations, honours stock, and removes tails for compact alternatives", () => {
+  const items = [product("100g", "silver", 70, 100, 1), product("20g", "silver", 18, 20, 4), product("5g", "silver", 5, 5, 100)];
+  const plans = buildInvestmentPlans(items, 100, "silver");
+  assert.deepEqual(plans[0].items.map(i => [i.product.id, i.quantity]), [["100g", 1], ["20g", 1], ["5g", 2]]);
+  assert.ok(plans.every(p => p.items[0].product.id === "100g"));
+  assert.deepEqual(plans.map(p => p.count), [4, 2, 1]);
+});
+
+test("does not invent alternatives by splitting the same weight into smaller bars", () => {
+  const plans = buildInvestmentPlans([product("100g", "silver", 100, 100, 1), product("10g", "silver", 10, 10, 100)], 100, "silver");
+  assert.equal(plans.length, 1);
+  assert.equal(plans[0].count, 1);
+});

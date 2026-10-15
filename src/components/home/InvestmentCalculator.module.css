@@ -24,6 +24,7 @@
 .budgetField input::placeholder { color: var(--color-gray); font-size: 1rem; font-weight: 400; }
 .budgetField > span { color: var(--color-gold-light); font-size: .8rem; }
 .hint { margin: 8px 0 12px; font-size: .7rem; color: var(--color-gray); }
+.budgetWords { min-height: 24px; margin: 10px 0 0; color: var(--color-gold-light); font-size: .8rem; line-height: 1.9; overflow-wrap: anywhere; }
 .presets { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
 .presets button { padding: 6px 12px; min-height: 36px; border: 1px solid var(--color-border-subtle); border-radius: 8px; background: var(--color-surface); color: var(--color-gray-light); font-size: .73rem; cursor: pointer; }
 .presets button:hover { border-color: var(--color-gold); color: var(--color-gold-light); }

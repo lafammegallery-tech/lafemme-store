@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { formatMoney } from "@/lib/format-money";
 import Link from "next/link";
 import type { Product } from "@/types/product";
 
@@ -28,7 +29,7 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="product-purity">{product.purity}</p>
 
         <div className="product-price" aria-label={`قیمت ${product.name}`}>
-          {new Intl.NumberFormat("fa-IR").format(product.price)} تومان
+          {formatMoney(product.price)} تومان
         </div>
         <span className="price-source-badge">{product.isLivePrice ? "قیمت به‌روز" : "قیمت موقت · خرید متوقف"}</span>
 

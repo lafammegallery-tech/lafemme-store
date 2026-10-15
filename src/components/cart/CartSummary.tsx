@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatMoney } from "@/lib/format-money";
 
 interface CartSummaryProps {
   total: number;
@@ -21,19 +22,19 @@ export function CartSummary({ total, itemCount = 0 }: CartSummaryProps) {
 
       <div className="cart-summary-row">
         <span>جمع کالاها</span>
-        <span>{new Intl.NumberFormat("fa-IR").format(total)} تومان</span>
+        <span>{formatMoney(total)} تومان</span>
       </div>
 
       <div className="cart-summary-row">
         <span>هزینه ارسال</span>
-        <span>{shippingCost === 0 ? "رایگان" : `${new Intl.NumberFormat("fa-IR").format(shippingCost)} تومان`}</span>
+        <span>{shippingCost === 0 ? "رایگان" : `${formatMoney(shippingCost)} تومان`}</span>
       </div>
 
       <div className="cart-summary-divider" />
 
       <div className="cart-summary-total">
         <span>مبلغ قابل پرداخت</span>
-        <span>{new Intl.NumberFormat("fa-IR").format(grandTotal)} تومان</span>
+        <span>{formatMoney(grandTotal)} تومان</span>
       </div>
 
       <Link href="/checkout" className="btn btn-primary cart-summary-checkout">

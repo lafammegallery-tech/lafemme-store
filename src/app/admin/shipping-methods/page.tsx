@@ -1,4 +1,6 @@
 import { requireAdmin } from "@/backend/auth/session";
+import { MoneyInput } from "@/components/ui/MoneyInput";
+import { formatMoney } from "@/lib/format-money";
 import { getPrisma } from "@/backend/database/prisma";
 import { createShippingMethodAction, toggleShippingMethodAction, deleteShippingMethodAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
@@ -6,7 +8,7 @@ import { Container, Card, Input, Textarea, Button, Badge } from "@/components/ui
 
 export const dynamic = "force-dynamic";
 
-const fmt = (n: number) => new Intl.NumberFormat("fa-IR").format(n);
+const fmt = formatMoney;
 
 export default async function Page() {
   await requireAdmin();
@@ -21,7 +23,7 @@ export default async function Page() {
             <h2 className="admin-form-title">افزودن روش ارسال</h2>
             <form action={createShippingMethodAction} className="grid gap-3">
               <Input name="name" placeholder="نام (مثلاً پیک امین)" required />
-              <Input name="cost" type="number" placeholder="هزینه (تومان) — ۰ برای رایگان" dir="ltr" />
+              <MoneyInput name="cost" placeholder="هزینه (تومان) — ۰ برای رایگان" dir="ltr" />
               <Textarea name="description" placeholder="توضیحات (مثلاً تحویل حضوری در فروشگاه)" rows={2} />
               <Input name="sortOrder" type="number" placeholder="ترتیب نمایش (۰)" dir="ltr" />
               <Button type="submit">افزودن روش ارسال</Button>

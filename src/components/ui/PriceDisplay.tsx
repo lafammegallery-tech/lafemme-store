@@ -1,5 +1,6 @@
 import type { HTMLAttributes } from "react";
 import { cn } from "./lib/cn";
+import { formatMoney } from "@/lib/format-money";
 export interface PriceDisplayProps extends HTMLAttributes<HTMLSpanElement> {
   value: number;
   currency?: string;
@@ -15,7 +16,7 @@ export function PriceDisplay({
 }: PriceDisplayProps) {
   return (
     <span className={cn("font-semibold tabular-nums text-lf-gold", className)} dir="rtl" {...props}>
-      {new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value)}{" "}
+      {formatMoney(value, locale)}{" "}
       <span className="text-[.8em] text-lf-gray-light">{currency}</span>
     </span>
   );

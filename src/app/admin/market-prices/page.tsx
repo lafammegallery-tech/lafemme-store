@@ -1,4 +1,5 @@
 import { requireAdmin } from "@/backend/auth/session";
+import { MoneyInput } from "@/components/ui/MoneyInput";
 import { getPrisma } from "@/backend/database/prisma";
 import { getMarketQuotes } from "@/backend/services/market-price.service";
 import { PageLayout, PageHero } from "@/components/common";
@@ -139,12 +140,11 @@ export default async function Page() {
                   <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>
                     قیمت طلا ۷۵۰ (تومان)
                   </label>
-                  <input
-                    type="number"
+                  <MoneyInput
+                    allowDecimals
                     name="manualGold750"
                     defaultValue={settings?.manualGold750 ? String(settings.manualGold750) : ""}
-                    placeholder="مثال: 18590"
-                    min="0"
+                    placeholder="مثال: ۱۸٬۵۹۰"
                     dir="ltr"
                     style={{
                       width: "100%",
@@ -161,12 +161,11 @@ export default async function Page() {
                   <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>
                     قیمت نقره ۹۹۹ (تومان)
                   </label>
-                  <input
-                    type="number"
+                  <MoneyInput
+                    allowDecimals
                     name="manualSilver999"
                     defaultValue={settings?.manualSilver999 ? String(settings.manualSilver999) : ""}
-                    placeholder="مثال: 1200"
-                    min="0"
+                    placeholder="مثال: ۱٬۲۰۰"
                     dir="ltr"
                     style={{
                       width: "100%",

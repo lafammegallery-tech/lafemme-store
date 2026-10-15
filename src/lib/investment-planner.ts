@@ -1,4 +1,5 @@
-/** Bounded, deterministic comparison search; not a forecast or an exact optimiser. */
+import { formatMoney, normalizeMoneyInput } from "./format-money";
+
 export type InvestmentMode = "gold" | "silver" | "mixed";
 export interface InvestmentProduct {
   id: string;
@@ -25,15 +26,11 @@ export interface InvestmentPlan {
 export const MAX_INVESTMENT_BUDGET = 1_000_000_000_000;
 
 export function parseInvestmentBudget(input: string): number {
-  const normalized = input.replace(/[۰-۹]/g, d => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
-    .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).replace(/[,٬\s]/g, "");
+  const normalized = normalizeMoneyInput(input);
   return /^\d{1,13}$/.test(normalized) ? Number(normalized) : NaN;
 }
 
-type State = { total: number; gold: number; silver: number; count: number; quantities: number[] };
-type Goal = "weight" | "budget" | "flexible";
 const digits = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 3 });
-const money = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
 
 export function eligibleInvestmentProducts(products: InvestmentProduct[], mode: InvestmentMode) {
   return products.filter(p => (mode === "mixed" || p.type === mode)
@@ -41,72 +38,68 @@ export function eligibleInvestmentProducts(products: InvestmentProduct[], mode: 
     && Number.isFinite(p.weightValue) && p.weightValue > 0);
 }
 
+/** Heaviest first, never replace an affordable large bar with a stack of small ones.
+ * Alternatives remove small tails, not large anchor bars. This is a denomination
+ * policy rather than a maximum-weight/maximum-spend knapsack optimisation.
+ */
 export function buildInvestmentPlans(products: InvestmentProduct[], budget: number, mode: InvestmentMode): InvestmentPlan[] {
   if (!Number.isSafeInteger(budget) || budget <= 0 || budget > MAX_INVESTMENT_BUDGET) return [];
   const catalog = eligibleInvestmentProducts(products, mode).filter(p => p.price <= budget)
-    .sort((a, b) => a.type.localeCompare(b.type) || a.id.localeCompare(b.id));
+    .sort((a, b) => (mode === "mixed" ? a.type.localeCompare(b.type) : 0)
+      || b.weightValue - a.weightValue || a.price - b.price || a.id.localeCompare(b.id));
   if (!catalog.length) return [];
-  const weight = (s: State) => mode === "silver" ? s.silver : s.gold;
-  const compare = (goal: Goal) => (a: State, b: State): number => {
-    // In mixed mode every strategy first preserves the gold allocation.
-    const priority = mode === "mixed" ? b.gold - a.gold : 0;
-    if (priority) return priority;
-    if (goal === "budget") return b.total - a.total || weight(b) - weight(a) || a.count - b.count;
-    if (goal === "flexible") return Math.min(3, b.count) - Math.min(3, a.count) || weight(b) - weight(a) || b.total - a.total || a.count - b.count;
-    return weight(b) - weight(a) || (mode === "mixed" ? b.silver - a.silver : 0) || a.total - b.total || a.count - b.count;
-  };
-  const candidates = new Map<string, State>();
-  for (const goal of ["weight", "budget", "flexible"] as const) {
-    let states: State[] = [{ total: 0, gold: 0, silver: 0, count: 0, quantities: catalog.map(() => 0) }];
-    catalog.forEach((product, index) => {
-      let remaining = Math.min(product.stock, Math.floor(budget / product.price));
-      // Binary stock bundles avoid iterating once per unit for large inventories.
-      for (let size = 1; remaining > 0; size *= 2) {
-        const quantity = Math.min(size, remaining);
-        remaining -= quantity;
-        const expanded = [...states];
-        for (const state of states) {
-          const total = state.total + product.price * quantity;
-          if (total > budget) continue;
-          const quantities = [...state.quantities];
-          quantities[index] += quantity;
-          expanded.push({ total, quantities, count: state.count + quantity,
-            gold: Math.round((state.gold + (product.type === "gold" ? product.weightValue * quantity : 0)) * 1e6) / 1e6,
-            silver: Math.round((state.silver + (product.type === "silver" ? product.weightValue * quantity : 0)) * 1e6) / 1e6 });
-        }
-        const unique = [...new Map(expanded.map(s => [s.quantities.join(","), s])).values()];
-        // Keep inexpensive partial combinations too: they may admit a later product.
-        const ranked = unique.sort(compare(goal)).slice(0, 192);
-        const inexpensive = [...unique].sort((a, b) => a.total - b.total).slice(0, 64);
-        const mixed = mode === "mixed" ? unique.filter(s => s.gold > 0 && s.silver > 0).sort(compare(goal)).slice(0, 64) : [];
-        states = [...new Map([...ranked, ...inexpensive, ...mixed].map(s => [s.quantities.join(","), s])).values()];
-      }
-    });
-    for (const state of states.filter(s => s.count > 0)) candidates.set(state.quantities.join(","), state);
+  type Item = InvestmentPlan["items"][number];
+  function fill(limit: number, selected: InvestmentProduct[]): Item[] {
+    const items: Item[] = [];
+    for (const product of selected) {
+      const quantity = Math.min(product.stock, Math.floor(limit / product.price));
+      if (quantity <= 0) continue;
+      items.push({ product, quantity });
+      limit -= product.price * quantity;
+    }
+    return items;
   }
-  const selected = new Set<string>();
   const plans: InvestmentPlan[] = [];
-  for (const goal of ["weight", "budget", "flexible"] as const) {
-    const remainingCandidates = [...candidates.values()].filter(s => !selected.has(s.quantities.join(",")));
-    // Offer an actual two-metal alternative when one was found, while choosing
-    // the highest gold allocation within that subset (primary plan stays intact).
-    const combined = mode === "mixed" && goal === "budget" ? remainingCandidates.filter(s => s.gold > 0 && s.silver > 0) : [];
-    const state = (combined.length ? combined : remainingCandidates).sort(compare(goal))[0];
-    if (!state) continue;
-    const key = state.quantities.join(",");
-    selected.add(key);
-    const items = catalog.flatMap((product, i) => state.quantities[i] ? [{ product, quantity: state.quantities[i] }] : []);
-    const title = goal === "weight" ? "تمرکز بر وزن" : goal === "budget" ? (combined.length ? "ترکیب دو فلز" : "استفاده از بودجه") : "انتخاب جایگزین";
-    let reason = goal === "weight"
-      ? `در جست‌وجوی ترکیب‌های موجود، این گزینه با تمرکز بر وزن ${mode === "silver" ? "نقره" : state.gold > 0 ? "طلا" : "نقره"} انتخاب شده است؛ در وزن برابر، مبلغ کمتر ترجیح داده می‌شود.`
-      : goal === "budget"
-        ? `این ترکیب ${money.format(state.total)} تومان از بودجه را به شمش تبدیل می‌کند و ${money.format(budget - state.total)} تومان باقی می‌گذارد.`
-        : `این ترکیب، انتخاب متفاوتی از محصولات قابل خرید در محدودهٔ بودجهٔ شماست.`;
-    if (state.count > 1) reason += ` با ${digits.format(state.count)} قطعهٔ جداگانه، برای فروش بخشی از دارایی لازم نیست همهٔ آن را یکجا بفروشید؛ شرایط بازخرید را جداگانه بررسی کنید.`;
-    if (state.gold > 0 && state.silver > 0) reason += ` در کنار ${digits.format(state.gold)} گرم طلا، ${digits.format(state.silver)} گرم نقره هم در بودجه جای گرفته است.`;
-    else if (mode === "mixed") reason += ` این پیشنهاد فقط شامل ${state.gold > 0 ? "طلا" : "نقره"} است؛ حالت «طلا و نقره» الزاماً به معنی حضور هر دو فلز در همهٔ ترکیب‌ها نیست.`;
-    plans.push({ key, title, reason, items, total: state.total, remaining: budget - state.total,
-      goldWeight: state.gold, silverWeight: state.silver, count: state.count });
+  const signatures = new Set<string>();
+  function add(items: Item[], title: string, explanation: string) {
+    if (!items.length || plans.length >= 3) return;
+    // Different SKUs of the same metal/size are not meaningful extra suggestions.
+    const sizes = new Map<string, number>();
+    for (const item of items) {
+      const size = `${item.product.type}:${item.product.weightValue}:${item.product.purity}`;
+      sizes.set(size, (sizes.get(size) ?? 0) + item.quantity);
+    }
+    const key = [...sizes].sort(([a], [b]) => a.localeCompare(b)).map(([size, count]) => `${size}=${count}`).join("|");
+    if (signatures.has(key)) return;
+    const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+    const count = items.reduce((sum, i) => sum + i.quantity, 0);
+    const metalWeight = (metal: "gold" | "silver") => Math.round(items.reduce((sum, i) => sum + (i.product.type === metal ? i.quantity * i.product.weightValue : 0), 0) * 1e6) / 1e6;
+    const goldWeight = metalWeight("gold"), silverWeight = metalWeight("silver");
+    const largest = items[0].product;
+    let reason = `${explanation} این ترکیب از شمش ${digits.format(largest.weightValue)} گرمی شروع شده و شامل ${formatMoney(count)} قطعه است؛ به‌جای خرد کردن خرید به تعداد زیادی شمش سبک، وزن‌های بزرگ‌تر انتخاب شده‌اند.`;
+    if (items.length > 1) reason += " وزن‌های کوچک‌تر فقط برای تکمیل ترکیب پس از شمش‌های سنگین‌تر استفاده شده‌اند.";
+    reason += ` مبلغ باقی‌مانده ${formatMoney(budget - total)} تومان است.`;
+    if (goldWeight > 0 && silverWeight > 0) reason += ` وزن طلا ${digits.format(goldWeight)} گرم و نقره ${digits.format(silverWeight)} گرم است.`;
+    else if (mode === "mixed") reason += ` این گزینه تک‌فلزی است؛ حضور هر دو فلز به بودجه و موجودی بستگی دارد.`;
+    signatures.add(key);
+    plans.push({ key, title, reason, items, total, remaining: budget - total, goldWeight, silverWeight, count });
   }
+  const primary = fill(budget, catalog);
+  add(primary, "شمش‌های سنگین‌تر", "ابتدا سنگین‌ترین شمش قابل خرید و سپس وزن‌های بعدی در بودجه انتخاب شده‌اند.");
+
+  if (mode === "mixed" && !primary.some(i => i.product.type === "silver")) {
+    const gold = catalog.filter(p => p.type === "gold");
+    const silver = catalog.filter(p => p.type === "silver");
+    const silverMinimum = silver.length ? Math.min(...silver.map(p => p.price)) : Infinity;
+    const goldItems = fill(budget - silverMinimum, gold);
+    if (goldItems.length) {
+      const rest = budget - goldItems.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
+      const silverItems = fill(rest, silver);
+      if (silverItems.length) add([...goldItems, ...silverItems], "ترکیب دو فلز", "در این سناریو، بخشی از بودجه برای حضور هر دو فلز کنار گذاشته شده و در هر فلز، شمش‌های سنگین‌تر زودتر انتخاب شده‌اند.");
+    }
+  }
+  // Compact scenarios deliberately leave the fine-grained remainder unspent.
+  if (primary.length > 1) add(primary.slice(0, -1), "قطعات کمتر", "با حذف ریزترین بخش خرید، تعداد قطعات کمتر شده و مبلغ بیشتری برای شما باقی می‌ماند.");
+  if (primary.length > 1) add(primary.slice(0, 1), "فقط وزن اصلی", "این سناریو فقط وزن اصلی خرید را نگه می‌دارد و بودجهٔ باقی‌مانده را صرف قطعات ریز نمی‌کند.");
   return plans;
 }

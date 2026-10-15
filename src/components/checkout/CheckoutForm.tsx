@@ -1,5 +1,6 @@
 "use client";
 import { useActionState, useState } from "react";
+import { formatMoney } from "@/lib/format-money";
 import { Button, Input, Textarea } from "@/components/ui";
 import { checkoutAction, type CheckoutState } from "@/app/actions/checkout";
 
@@ -22,7 +23,7 @@ export interface ShippingMethodOption {
   cost: number;
 }
 
-const fmt = (n: number) => new Intl.NumberFormat("fa-IR").format(n);
+const fmt = formatMoney;
 
 /** فرم تکمیل سفارش — اطلاعات آدرس، ارسال و پرداخت. */
 export function CheckoutForm({

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input, Textarea, Button } from "@/components/ui";
 import MultiImageUploader from "./MultiImageUploader";
 import PriceCalculator from "./PriceCalculator";
+import { MoneyInput } from "@/components/ui/MoneyInput";
 
 interface Category {
   id: string;
@@ -39,6 +40,7 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
   const [metalType, setMetalType] = useState(defaults.metalType ?? "GOLD");
   const [weightValue, setWeightValue] = useState(String(defaults.weightValue ?? ""));
   const [premiumPercent, setPremiumPercent] = useState(String(defaults.premiumPercent ?? "0"));
+  const [price, setPrice] = useState(defaults.price ?? "");
 
   return (
     <form action={action} className="grid gap-6 max-w-2xl py-10">
@@ -109,9 +111,10 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
           metalType={metalType}
           weightValue={weightValue}
           premiumPercent={premiumPercent}
+          onApply={value => setPrice(String(value))}
         />
 
-        <Input name="price" type="number" min="0" placeholder="قیمت پشتیبان (تومان) — از دکمه اعمال بالا یا وارد کنید" required dir="ltr" defaultValue={defaults.price ?? ""} />
+        <MoneyInput name="price" placeholder="قیمت پشتیبان (تومان) — از دکمه اعمال بالا یا وارد کنید" required dir="ltr" value={price} onValueChange={setPrice} />
         <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
           <div>
             <Input
@@ -127,7 +130,7 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
             <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>درصد سود روی قیمت فلز</small>
           </div>
           <div>
-            <Input name="fixedPremium" type="number" min="0" placeholder="سود ثابت (تومان)" dir="ltr" defaultValue={String(defaults.fixedPremium ?? "0")} />
+            <MoneyInput name="fixedPremium" placeholder="سود ثابت (تومان)" dir="ltr" defaultValue={String(defaults.fixedPremium ?? "0")} />
             <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>مبلغ ثابت علاوه بر قیمت فلز</small>
           </div>
         </div>

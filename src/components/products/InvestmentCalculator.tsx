@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { MoneyInput } from "@/components/ui/MoneyInput";
+import { formatMoney, moneyToPersianWords } from "@/lib/format-money";
 
 interface InvestmentCalculatorProps {
   productPrice: number;
@@ -34,7 +36,8 @@ export function InvestmentCalculator({ productPrice, productWeight, metalLabel }
       <div className="investment-calculator__inputs">
         <label>
           بودجه شما (تومان)
-          <input type="number" min={0} step={100000} value={budget} onChange={(event) => setBudget(Number(event.target.value))} />
+          <MoneyInput value={budget} onValueChange={value => setBudget(Number(value) || 0)} aria-describedby="product-budget-words" />
+          <small id="product-budget-words" aria-live="polite">{moneyToPersianWords(budget)}</small>
         </label>
         <label>
           سناریوی تغییر قیمت (%)
@@ -44,9 +47,9 @@ export function InvestmentCalculator({ productPrice, productWeight, metalLabel }
       <div className="investment-calculator__results">
         <div><span>تعداد قابل خرید</span><strong>{result.quantity.toLocaleString("fa-IR")} عدد</strong></div>
         <div><span>وزن کل {metalLabel}</span><strong>{result.totalWeight.toLocaleString("fa-IR")} گرم</strong></div>
-        <div><span>مبلغ سرمایه‌گذاری</span><strong>{result.invested.toLocaleString("fa-IR")} تومان</strong></div>
-        <div><span>ارزش در سناریوی انتخابی</span><strong>{Math.round(result.projectedValue).toLocaleString("fa-IR")} تومان</strong></div>
-        <div className={result.difference >= 0 ? "is-positive" : "is-negative"}><span>تغییر تخمینی</span><strong>{Math.round(result.difference).toLocaleString("fa-IR")} تومان</strong></div>
+        <div><span>مبلغ سرمایه‌گذاری</span><strong>{formatMoney(result.invested)} تومان</strong></div>
+        <div><span>ارزش در سناریوی انتخابی</span><strong>{formatMoney(result.projectedValue)} تومان</strong></div>
+        <div className={result.difference >= 0 ? "is-positive" : "is-negative"}><span>تغییر تخمینی</span><strong>{formatMoney(result.difference)} تومان</strong></div>
       </div>
     </section>
   );

@@ -7,8 +7,10 @@ import { Container } from "@/components/ui";
 import { MAX_INVESTMENT_BUDGET, parseInvestmentBudget } from "@/lib/investment-planner";
 import type { InvestmentMode, InvestmentPlan } from "@/lib/investment-planner";
 import styles from "./InvestmentCalculator.module.css";
+import { MoneyInput } from "@/components/ui/MoneyInput";
+import { formatMoney, moneyToPersianWords } from "@/lib/format-money";
 
-const money = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 0 });
+const money = { format: formatMoney };
 const weight = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 3 });
 const modes: Array<{ value: InvestmentMode; label: string; symbol: string }> = [
   { value: "gold", label: "فقط طلا", symbol: "Au" },
@@ -18,6 +20,7 @@ const modes: Array<{ value: InvestmentMode; label: string; symbol: string }> = [
 
 export function InvestmentCalculator() {
   const [budget, setBudget] = useState("");
+  const budgetWords = budget ? moneyToPersianWords(parseInvestmentBudget(budget)) : "";
   const [mode, setMode] = useState<InvestmentMode>("mixed");
   const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState<InvestmentPlan[] | null>(null);
@@ -78,11 +81,12 @@ export function InvestmentCalculator() {
             <div className={styles.formHeading}><span aria-hidden="true">↗</span><div><h3>راهنمای انتخاب شمش</h3><p>یک قدم نزدیک‌تر به انتخاب شما</p></div></div>
             <label htmlFor="investment-budget" className={styles.label}>چقدر برای خرید در نظر دارید؟</label>
             <div className={styles.budgetField}>
-              <input id="investment-budget" name="budget" type="text" inputMode="numeric" autoComplete="off"
-                placeholder="مثلاً ۱۰۰٬۰۰۰٬۰۰۰" value={budget} maxLength={24} aria-describedby="investment-budget-hint"
-                onChange={event => { resetResults(); setBudget(event.target.value); }} />
+              <MoneyInput id="investment-budget" name="budget" autoComplete="off"
+                placeholder="مثلاً ۱۰۰٬۰۰۰٬۰۰۰" value={budget} maxLength={24} aria-describedby="investment-budget-words investment-budget-hint"
+                onValueChange={value => { resetResults(); setBudget(value); }} />
               <span>تومان</span>
             </div>
+            <p id="investment-budget-words" className={styles.budgetWords} aria-live="polite" aria-atomic="true">{budgetWords || "مبلغ به حروف اینجا نمایش داده می‌شود"}</p>
             <p id="investment-budget-hint" className={styles.hint}>مبلغ را به تومان وارد کنید، نه ریال.</p>
             <div className={styles.presets} aria-label="بودجه‌های نمونه">
               {[50, 100, 250].map(value => <button key={value} type="button" onClick={() => { resetResults(); setBudget(money.format(value * 1_000_000)); }}>{money.format(value)} میلیون</button>)}
@@ -117,7 +121,7 @@ export function InvestmentCalculator() {
             </article>)}</div>
           </div>}
         </div>
-        <p className={styles.disclaimer}>این ابزار برای مقایسهٔ خرید است، نه توصیهٔ مالی یا تضمین سود. جست‌وجوی ترکیب‌ها محدود است و همهٔ حالت‌های ممکن را تضمین نمی‌کند. وزن‌ها، وزن درج‌شدهٔ محصول‌اند، نه وزن فلز خالص. هزینهٔ ارسال جداست و قیمت و موجودی ممکن است تغییر کند.</p>
+        <p className={styles.disclaimer}>مبنای پیشنهاد، انتخاب شمش‌های سنگین‌تر و پرهیز از قطعات ریز غیرضروری است؛ گزینه‌های کم‌تعدادتر ممکن است بخشی از بودجه را استفاده نکنند. این ابزار توصیهٔ مالی یا تضمین سود نیست. وزن‌ها، وزن محصول‌اند، نه فلز خالص. هزینهٔ ارسال جداست و قیمت و موجودی ممکن است تغییر کند.</p>
       </Container>
     </section>
   );

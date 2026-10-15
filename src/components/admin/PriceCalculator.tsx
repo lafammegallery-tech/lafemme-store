@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { formatMoney } from "@/lib/format-money";
 
 interface Props {
   metalType: string;
   weightValue: string;
   premiumPercent: string;
+  onApply: (value: number) => void;
 }
 
 interface MarketQuote {
@@ -15,7 +17,7 @@ interface MarketQuote {
   source: string;
 }
 
-export default function PriceCalculator({ metalType, weightValue, premiumPercent }: Props) {
+export default function PriceCalculator({ metalType, weightValue, premiumPercent, onApply }: Props) {
   const [quote, setQuote] = useState<MarketQuote | null>(null);
   const [loading, setLoading] = useState(false);
   const priceRef = useRef<HTMLInputElement | null>(null);
@@ -42,12 +44,7 @@ export default function PriceCalculator({ metalType, weightValue, premiumPercent
     if (!q || q.stale || q.price <= 0 || weight <= 0) return;
     const metal = q.price;
     const calculated = Math.round(metal * weight * (1 + premium / 100));
-    const input = document.querySelector<HTMLInputElement>('input[name="price"]');
-    if (input) {
-      input.value = String(calculated);
-      // fire a native change event so React picks it up
-      input.dispatchEvent(new Event("input", { bubbles: true }));
-    }
+    onApply(calculated);
   }
 
   if (!quote && !loading) return null;
@@ -80,7 +77,7 @@ export default function PriceCalculator({ metalType, weightValue, premiumPercent
             قیمت بازار ({metalType === "SILVER" ? "نقره" : "طلا ۷۵۰"}):
             {" "}
             <strong style={{ color: "var(--color-gold)" }}>
-              {quote.priceToman.toLocaleString("fa-IR", { maximumFractionDigits: 0 })} تومان
+              {formatMoney(quote.priceToman)} تومان
             </strong>
             {" "}— منبع: {quote.source}
           </span>
@@ -89,7 +86,7 @@ export default function PriceCalculator({ metalType, weightValue, premiumPercent
               قیمت پیشنهادی ({weight} گرم + {premium}٪ سود):
               {" "}
               <strong style={{ color: "var(--color-white)" }}>
-                {computed.toLocaleString("fa-IR")} تومان
+                {formatMoney(computed)} تومان
               </strong>
               {" "}
               <button

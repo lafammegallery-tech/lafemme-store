@@ -1,4 +1,5 @@
 import { requireAdmin } from "@/backend/auth/session";
+import { MoneyInput } from "@/components/ui/MoneyInput";
 import { getPrisma } from "@/backend/database/prisma";
 import { createCouponAction, toggleCouponAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
@@ -25,8 +26,8 @@ export default async function Page() {
             <option value="FIXED">مبلغ ثابت</option>
             <option value="FREE_SHIPPING">ارسال رایگان</option>
           </select>
-          <Input name="value" type="number" placeholder="مقدار (درصد یا تومان)" />
-          <Input name="minimumAmount" type="number" placeholder="حداقل خرید" />
+          <MoneyInput name="value" allowDecimals placeholder="مقدار (درصد یا تومان)" />
+          <MoneyInput name="minimumAmount" placeholder="حداقل خرید" />
           <Input name="usageLimit" type="number" placeholder="سقف استفاده" />
           <Input name="expiresAt" type="date" />
           <Button type="submit">ساخت کد</Button>

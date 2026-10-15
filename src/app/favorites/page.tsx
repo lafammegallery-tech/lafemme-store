@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { formatMoney } from "@/lib/format-money";
 import Image from "next/image";
 import Link from "next/link";
 import { AccountLayout } from "@/components/account/AccountLayout";
@@ -39,7 +40,7 @@ export default function FavoritesPage() {
                     <div className="product-content">
                       <h3>{item.name}</h3>
                       <div className="product-price">
-                        {new Intl.NumberFormat("fa-IR").format(item.price)} تومان
+                        {formatMoney(item.price)} تومان
                       </div>
                       <Link href={item.href} className="btn btn-primary">
                         مشاهده محصول

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { formatMoney } from "@/lib/format-money";
 import { startPaymentAction } from "@/app/actions/payment";
 import { PageLayout, PageHero } from "@/components/common";
 import { Container, Card, Button } from "@/components/ui";
@@ -23,7 +24,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
   if (!orderRow || !(await canAccessOrder(orderRow, true))) notFound();
   const isCardToCard = payment?.method === "CARD_TO_CARD";
   const hasReceipt = orderRow.receipts.some((receipt) => receipt.status === "PENDING" || receipt.status === "APPROVED");
-  const finalAmount = Number(orderRow.totalAmount).toLocaleString("fa-IR");
+  const finalAmount = formatMoney(Number(orderRow.totalAmount));
 
   const snapshot = payment?.metadata && typeof payment.metadata === "object" && !Array.isArray(payment.metadata) ? payment.metadata : null;
   const legacyConfig = isCardToCard && !snapshot
