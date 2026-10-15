@@ -53,7 +53,7 @@ export function buildInvestmentPlans(products: InvestmentProduct[], budget: numb
     if (priority) return priority;
     if (goal === "budget") return b.total - a.total || weight(b) - weight(a) || a.count - b.count;
     if (goal === "flexible") return Math.min(3, b.count) - Math.min(3, a.count) || weight(b) - weight(a) || b.total - a.total || a.count - b.count;
-    return weight(b) - weight(a) || b.total - a.total || a.count - b.count;
+    return weight(b) - weight(a) || (mode === "mixed" ? b.silver - a.silver : 0) || a.total - b.total || a.count - b.count;
   };
   const candidates = new Map<string, State>();
   for (const goal of ["weight", "budget", "flexible"] as const) {
@@ -98,7 +98,7 @@ export function buildInvestmentPlans(products: InvestmentProduct[], budget: numb
     const items = catalog.flatMap((product, i) => state.quantities[i] ? [{ product, quantity: state.quantities[i] }] : []);
     const title = goal === "weight" ? "تمرکز بر وزن" : goal === "budget" ? (combined.length ? "ترکیب دو فلز" : "استفاده از بودجه") : "انتخاب جایگزین";
     let reason = goal === "weight"
-      ? `در جست‌وجوی ترکیب‌های موجود، این گزینه با تمرکز بر وزن ${mode === "silver" ? "نقره" : state.gold > 0 ? "طلا" : "نقره"} انتخاب شده است.`
+      ? `در جست‌وجوی ترکیب‌های موجود، این گزینه با تمرکز بر وزن ${mode === "silver" ? "نقره" : state.gold > 0 ? "طلا" : "نقره"} انتخاب شده است؛ در وزن برابر، مبلغ کمتر ترجیح داده می‌شود.`
       : goal === "budget"
         ? `این ترکیب ${money.format(state.total)} تومان از بودجه را به شمش تبدیل می‌کند و ${money.format(budget - state.total)} تومان باقی می‌گذارد.`
         : `این ترکیب، انتخاب متفاوتی از محصولات قابل خرید در محدودهٔ بودجهٔ شماست.`;

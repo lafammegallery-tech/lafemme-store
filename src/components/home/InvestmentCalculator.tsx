@@ -103,7 +103,7 @@ export function InvestmentCalculator() {
           {!!plans?.length && <div className={styles.results}>
             <div className={styles.resultsHeading}><div><span className={styles.eyebrow}>انتخاب‌های پیش روی شما</span><h3>{money.format(plans.length)} پیشنهاد برای بودجهٔ شما</h3></div><p>محاسبه در {new Date(calculatedAt).toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" })} · قیمت نهایی در سبد بررسی می‌شود</p></div>
             <div className={styles.planGrid}>{plans.map((plan, index) => <article key={plan.key} className={styles.plan}>
-              <div className={styles.planHeading}><span className={styles.planNumber}>۰{index + 1}</span><h4>{plan.title}</h4><span className={styles.pieces}>{money.format(plan.count)} قطعه</span></div>
+              <div className={styles.planHeading}><span className={styles.planNumber}>{money.format(index + 1).padStart(2, "۰")}</span><h4>{plan.title}</h4><span className={styles.pieces}>{money.format(plan.count)} قطعه</span></div>
               <ul className={styles.products}>{plan.items.map(({ product, quantity }) => <li key={product.id}>
                 <Link href={product.href} className={styles.productLink}>
                   <span className={styles.image}><Image src={product.imageSrc} alt="" width={56} height={64} unoptimized /></span>

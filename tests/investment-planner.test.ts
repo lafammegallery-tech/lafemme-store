@@ -38,7 +38,7 @@ test("mixed mode preserves gold first then uses remainder for silver", () => {
   const plans = buildInvestmentPlans(catalog, 100, "mixed");
   assert.equal(plans[0].goldWeight, 2);
   assert.ok(plans[0].silverWeight > 0);
-  assert.equal(plans[0].total, 100);
+  assert.equal(plans[0].total, 95);
   assert.ok(plans.every(p => !p.reason.includes("اولویت") && !p.title.includes("اولویت")));
 });
 
@@ -63,6 +63,12 @@ test("mixed mode offers a genuine mixed alternative without weakening primary go
   const plans = buildInvestmentPlans(items, 80, "mixed");
   assert.equal(plans[0].goldWeight, .2);
   assert.ok(plans.some(p => p.goldWeight > 0 && p.silverWeight > 0));
+});
+
+test("equal weight prefers lower cost instead of needless budget consumption", () => {
+  const plans = buildInvestmentPlans([product("small", "gold", 45, 1), product("large", "gold", 80, 2)], 90, "gold");
+  assert.equal(plans[0].goldWeight, 2);
+  assert.equal(plans[0].total, 80);
 });
 
 test("large inventories stay bounded and deterministic", () => {
