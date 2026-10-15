@@ -71,14 +71,15 @@ export function buildInvestmentPlans(products: InvestmentProduct[], budget: numb
           const quantities = [...state.quantities];
           quantities[index] += quantity;
           expanded.push({ total, quantities, count: state.count + quantity,
-            gold: state.gold + (product.type === "gold" ? product.weightValue * quantity : 0),
-            silver: state.silver + (product.type === "silver" ? product.weightValue * quantity : 0) });
+            gold: Math.round((state.gold + (product.type === "gold" ? product.weightValue * quantity : 0)) * 1e6) / 1e6,
+            silver: Math.round((state.silver + (product.type === "silver" ? product.weightValue * quantity : 0)) * 1e6) / 1e6 });
         }
         const unique = [...new Map(expanded.map(s => [s.quantities.join(","), s])).values()];
         // Keep inexpensive partial combinations too: they may admit a later product.
         const ranked = unique.sort(compare(goal)).slice(0, 192);
         const inexpensive = [...unique].sort((a, b) => a.total - b.total).slice(0, 64);
-        states = [...new Map([...ranked, ...inexpensive].map(s => [s.quantities.join(","), s])).values()];
+        const mixed = mode === "mixed" ? unique.filter(s => s.gold > 0 && s.silver > 0).sort(compare(goal)).slice(0, 64) : [];
+        states = [...new Map([...ranked, ...inexpensive, ...mixed].map(s => [s.quantities.join(","), s])).values()];
       }
     });
     for (const state of states.filter(s => s.count > 0)) candidates.set(state.quantities.join(","), state);
@@ -86,12 +87,16 @@ export function buildInvestmentPlans(products: InvestmentProduct[], budget: numb
   const selected = new Set<string>();
   const plans: InvestmentPlan[] = [];
   for (const goal of ["weight", "budget", "flexible"] as const) {
-    const state = [...candidates.values()].filter(s => !selected.has(s.quantities.join(","))).sort(compare(goal))[0];
+    const remainingCandidates = [...candidates.values()].filter(s => !selected.has(s.quantities.join(",")));
+    // Offer an actual two-metal alternative when one was found, while choosing
+    // the highest gold allocation within that subset (primary plan stays intact).
+    const combined = mode === "mixed" && goal === "budget" ? remainingCandidates.filter(s => s.gold > 0 && s.silver > 0) : [];
+    const state = (combined.length ? combined : remainingCandidates).sort(compare(goal))[0];
     if (!state) continue;
     const key = state.quantities.join(",");
     selected.add(key);
     const items = catalog.flatMap((product, i) => state.quantities[i] ? [{ product, quantity: state.quantities[i] }] : []);
-    const title = goal === "weight" ? "تمرکز بر وزن" : goal === "budget" ? "استفاده از بودجه" : "انتخاب جایگزین";
+    const title = goal === "weight" ? "تمرکز بر وزن" : goal === "budget" ? (combined.length ? "ترکیب دو فلز" : "استفاده از بودجه") : "انتخاب جایگزین";
     let reason = goal === "weight"
       ? `در جست‌وجوی ترکیب‌های موجود، این گزینه با تمرکز بر وزن ${mode === "silver" ? "نقره" : state.gold > 0 ? "طلا" : "نقره"} انتخاب شده است.`
       : goal === "budget"

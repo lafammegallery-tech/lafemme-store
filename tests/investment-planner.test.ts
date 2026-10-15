@@ -23,7 +23,7 @@ test("plans respect budget, stock, metal filter, actual totals, and are distinct
         assert.ok(plan.total <= budget && plan.total > 0);
         assert.equal(plan.total + plan.remaining, budget);
         assert.equal(plan.total, plan.items.reduce((sum, i) => sum + i.quantity * i.product.price, 0));
-        assert.equal(plan.goldWeight, plan.items.reduce((sum, i) => sum + (i.product.type === "gold" ? i.quantity * i.product.weightValue : 0), 0));
+        assert.ok(Math.abs(plan.goldWeight - plan.items.reduce((sum, i) => sum + (i.product.type === "gold" ? i.quantity * i.product.weightValue : 0), 0)) < 1e-6);
         assert.ok(plan.reason.length > 40);
         for (const item of plan.items) {
           assert.ok(Number.isInteger(item.quantity) && item.quantity > 0 && item.quantity <= item.product.stock);
@@ -56,6 +56,13 @@ test("mixed mode does not invent gold or silver if only one metal is affordable"
   const silverOnly = buildInvestmentPlans(catalog, 25, "mixed");
   assert.equal(silverOnly[0].goldWeight, 0);
   assert.equal(silverOnly[0].silverWeight, 10);
+});
+
+test("mixed mode offers a genuine mixed alternative without weakening primary gold choice", () => {
+  const items = [product("gold", "gold", 40, .1, 100), product("silver", "silver", 15, 1, 100)];
+  const plans = buildInvestmentPlans(items, 80, "mixed");
+  assert.equal(plans[0].goldWeight, .2);
+  assert.ok(plans.some(p => p.goldWeight > 0 && p.silverWeight > 0));
 });
 
 test("large inventories stay bounded and deterministic", () => {
