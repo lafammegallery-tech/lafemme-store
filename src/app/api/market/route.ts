@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { getMarketQuotes, persistMarketQuotes } from "@/backend/services/market-price.service";
 
-export const revalidate = 300;
+// Provider quotes have a one-minute cache. Do not add a second HTTP/CDN cache
+// that could prolong outdated quotes or hide changes to manual pricing.
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const quotes = await getMarketQuotes();
-  return NextResponse.json(quotes, { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" } });
+  return NextResponse.json(quotes, { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function POST(request: Request) {

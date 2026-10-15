@@ -1,6 +1,7 @@
 import "server-only";
 import { parseCustomPrices } from "./custom-price-parser";
 import type { MarketQuote, MetalKind } from "./market-price.service";
+import { MARKET_REFRESH_MS } from "@/lib/market-refresh";
 
 let cached: ReturnType<typeof parseCustomPrices> | null = null;
 let expiresAt = 0;
@@ -16,7 +17,7 @@ async function loadPrices() {
     const response = await fetch(url, { headers: { Accept: "application/json", "X-API-Key": key }, cache: "no-store", redirect: "error", signal: AbortSignal.timeout(8000) });
     if (!response.ok) throw new Error("Price API unavailable");
     cached = parseCustomPrices(await response.json());
-    expiresAt = Date.now() + 60_000;
+    expiresAt = Date.now() + MARKET_REFRESH_MS;
     return cached;
   })();
   try { return await pending; } finally { pending = null; }

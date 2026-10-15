@@ -103,7 +103,7 @@ export async function fetchProviderQuote(
         "User-Agent": "LaFemme-Market-Service/1.3",
       },
       next: {
-        revalidate: 300,
+        revalidate: 60,
       },
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });

@@ -53,12 +53,7 @@ export default async function Page() {
                     <PriceDisplay value={liveQuotes.gold995.price} />
                   </h2>
                 </div>
-                <span
-                  className={liveQuotes.gold995.stale ? "" : liveQuotes.gold995.change24h >= 0 ? "market-up" : "market-down"}
-                  style={liveQuotes.gold995.stale ? { color: "#888", fontSize: "0.82rem" } : {}}
-                >
-                  {liveQuotes.gold995.stale ? "قدیمی" : `${liveQuotes.gold995.change24h > 0 ? "+" : ""}${liveQuotes.gold995.change24h.toFixed(2)}٪`}
-                </span>
+                {liveQuotes.gold995.stale && <span className="market-stale">قیمت تأییدنشده</span>}
               </div>
               <small style={{ color: "var(--color-gray)" }}>
                 منبع: {liveQuotes.gold995.source}
@@ -77,12 +72,7 @@ export default async function Page() {
                     <PriceDisplay value={liveQuotes.gold750.price} />
                   </h2>
                 </div>
-                <span
-                  className={liveQuotes.gold750.stale ? "" : liveQuotes.gold750.change24h >= 0 ? "market-up" : "market-down"}
-                  style={liveQuotes.gold750.stale ? { color: "#888", fontSize: "0.82rem" } : {}}
-                >
-                  {liveQuotes.gold750.stale ? "قدیمی" : `${liveQuotes.gold750.change24h > 0 ? "+" : ""}${liveQuotes.gold750.change24h.toFixed(2)}٪`}
-                </span>
+                {liveQuotes.gold750.stale && <span className="market-stale">قیمت تأییدنشده</span>}
               </div>
               <small style={{ color: "var(--color-gray)" }}>
                 منبع: {liveQuotes.gold750.source} | {new Date(liveQuotes.gold750.updatedAt).toLocaleString("fa-IR")}
@@ -101,12 +91,7 @@ export default async function Page() {
                     <PriceDisplay value={liveQuotes.silver999.price} />
                   </h2>
                 </div>
-                <span
-                  className={liveQuotes.silver999.stale ? "" : liveQuotes.silver999.change24h >= 0 ? "market-up" : "market-down"}
-                  style={liveQuotes.silver999.stale ? { color: "#888", fontSize: "0.82rem" } : {}}
-                >
-                  {liveQuotes.silver999.stale ? "قدیمی" : `${liveQuotes.silver999.change24h > 0 ? "+" : ""}${liveQuotes.silver999.change24h.toFixed(2)}٪`}
-                </span>
+                {liveQuotes.silver999.stale && <span className="market-stale">قیمت تأییدنشده</span>}
               </div>
               <small style={{ color: "var(--color-gray)" }}>
                 منبع: {liveQuotes.silver999.source} | {new Date(liveQuotes.silver999.updatedAt).toLocaleString("fa-IR")}
