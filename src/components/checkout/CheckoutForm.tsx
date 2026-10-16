@@ -3,6 +3,7 @@ import { useActionState, useState } from "react";
 import { formatMoney } from "@/lib/format-money";
 import { Button, Input, Textarea } from "@/components/ui";
 import { checkoutAction, type CheckoutState } from "@/app/actions/checkout";
+import { splitPayment } from "@/lib/staged-payment";
 
 const initialState: CheckoutState = {};
 
@@ -130,12 +131,12 @@ export function CheckoutForm({
 
         {selectedPayment?.cardNumber && (
           <div className="card-info-box">
-            <p className="card-info-title">اطلاعات کارت برای واریز</p>
+            <p className="card-info-title">کارت مرحلهٔ اول — فقط پیش‌پرداخت ۱۰٪</p>
             <p className="card-info-number" dir="ltr">{selectedPayment.cardNumber}</p>
             {selectedPayment.cardHolder && <p className="card-info-line">به نام: {selectedPayment.cardHolder}</p>}
             {selectedPayment.bankName && <p className="card-info-line">بانک: {selectedPayment.bankName}</p>}
             {selectedPayment.requiresReceipt && (
-              <p className="card-info-hint">پس از ثبت سفارش، تصویر رسید واریز را بارگذاری کنید تا سفارش تأیید شود.</p>
+              <p className="card-info-hint">پس از ایجاد درخواست، فقط ۱۰٪ را واریز و فیش یا فیش‌ها را ارسال کنید. تأیید اولیه پس از بررسی مدیر است. برای مانده، تماس و اعلام کارت یا شبای اختصاصی سفارش و تأیید نهایی لازم است.</p>
             )}
           </div>
         )}
@@ -147,8 +148,9 @@ export function CheckoutForm({
       </fieldset>
 
       <p role="status">جمع با ارسال: {fmt(subtotal + shippingCost)} تومان (تخفیف معتبر هنگام ثبت سفارش اعمال می‌شود)</p>
+      {subtotal + shippingCost >= 10 && <p>پیش‌پرداخت تقریبی ۱۰٪: {fmt(splitPayment(subtotal + shippingCost).deposit)} تومان؛ مانده: {fmt(splitPayment(subtotal + shippingCost).balance)} تومان. مبالغ قطعی پس از اعمال تخفیف در صفحهٔ پرداخت نمایش داده می‌شود.</p>}
       <Button type="submit" className="btn btn-primary w-full" disabled={isPending || paymentMethods.length === 0 || shippingMethods.length === 0}>
-        {isPending ? "در حال ثبت سفارش..." : "ثبت سفارش"}
+        {isPending ? "در حال ایجاد درخواست..." : "ایجاد درخواست و پرداخت ۱۰٪"}
       </Button>
     </form>
   );

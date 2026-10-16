@@ -13,7 +13,10 @@ export async function changeOrderStatus(id: string, status: OrderStatus, actorId
     const old = await tx.order.findUniqueOrThrow({ where: { id }, include: { items: true, payments: true } });
     if (status === old.status) return { old, order: old };
     if (!transitions[old.status].includes(status)) throw new Error("تغییر وضعیت سفارش مجاز نیست.");
-    if (status === "CONFIRMED" && !old.payments.some((payment) => payment.status === "SUCCESS")) throw new Error("ابتدا رسید پرداخت را تأیید کنید.");
+    if (["CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED"].includes(status)) {
+      const paid = old.payments.filter(payment => payment.status === "SUCCESS").reduce((sum, payment) => sum + Number(payment.amount), 0);
+      if (paid !== Number(old.totalAmount) || (old.twoStagePayment && (!["DEPOSIT", "BALANCE"].every(stage => old.payments.some(payment => payment.stage === stage && payment.status === "SUCCESS"))))) throw new Error("ابتدا هر دو مرحلهٔ پرداخت و تسویهٔ کامل را تأیید کنید.");
+    }
     if (status === "CANCELLED" || status === "SHIPPED") {
       for (const item of old.items) {
         if (!item.productId) continue;

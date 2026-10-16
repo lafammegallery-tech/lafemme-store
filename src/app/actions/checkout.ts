@@ -7,6 +7,7 @@ import { evaluateCoupon } from "@/backend/services/coupon.service";
 import { getStorefrontProducts } from "@/backend/services/storefront-product.service";
 import { grantGuestOrderAccess } from "@/backend/auth/order-access";
 import { assertRateLimit } from "@/backend/security/rate-limit";
+import { splitPayment } from "@/lib/staged-payment";
 
 export type CheckoutState = { error?: string };
 
@@ -88,6 +89,7 @@ export async function checkoutAction(
       const baseShipping = shippingMethod ? Number(shippingMethod.cost) : subtotal >= 100_000_000 ? 0 : 500_000;
       const shippingAmount = applied?.freeShipping ? 0 : baseShipping;
       const totalAmount = subtotal - discountAmount + shippingAmount;
+      const { deposit, balance } = splitPayment(totalAmount);
 
       // شماره سفارش یکتا با timestamp و random برای جلوگیری از تکرار
       const rand = Math.floor(Math.random() * 10000).toString().padStart(4, "0");
@@ -104,6 +106,7 @@ export async function checkoutAction(
           discountAmount,
           shippingAmount,
           totalAmount,
+          twoStagePayment: true,
           shippingAddress: { province, city, addressLine, postalCode: String(formData.get("postalCode") ?? "") },
           shippingMethod: shippingMethod?.name ?? null,
           paymentMethodName: paymentMethod?.name ?? null,
@@ -120,9 +123,12 @@ export async function checkoutAction(
               totalPrice: Number(i.unitPrice) * i.quantity,
             })),
           },
-          payments: { create: { amount: totalAmount, method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } } },
+          payments: { create: [
+            { amount: deposit, stage: "DEPOSIT", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } },
+            { amount: balance, stage: "BALANCE", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD" },
+          ] },
           shipment: { create: { status: "PENDING" } },
-          statusHistory: { create: { toStatus: "PENDING", note: "سفارش ایجاد شد." } },
+          statusHistory: { create: { toStatus: "PENDING", note: "درخواست خرید ایجاد شد؛ در انتظار واریز و تأیید پیش‌پرداخت ۱۰٪." } },
         },
       });
 

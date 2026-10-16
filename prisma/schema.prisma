@@ -86,6 +86,12 @@ enum ReceiptStatus {
   REJECTED
 }
 
+enum PaymentStage {
+  FULL
+  DEPOSIT
+  BALANCE
+}
+
 enum DiscountType {
   PERCENT
   FIXED
@@ -365,6 +371,8 @@ model Order {
 
   shippingMethod String?
   paymentMethodName String?
+  twoStagePayment Boolean @default(false)
+  paymentRevision Int @default(0)
 
   user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   address  Address?  @relation(fields: [addressId], references: [id], onDelete: SetNull)
@@ -440,6 +448,7 @@ model Payment {
   status         PaymentStatus @default(PENDING)
   method         PaymentMethod @default(ONLINE)
   amount         Decimal       @db.Decimal(18, 0)
+  stage          PaymentStage  @default(FULL)
   gateway        String?
   authority      String?
   transactionId  String?       @unique
@@ -586,6 +595,7 @@ model PaymentReceipt {
   id         String        @id @default(cuid())
   orderId    String
   imageUrl   String
+  stage      PaymentStage  @default(FULL)
   status     ReceiptStatus @default(PENDING)
   note       String?
   reviewedBy String?

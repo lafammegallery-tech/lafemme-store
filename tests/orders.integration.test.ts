@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { getPrisma } from "../src/backend/database/prisma";
 import { changeOrderStatus, expireUnpaidOrders } from "../src/backend/services/order-status.service";
 import { reviewPaymentReceipt } from "../src/backend/services/receipt-review.service";
+import { saveBalanceDestination, submitReceiptBundle } from "../src/backend/services/staged-payment.service";
 
 const url = process.env.TEST_DATABASE_URL;
 if (url) process.env.DATABASE_URL = url;
@@ -63,6 +64,91 @@ test("order lifecycle preserves inventory and cancellation is idempotent", { ski
     await db.product.delete({ where: { id: product.id } });
     await db.category.delete({ where: { id: category.id } });
     await db.user.delete({ where: { id: user.id } });
+    await db.$disconnect();
+  }
+});
+
+test("two-stage lifecycle: deposit, per-order destination, multi-image rejection/retry, final approval and safe cancellation", { skip: !url }, async () => {
+  const db = getPrisma();
+  const suffix = randomUUID();
+  const admin = await db.user.create({ data: { phone: `staged-${suffix}`, role: "ADMIN" } });
+  const category = await db.category.create({ data: { name: "Staged test", slug: `staged-${suffix}` } });
+  const product = await db.product.create({ data: { name: "Staged", slug: `staged-${suffix}`, categoryId: category.id, metalType: "SILVER", price: 1001, stock: 5, status: "ACTIVE", inventory: { create: { quantity: 5, reserved: 2 } } } });
+  const makeOrder = (label: string) => db.order.create({ data: {
+    userId: admin.id, orderNumber: `${label}-${suffix}`, customerName: "Stage test", customerPhone: "09000000001", subtotal: 1001, totalAmount: 1001, shippingAddress: {}, twoStagePayment: true,
+    items: { create: { productId: product.id, productName: "Stage test", unitPrice: 1001, totalPrice: 1001, quantity: 1 } },
+    payments: { create: [{ stage: "DEPOSIT", amount: 101, method: "CARD_TO_CARD", metadata: { cardNumber: "6037991234567891" } }, { stage: "BALANCE", amount: 900, method: "CARD_TO_CARD" }] }, shipment: { create: {} },
+  } });
+  const read = (id: string) => db.order.findUniqueOrThrow({ where: { id }, include: { payments: true, receipts: true } });
+  const destination = { cardNumber: "6037991234567892", iban: "", cardHolder: "تست", bankName: "تست" };
+  try {
+    const a = await makeOrder("staged-a");
+    const b = await makeOrder("staged-b");
+    await assert.rejects(saveBalanceDestination(a.id, 0, destination, admin.id));
+    await assert.rejects(submitReceiptBundle(a.id, "BALANCE", 0, ["/uploads/receipts/too-early.webp"]));
+    await assert.rejects(submitReceiptBundle(a.id, "DEPOSIT", 0, []));
+    await assert.rejects(submitReceiptBundle(a.id, "DEPOSIT", 0, Array.from({ length: 11 }, (_, i) => `/uploads/receipts/${i}.webp`)));
+    await submitReceiptBundle(a.id, "DEPOSIT", 0, ["/uploads/receipts/d1.webp", "/uploads/receipts/d2.webp"]);
+    await assert.rejects(submitReceiptBundle(a.id, "DEPOSIT", 0, ["/uploads/receipts/duplicate.webp"]));
+    let state = await read(a.id);
+    assert.equal(state.receipts.length, 2);
+    await reviewPaymentReceipt(state.receipts[0].id, true, admin.id, null);
+    await assert.rejects(reviewPaymentReceipt(state.receipts[0].id, true, admin.id, null));
+    state = await read(a.id);
+    assert.equal(state.status, "PENDING");
+    assert.equal(state.receipts.filter(r => r.status === "APPROVED").length, 2);
+    assert.equal(state.payments.find(p => p.stage === "DEPOSIT")?.status, "SUCCESS");
+    assert.equal(state.payments.find(p => p.stage === "BALANCE")?.status, "PENDING");
+    await assert.rejects(changeOrderStatus(a.id, "CONFIRMED", admin.id, "no bypass"));
+    await assert.rejects(changeOrderStatus(a.id, "PROCESSING", admin.id, "no bypass"));
+    await assert.rejects(submitReceiptBundle(a.id, "BALANCE", state.paymentRevision, ["/uploads/receipts/no-dest.webp"]));
+    await saveBalanceDestination(a.id, state.paymentRevision, destination, admin.id);
+    await assert.rejects(saveBalanceDestination(a.id, state.paymentRevision, destination, admin.id));
+    assert.equal((await read(b.id)).payments.find(p => p.stage === "BALANCE")?.metadata, null);
+    state = await read(a.id);
+    const oldRevision = state.paymentRevision;
+    await saveBalanceDestination(a.id, state.paymentRevision, { ...destination, cardNumber: "", iban: "IR062960000000100324200001" }, admin.id);
+    await assert.rejects(submitReceiptBundle(a.id, "BALANCE", oldRevision, ["/uploads/receipts/old-dest.webp"]));
+    state = await read(a.id);
+    await submitReceiptBundle(a.id, "BALANCE", state.paymentRevision, ["/uploads/receipts/b1.webp", "/uploads/receipts/b2.webp", "/uploads/receipts/b3.webp"]);
+    state = await read(a.id);
+    await assert.rejects(saveBalanceDestination(a.id, state.paymentRevision, destination, admin.id));
+    await reviewPaymentReceipt(state.receipts.find(r => r.stage === "BALANCE")!.id, false, admin.id, "Incomplete amount");
+    state = await read(a.id);
+    assert.equal(state.receipts.filter(r => r.stage === "BALANCE" && r.status === "REJECTED").length, 3);
+    assert.equal(state.payments.find(p => p.stage === "DEPOSIT")?.status, "SUCCESS");
+    await submitReceiptBundle(a.id, "BALANCE", state.paymentRevision, ["/uploads/receipts/retry1.webp", "/uploads/receipts/retry2.webp"]);
+    state = await read(a.id);
+    await reviewPaymentReceipt(state.receipts.find(r => r.stage === "BALANCE" && r.status === "PENDING")!.id, true, admin.id, "Full settlement");
+    state = await read(a.id);
+    assert.equal(state.status, "CONFIRMED");
+    assert.ok(state.payments.every(p => p.status === "SUCCESS"));
+    assert.equal(state.payments.reduce((sum, p) => sum + Number(p.amount), 0), 1001);
+    await assert.rejects(saveBalanceDestination(a.id, state.paymentRevision, destination, admin.id));
+    await assert.rejects(submitReceiptBundle(a.id, "BALANCE", state.paymentRevision, ["/uploads/receipts/after-final.webp"]));
+    await changeOrderStatus(a.id, "PROCESSING", admin.id, "paid");
+    await changeOrderStatus(a.id, "SHIPPED", admin.id, "paid");
+    await changeOrderStatus(a.id, "SHIPPED", admin.id, "idempotent");
+    assert.equal((await db.inventory.findUniqueOrThrow({ where: { productId: product.id } })).reserved, 1);
+    await submitReceiptBundle(b.id, "DEPOSIT", 0, ["/uploads/receipts/cancel-deposit.webp"]);
+    const pendingB = await read(b.id);
+    await reviewPaymentReceipt(pendingB.receipts[0].id, true, admin.id, null);
+    await db.order.update({ where: { id: b.id }, data: { createdAt: new Date(Date.now() - 25 * 3600_000) } });
+    await expireUnpaidOrders();
+    assert.equal((await read(b.id)).status, "PENDING", "paid deposit cannot auto-expire");
+    await changeOrderStatus(b.id, "CANCELLED", admin.id, "refund requires manual handling");
+    await changeOrderStatus(b.id, "CANCELLED", admin.id, "repeat");
+    const cancelled = await read(b.id);
+    assert.equal(cancelled.payments.find(p => p.stage === "DEPOSIT")?.status, "SUCCESS", "do not erase received money");
+    assert.equal(cancelled.payments.find(p => p.stage === "BALANCE")?.status, "CANCELLED");
+    assert.equal((await db.inventory.findUniqueOrThrow({ where: { productId: product.id } })).reserved, 0);
+    assert.ok(await db.auditLog.count({ where: { actorId: admin.id, action: "RECEIPT_BUNDLE_REVIEW" } }) >= 4);
+  } finally {
+    await db.auditLog.deleteMany({ where: { actorId: admin.id } });
+    await db.order.deleteMany({ where: { userId: admin.id } });
+    await db.product.delete({ where: { id: product.id } });
+    await db.category.delete({ where: { id: category.id } });
+    await db.user.delete({ where: { id: admin.id } });
     await db.$disconnect();
   }
 });

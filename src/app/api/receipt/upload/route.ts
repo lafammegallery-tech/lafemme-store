@@ -6,34 +6,43 @@ import { canAccessOrder } from "@/backend/auth/order-access";
 import { validateImage } from "@/backend/security/image-upload";
 import { assertRateLimit } from "@/backend/security/rate-limit";
 import { isAllowedRequestOrigin } from "@/backend/security/request-origin";
+import { submitReceiptBundle } from "@/backend/services/staged-payment.service";
+import { MAX_RECEIPT_BYTES, MAX_RECEIPT_FILES } from "@/lib/staged-payment";
+import type { PaymentStage } from "@/generated/prisma/enums";
 
 export async function POST(request: Request) {
   if (!isAllowedRequestOrigin(request.headers)) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-  if (Number(request.headers.get("content-length")) > 6 * 1024 * 1024) return NextResponse.json({ error: "File too large" }, { status: 413 });
+  if (Number(request.headers.get("content-length")) > MAX_RECEIPT_BYTES + 1024 * 1024) return NextResponse.json({ error: "حجم کل تصاویر باید حداکثر ۳۰ مگابایت باشد." }, { status: 413 });
+  const paths: string[] = [];
   try {
     const form = await request.formData();
     const orderNumber = String(form.get("orderNumber") ?? "").slice(0, 100);
-    const prisma = getPrisma();
-    const order = await prisma.order.findUnique({ where: { orderNumber }, include: { payments: true } });
+    const order = await getPrisma().order.findUnique({ where: { orderNumber } });
     if (!order || !(await canAccessOrder(order))) return NextResponse.json({ error: "سفارش پیدا نشد." }, { status: 404 });
-    assertRateLimit(`receipt:${order.id}`, 5, 3600_000);
-    if (order.status !== "PENDING" || !order.payments.some((p) => p.method === "CARD_TO_CARD")) throw new Error("سفارش قابل ارسال رسید نیست.");
-    const { bytes, filename } = await validateImage(form.get("file"));
+    assertRateLimit(`receipt:${order.id}`, 10, 3600_000);
+    const stage = String(form.get("stage") ?? "FULL") as PaymentStage;
+    if (!["DEPOSIT", "BALANCE", "FULL"].includes(stage)) throw new Error("مرحله معتبر نیست.");
+    const revision = Number(form.get("revision"));
+    if (!form.has("revision") || !Number.isSafeInteger(revision) || revision < 0) throw new Error("صفحه را تازه کنید.");
+    const files = form.getAll("files");
+    if (!files.length && form.get("file")) files.push(form.get("file")!);
+    if (!files.length || files.length > MAX_RECEIPT_FILES) throw new Error("بین ۱ تا ۱۰ تصویر انتخاب کنید.");
+    if (files.reduce((sum, f) => sum + (f instanceof File ? f.size : MAX_RECEIPT_BYTES + 1), 0) > MAX_RECEIPT_BYTES) throw new Error("مجموع تصاویر نباید بیشتر از ۳۰ مگابایت باشد.");
+    // Validate every image before writing any files. Commit the entire bundle atomically.
+    const images = [];
+    for (const file of files) images.push(await validateImage(file));
     const dir = join(process.cwd(), "storage", "receipts");
     await mkdir(dir, { recursive: true });
-    const path = join(dir, filename);
-    await writeFile(path, bytes, { flag: "wx", mode: 0o600 });
-    const url = `/uploads/receipts/${filename}`;
-    try {
-      await prisma.$transaction(async (tx) => {
-        const current = await tx.order.findUniqueOrThrow({ where: { id: order.id }, include: { receipts: true } });
-        if (current.status !== "PENDING" || current.receipts.some((r) => r.status === "PENDING" || r.status === "APPROVED")) throw new Error("یک رسید در انتظار بررسی دارید یا سفارش بسته شده است.");
-        await tx.paymentReceipt.create({ data: { orderId: order.id, imageUrl: url } });
-        await tx.payment.updateMany({ where: { orderId: order.id, method: "CARD_TO_CARD", status: "PENDING" }, data: { status: "PROCESSING" } });
-      }, { isolationLevel: "Serializable" });
-    } catch (error) { await unlink(path); throw error; }
-    return NextResponse.json({ url });
+    for (const image of images) {
+      const path = join(dir, image.filename);
+      await writeFile(path, image.bytes, { flag: "wx", mode: 0o600 });
+      paths.push(path);
+    }
+    const urls = images.map(image => `/uploads/receipts/${image.filename}`);
+    await submitReceiptBundle(order.id, stage, revision, urls);
+    return NextResponse.json({ urls });
   } catch (error) {
+    await Promise.allSettled(paths.map(path => unlink(path)));
     return NextResponse.json({ error: error instanceof Error ? error.message : "ارسال رسید ناموفق بود." }, { status: 400 });
   }
 }

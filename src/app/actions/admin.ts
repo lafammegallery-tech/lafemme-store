@@ -6,7 +6,6 @@ import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
 import { changeOrderStatus } from "@/backend/services/order-status.service";
-import { reviewPaymentReceipt } from "@/backend/services/receipt-review.service";
 import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 /** آرایه‌ی URL تصاویر را از فیلد JSON فرم می‌خواند؛ در صورت نبود، به imageUrl تکی برمی‌گردد. */
@@ -415,24 +414,6 @@ export async function deleteShippingMethodAction(formData: FormData) {
   await getPrisma().shippingMethodConfig.delete({ where: { id } });
   await writeAudit({ actorId: s.userId, action: "SHIPPING_METHOD_DELETE", entityType: "ShippingMethodConfig", entityId: id });
   revalidatePath("/admin/shipping-methods");
-}
-
-/* ===================== بررسی رسید کارت‌به‌کارت ===================== */
-
-/** تأیید یا رد رسید کارت‌به‌کارت. تأیید، پرداخت را موفق و سفارش را تأییدشده می‌کند. */
-export async function reviewReceiptAction(formData: FormData) {
-  const s = await requireAdmin();
-  const id = text(formData.get("id"), 100);
-  const decision = text(formData.get("decision"), 20); // "approve" | "reject"
-  const note = text(formData.get("note"), 500) || null;
-  const approved = decision === "approve";
-  if (decision !== "approve" && decision !== "reject") throw new Error("تصمیم معتبر نیست.");
-
-  const orderId = await reviewPaymentReceipt(id, approved, s.userId, note);
-
-  await writeAudit({ actorId: s.userId, action: "RECEIPT_REVIEW", entityType: "PaymentReceipt", entityId: id, newData: { decision, note } });
-  revalidatePath("/admin/payment-receipts");
-  revalidatePath(`/admin/orders/${orderId}`);
 }
 
 export async function updateMarketOverrideAction(formData: FormData) {

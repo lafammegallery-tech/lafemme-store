@@ -2,9 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
-import { reviewReceiptAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Button, Badge, PriceDisplay } from "@/components/ui";
+import { Container, Card, Badge, PriceDisplay } from "@/components/ui";
+import { STAGE_LABELS } from "@/lib/staged-payment";
 
 export const dynamic = "force-dynamic";
 
@@ -60,23 +60,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ s
                     <Badge tone={STATUS[r.status].tone}>{STATUS[r.status].label}</Badge>
                   </div>
                   <p className="admin-item-sub">{r.order.customerName} • {r.order.customerPhone}</p>
+                  <p>{STAGE_LABELS[r.stage]}</p>
                   <PriceDisplay value={Number(r.order.totalAmount)} />
                   {r.note && <p className="admin-item-sub">یادداشت: {r.note}</p>}
 
                   {r.status === "PENDING" && (
-                    <div className="receipt-actions">
-                      <form action={reviewReceiptAction} className="receipt-action-form">
-                        <input type="hidden" name="id" value={r.id} />
-                        <input type="hidden" name="decision" value="approve" />
-                        <Button type="submit" size="sm">تأیید و ثبت سفارش</Button>
-                      </form>
-                      <form action={reviewReceiptAction} className="receipt-action-form">
-                        <input type="hidden" name="id" value={r.id} />
-                        <input type="hidden" name="decision" value="reject" />
-                        <input name="note" placeholder="دلیل رد (اختیاری)" className="receipt-note-input" />
-                        <Button type="submit" variant="danger" size="sm">رد</Button>
-                      </form>
-                    </div>
+                    <Link href={`/admin/orders/${r.orderId}`} className="btn btn-primary mt-4">مشاهدهٔ تمام فیش‌ها و بررسی این مرحله</Link>
                   )}
                 </div>
               </Card>
