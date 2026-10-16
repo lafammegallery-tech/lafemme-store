@@ -34,7 +34,9 @@ async function main() {
       assert.equal(product.isLivePrice, eligible);
       if (eligible) {
         assert.ok(product.price > 123);
-        assert.equal(product.price, Math.round(2 * (product.type === "gold" ? quotes.gold995.price : quotes.silver999.price)));
+        const referencePrice = product.type === "gold" ? quotes.gold995.price : quotes.silver999.price;
+        const existingPurityFactor = product.type === "gold" ? 1 : 999 / 995;
+        assert.equal(product.price, Math.round(2 * referencePrice * existingPurityFactor));
       } else assert.equal(product.price, 123, "fallback amount is display-only, never purchase eligibility");
     }
     assert.equal(requests, 1, "both metals and subsequent reads share the cached partial response");
