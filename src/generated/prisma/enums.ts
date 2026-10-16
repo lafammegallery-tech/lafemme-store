@@ -116,6 +116,15 @@ export const ReceiptStatus = {
 export type ReceiptStatus = (typeof ReceiptStatus)[keyof typeof ReceiptStatus]
 
 
+export const PaymentStage = {
+  FULL: 'FULL',
+  DEPOSIT: 'DEPOSIT',
+  BALANCE: 'BALANCE'
+} as const
+
+export type PaymentStage = (typeof PaymentStage)[keyof typeof PaymentStage]
+
+
 export const DiscountType = {
   PERCENT: 'PERCENT',
   FIXED: 'FIXED',

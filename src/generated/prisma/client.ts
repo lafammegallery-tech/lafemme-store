@@ -171,3 +171,8 @@ export type PaymentReceipt = Prisma.PaymentReceiptModel
  * 
  */
 export type MarketSettings = Prisma.MarketSettingsModel
+/**
+ * Model ContactMessage
+ * 
+ */
+export type ContactMessage = Prisma.ContactMessageModel

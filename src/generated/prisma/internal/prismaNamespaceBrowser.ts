@@ -76,7 +76,8 @@ export const ModelName = {
   PaymentMethodConfig: 'PaymentMethodConfig',
   ShippingMethodConfig: 'ShippingMethodConfig',
   PaymentReceipt: 'PaymentReceipt',
-  MarketSettings: 'MarketSettings'
+  MarketSettings: 'MarketSettings',
+  ContactMessage: 'ContactMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -307,7 +308,9 @@ export const OrderScalarFieldEnum = {
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt',
   shippingMethod: 'shippingMethod',
-  paymentMethodName: 'paymentMethodName'
+  paymentMethodName: 'paymentMethodName',
+  twoStagePayment: 'twoStagePayment',
+  paymentRevision: 'paymentRevision'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -364,6 +367,7 @@ export const PaymentScalarFieldEnum = {
   status: 'status',
   method: 'method',
   amount: 'amount',
+  stage: 'stage',
   gateway: 'gateway',
   authority: 'authority',
   transactionId: 'transactionId',
@@ -495,6 +499,7 @@ export const PaymentReceiptScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   imageUrl: 'imageUrl',
+  stage: 'stage',
   status: 'status',
   note: 'note',
   reviewedBy: 'reviewedBy',
@@ -516,6 +521,17 @@ export const MarketSettingsScalarFieldEnum = {
 } as const
 
 export type MarketSettingsScalarFieldEnum = (typeof MarketSettingsScalarFieldEnum)[keyof typeof MarketSettingsScalarFieldEnum]
+
+
+export const ContactMessageScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  message: 'message',
+  createdAt: 'createdAt'
+} as const
+
+export type ContactMessageScalarFieldEnum = (typeof ContactMessageScalarFieldEnum)[keyof typeof ContactMessageScalarFieldEnum]
 
 
 export const SortOrder = {
