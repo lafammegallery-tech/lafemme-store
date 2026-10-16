@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
-import { saveDestinationAction, reviewBundleAction, type PaymentActionState } from "@/app/actions/staged-payment";
+import { useActionState, useState } from "react";
+import { useRouter } from "next/navigation";
+import { saveDestinationAction, type PaymentActionState } from "@/app/actions/staged-payment";
 import { Button, Input } from "@/components/ui";
 
 const initial: PaymentActionState = {};
@@ -21,13 +22,26 @@ export function DestinationForm({ orderId, revision, destination, locked }: { or
 }
 
 export function ReviewBundleForm({ receiptId, deposit, count }: { receiptId: string; deposit: boolean; count: number }) {
-  const [state, action, pending] = useActionState(reviewBundleAction, initial);
-  return <form action={action} className="grid gap-3 mt-4">
-    <input type="hidden" name="id" value={receiptId} />
+  const router = useRouter();
+  const [note, setNote] = useState("");
+  const [apiState, setApiState] = useState<PaymentActionState>({});
+  const [apiPending, setApiPending] = useState(false);
+  async function review(decision: "approve" | "reject") {
+    if (decision === "reject" && !note.trim()) return setApiState({ error: "دلیل رد را بنویسید تا مشتری بتواند اصلاح کند." });
+    setApiPending(true); setApiState({});
+    try {
+      const response = await fetch("/api/admin/payment-receipts/review", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: receiptId, decision, note }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "بررسی انجام نشد.");
+      setApiState({ success: data.message }); router.refresh();
+    } catch (error) { setApiState({ error: error instanceof Error ? error.message : "بررسی انجام نشد." }); }
+    finally { setApiPending(false); }
+  }
+  return <div className="grid gap-3 mt-4">
     <p>تصمیم شما روی تمام {count.toLocaleString("fa-IR")} تصویر در انتظارِ این مرحله اعمال می‌شود. پیش از تأیید، وصول وجه و جمع تمام واریزها را با مبلغ این مرحله تطبیق دهید.</p>
-    <label>توضیح بررسی (برای رد الزامی)<Input name="note" maxLength={500} placeholder="دلیل رد یا توضیح تأیید" /></label>
-    {state.error && <p role="alert" className="text-red-400">{state.error}</p>}{state.success && <p role="status">{state.success}</p>}
-    <Button type="submit" name="decision" value="approve" disabled={pending}>{deposit ? "تأیید اولیهٔ پیش‌پرداخت" : "تأیید نهایی و تسویهٔ سفارش"}</Button>
-    <Button type="submit" name="decision" value="reject" variant="danger" disabled={pending}>رد مجموعه رسیدهای این مرحله</Button>
-  </form>;
+    <label>توضیح بررسی (برای رد الزامی)<Input value={note} onChange={event => setNote(event.target.value)} disabled={apiPending} maxLength={500} placeholder="دلیل رد یا توضیح تأیید" /></label>
+    {apiState.error && <p role="alert" className="text-red-400">{apiState.error}</p>}{apiState.success && <p role="status">{apiState.success}</p>}
+    <Button type="button" onClick={() => review("approve")} disabled={apiPending}>{apiPending ? "در حال بررسی…" : deposit ? "تأیید اولیهٔ پیش‌پرداخت" : "تأیید نهایی و تسویهٔ سفارش"}</Button>
+    <Button type="button" onClick={() => review("reject")} variant="danger" disabled={apiPending}>رد مجموعه رسیدهای این مرحله</Button>
+  </div>;
 }

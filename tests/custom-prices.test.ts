@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { parseCustomPrices } from "../src/backend/services/custom-price-parser";
+import { parseCustomPrices, parseCustomPricesPartial } from "../src/backend/services/custom-price-parser";
 import { formatMoney } from "../src/lib/format-money";
 
 test("money display has no decimals without changing conversion precision", () => {
@@ -29,4 +29,37 @@ test("rejects unavailable, outdated, duplicate, missing and invalid prices", () 
   const invalid = payload(); invalid.prices[0].buy_price = -1;
   assert.throws(() => parseCustomPrices(invalid, now));
   assert.throws(() => parseCustomPrices({ prices: [] }, now));
+});
+
+test("keeps an available metal when the other API asset is unavailable", () => {
+  const payloadWithMissingSilver = payload();
+  payloadWithMissingSilver.prices = payloadWithMissingSilver.prices.filter(row => row.asset !== "SILVER_1000G_NADIR");
+  const result = parseCustomPricesPartial(payloadWithMissingSilver, now);
+  assert.ok(result.gold);
+  assert.equal(result.silver, null);
+});
+
+test("each metal fails closed independently for every invalid asset variant", () => {
+  for (const index of [0, 1]) {
+    const unavailableMetal = index === 0 ? "gold" : "silver";
+    const availableMetal = index === 0 ? "silver" : "gold";
+    const variants = [
+      (data: ReturnType<typeof payload>) => { data.prices[index].available = false; },
+      (data: ReturnType<typeof payload>) => { data.prices.splice(index, 1); },
+      (data: ReturnType<typeof payload>) => { data.prices.push(data.prices[index]); },
+      (data: ReturnType<typeof payload>) => { data.prices[index].buy_price = 0; },
+      (data: ReturnType<typeof payload>) => { data.prices[index].buy_price = -1; },
+      (data: ReturnType<typeof payload>) => { data.prices[index].unit_code = "WRONG"; },
+      (data: ReturnType<typeof payload>) => { data.prices[index].updated_at = new Date(now - 16 * 60_000).toISOString(); },
+      (data: ReturnType<typeof payload>) => { data.prices[index].updated_at = new Date(now + 61_000).toISOString(); },
+    ];
+    for (const mutate of variants) {
+      const data = payload(); mutate(data);
+      const parsed = parseCustomPricesPartial(data, now);
+      assert.equal(parsed[unavailableMetal], null);
+      assert.deepEqual(parsed[availableMetal], parseCustomPrices(payload(), now)[availableMetal]);
+    }
+  }
+  assert.deepEqual(parseCustomPricesPartial({ prices: [] }, now), { gold: null, silver: null });
+  for (const data of [null, {}, { prices: {} }]) assert.throws(() => parseCustomPricesPartial(data, now));
 });
