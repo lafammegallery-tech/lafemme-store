@@ -7,7 +7,8 @@ import { evaluateCoupon } from "@/backend/services/coupon.service";
 import { getStorefrontProducts } from "@/backend/services/storefront-product.service";
 import { grantGuestOrderAccess } from "@/backend/auth/order-access";
 import { assertRateLimit } from "@/backend/security/rate-limit";
-import { splitPayment } from "@/lib/staged-payment";
+import { paymentPlan, matchesPaymentRange } from "@/lib/payment-policy";
+import { getPaymentPolicy } from "@/backend/services/payment-policy.service";
 
 export type CheckoutState = { error?: string };
 
@@ -38,13 +39,6 @@ export async function checkoutAction(
   // روش پرداخت و ارسال انتخاب‌شده را از تنظیمات مدیر می‌خوانیم.
   const paymentMethodId = String(formData.get("paymentMethodId") ?? "").trim();
   const shippingMethodId = String(formData.get("shippingMethodId") ?? "").trim();
-  const [paymentMethod, shippingMethod] = await Promise.all([
-    paymentMethodId ? prisma.paymentMethodConfig.findFirst({ where: { id: paymentMethodId, isActive: true } }) : null,
-    shippingMethodId ? prisma.shippingMethodConfig.findFirst({ where: { id: shippingMethodId, isActive: true } }) : null,
-  ]);
-
-  if (!paymentMethod || paymentMethod.type !== "CARD_TO_CARD" || !paymentMethod.cardNumber || paymentMethod.cardNumber === "6037991234567890") return { error: "روش کارت‌به‌کارت واقعی و معتبر انتخاب کنید؛ کارت نمونه قابل استفاده نیست." };
-  if (!shippingMethod) return { error: "روش ارسال معتبر انتخاب کنید." };
   let orderNumber: string;
   let orderId: string;
 
@@ -58,6 +52,13 @@ export async function checkoutAction(
       return { ...item, unitPrice: product.price };
     });
     const order = await prisma.$transaction(async (tx) => {
+      const [paymentMethod, shippingMethod, policy] = await Promise.all([
+        tx.paymentMethodConfig.findFirst({ where: { id: paymentMethodId, isActive: true } }),
+        tx.shippingMethodConfig.findFirst({ where: { id: shippingMethodId, isActive: true } }),
+        getPaymentPolicy(tx),
+      ]);
+      if (!paymentMethod || paymentMethod.type !== "CARD_TO_CARD" || !paymentMethod.cardNumber || !/^\d{16}$/.test(paymentMethod.cardNumber) || paymentMethod.cardNumber === "6037991234567890") throw new Error("روش کارت‌به‌کارت واقعی و معتبر انتخاب کنید؛ کارت نمونه قابل استفاده نیست.");
+      if (!shippingMethod) throw new Error("روش ارسال معتبر انتخاب کنید.");
       const currentItems = await tx.cartItem.findMany({ where: { cartId: cart.id } });
       if (currentItems.length !== pricedItems.length || pricedItems.some((item) => !currentItems.some((current) => current.id === item.id && current.quantity === item.quantity && Number(current.unitPrice) === item.unitPrice))) throw new Error("سبد تغییر کرده؛ صفحه را تازه کنید.");
       const activeProducts = await tx.product.count({ where: { id: { in: pricedItems.map((item) => item.productId) }, status: "ACTIVE", deletedAt: null } });
@@ -89,7 +90,10 @@ export async function checkoutAction(
       const baseShipping = shippingMethod ? Number(shippingMethod.cost) : subtotal >= 100_000_000 ? 0 : 500_000;
       const shippingAmount = applied?.freeShipping ? 0 : baseShipping;
       const totalAmount = subtotal - discountAmount + shippingAmount;
-      const { deposit, balance } = splitPayment(totalAmount);
+      if (!matchesPaymentRange(totalAmount, { minimumAmount: Number(paymentMethod.minimumAmount), maximumAmount: paymentMethod.maximumAmount === null ? null : Number(paymentMethod.maximumAmount) })) throw new Error("این روش پرداخت برای مبلغ نهایی سفارش مجاز نیست؛ صفحه را تازه و روش مناسب را انتخاب کنید.");
+      const plan = paymentPlan(totalAmount, policy);
+      const expected = JSON.stringify({ total: totalAmount, percent: plan.depositPercent, revision: policy.revision });
+      if (String(formData.get("paymentQuote") ?? "") !== expected) throw new Error("مبلغ یا قانون پرداخت تغییر کرده؛ صفحه را تازه و شرایط جدید را پیش از ثبت سفارش بررسی کنید.");
 
       // شماره سفارش یکتا با timestamp و random برای جلوگیری از تکرار
       const rand = Math.floor(Math.random() * 10000).toString().padStart(4, "0");
@@ -106,7 +110,8 @@ export async function checkoutAction(
           discountAmount,
           shippingAmount,
           totalAmount,
-          twoStagePayment: true,
+          twoStagePayment: plan.twoStage,
+          depositPercent: plan.depositPercent,
           shippingAddress: { province, city, addressLine, postalCode: String(formData.get("postalCode") ?? "") },
           shippingMethod: shippingMethod?.name ?? null,
           paymentMethodName: paymentMethod?.name ?? null,
@@ -123,12 +128,12 @@ export async function checkoutAction(
               totalPrice: Number(i.unitPrice) * i.quantity,
             })),
           },
-          payments: { create: [
-            { amount: deposit, stage: "DEPOSIT", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } },
-            { amount: balance, stage: "BALANCE", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD" },
-          ] },
+          payments: { create: plan.twoStage ? [
+            { amount: plan.deposit, stage: "DEPOSIT", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } },
+            { amount: plan.balance, stage: "BALANCE", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD" },
+          ] : [{ amount: totalAmount, stage: "FULL", method: "CARD_TO_CARD", status: "PENDING", gateway: "CARD_TO_CARD", metadata: { cardNumber: paymentMethod.cardNumber, cardHolder: paymentMethod.cardHolder, bankName: paymentMethod.bankName } }] },
           shipment: { create: { status: "PENDING" } },
-          statusHistory: { create: { toStatus: "PENDING", note: "درخواست خرید ایجاد شد؛ در انتظار واریز و تأیید پیش‌پرداخت ۱۰٪." } },
+          statusHistory: { create: { toStatus: "PENDING", note: plan.twoStage ? `درخواست خرید ایجاد شد؛ در انتظار واریز و تأیید پیش‌پرداخت ${plan.depositPercent}٪.` : "سفارش ایجاد شد؛ در انتظار واریز مبلغ کامل و تأیید رسیدها." } },
         },
       });
 

@@ -35,7 +35,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               <PriceDisplay value={Number(o.totalAmount)} />
               <p className="mt-3">روش پرداخت: {o.paymentMethodName ?? o.payments[0]?.method ?? "—"}</p>
               <p>روش ارسال: {o.shippingMethod ?? "—"}</p>
-              <p>پرداخت: {o.twoStagePayment ? (balance?.status === "SUCCESS" ? "تأیید نهایی و تسویه‌شده" : depositApproved ? "تأیید اولیه انجام شده؛ منتظر تسویه" : "منتظر پیش‌پرداخت ۱۰٪ و تأیید اولیه") : "تک‌مرحله‌ای (سفارش قبلی)"}</p>
+              <p>پرداخت: {o.twoStagePayment ? (balance?.status === "SUCCESS" ? "تأیید نهایی و تسویه‌شده" : depositApproved ? "تأیید اولیه انجام شده؛ منتظر تسویه" : "منتظر پیش‌پرداخت و تأیید اولیه") : "پرداخت کامل در یک مرحله"}</p>
+              {o.twoStagePayment && <p>درصد پیش‌پرداخت ثبت‌شدهٔ سفارش: {(o.depositPercent ?? 10).toLocaleString("fa-IR")}٪ (مستقل از تنظیمات فعلی فروشگاه)</p>}
               <h3 className="mt-5">اقلام</h3>
               {o.items.map((i) => (
                 <p key={i.id}>
@@ -68,7 +69,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
               {o.twoStagePayment && balance && <section className="mb-8">
                 <h2>مقصد ماندهٔ این سفارش</h2>
                 <p>پس از تأیید اولیه با مشتری به شمارهٔ <span dir="ltr">{o.customerPhone}</span> هماهنگ کنید و کارت یا شبا را اینجا ثبت کنید. مشتری مقصد را در صفحهٔ پیگیری همان سفارش می‌بیند.</p>
-                {depositApproved && o.status === "PENDING" && balance.status !== "SUCCESS" ? <DestinationForm key={o.paymentRevision} orderId={o.id} revision={o.paymentRevision} destination={destinationSnapshot(balance.metadata)} locked={o.receipts.some(r => r.stage === "BALANCE" && r.status === "PENDING")} /> : <p>{depositApproved ? "سفارش در این وضعیت قابل تغییر مقصد نیست." : "ابتدا پیش‌پرداخت ۱۰٪ را تأیید کنید."}</p>}
+                {depositApproved && o.status === "PENDING" && balance.status !== "SUCCESS" ? <DestinationForm key={o.paymentRevision} orderId={o.id} revision={o.paymentRevision} destination={destinationSnapshot(balance.metadata)} locked={o.receipts.some(r => r.stage === "BALANCE" && r.status === "PENDING")} /> : <p>{depositApproved ? "سفارش در این وضعیت قابل تغییر مقصد نیست." : "ابتدا پیش‌پرداخت ثبت‌شدهٔ سفارش را تأیید کنید."}</p>}
               </section>}
               <h2>تغییر وضعیت</h2>
               <form action={updateOrderStatusAction} className="grid gap-3">

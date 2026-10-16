@@ -407,6 +407,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   PreOrder: 'PreOrder',
   PaymentMethodConfig: 'PaymentMethodConfig',
+  PaymentPolicy: 'PaymentPolicy',
   ShippingMethodConfig: 'ShippingMethodConfig',
   PaymentReceipt: 'PaymentReceipt',
   MarketSettings: 'MarketSettings',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "address" | "category" | "product" | "productImage" | "productVariant" | "inventory" | "marketPrice" | "cart" | "cartItem" | "wishlist" | "wishlistItem" | "order" | "orderItem" | "orderStatusHistory" | "shipment" | "payment" | "coupon" | "couponUsage" | "notification" | "auditLog" | "preOrder" | "paymentMethodConfig" | "shippingMethodConfig" | "paymentReceipt" | "marketSettings" | "contactMessage"
+    modelProps: "user" | "address" | "category" | "product" | "productImage" | "productVariant" | "inventory" | "marketPrice" | "cart" | "cartItem" | "wishlist" | "wishlistItem" | "order" | "orderItem" | "orderStatusHistory" | "shipment" | "payment" | "coupon" | "couponUsage" | "notification" | "auditLog" | "preOrder" | "paymentMethodConfig" | "paymentPolicy" | "shippingMethodConfig" | "paymentReceipt" | "marketSettings" | "contactMessage"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2132,6 +2133,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PaymentPolicy: {
+      payload: Prisma.$PaymentPolicyPayload<ExtArgs>
+      fields: Prisma.PaymentPolicyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentPolicyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentPolicyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentPolicyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentPolicyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentPolicyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentPolicyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentPolicyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentPolicyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentPolicyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        update: {
+          args: Prisma.PaymentPolicyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentPolicyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentPolicyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentPolicyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentPolicyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentPolicyPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentPolicyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentPolicy>
+        }
+        groupBy: {
+          args: Prisma.PaymentPolicyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentPolicyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentPolicyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentPolicyCountAggregateOutputType> | number
+        }
+      }
+    }
     ShippingMethodConfig: {
       payload: Prisma.$ShippingMethodConfigPayload<ExtArgs>
       fields: Prisma.ShippingMethodConfigFieldRefs
@@ -2681,6 +2756,7 @@ export const OrderScalarFieldEnum = {
   shippingMethod: 'shippingMethod',
   paymentMethodName: 'paymentMethodName',
   twoStagePayment: 'twoStagePayment',
+  depositPercent: 'depositPercent',
   paymentRevision: 'paymentRevision'
 } as const
 
@@ -2845,11 +2921,26 @@ export const PaymentMethodConfigScalarFieldEnum = {
   requiresReceipt: 'requiresReceipt',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  minimumAmount: 'minimumAmount',
+  maximumAmount: 'maximumAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentMethodConfigScalarFieldEnum = (typeof PaymentMethodConfigScalarFieldEnum)[keyof typeof PaymentMethodConfigScalarFieldEnum]
+
+
+export const PaymentPolicyScalarFieldEnum = {
+  id: 'id',
+  twoStageEnabled: 'twoStageEnabled',
+  depositPercent: 'depositPercent',
+  thresholdAmount: 'thresholdAmount',
+  revision: 'revision',
+  updatedAt: 'updatedAt',
+  updatedBy: 'updatedBy'
+} as const
+
+export type PaymentPolicyScalarFieldEnum = (typeof PaymentPolicyScalarFieldEnum)[keyof typeof PaymentPolicyScalarFieldEnum]
 
 
 export const ShippingMethodConfigScalarFieldEnum = {
@@ -3350,6 +3441,7 @@ export type GlobalOmitConfig = {
   auditLog?: Prisma.AuditLogOmit
   preOrder?: Prisma.PreOrderOmit
   paymentMethodConfig?: Prisma.PaymentMethodConfigOmit
+  paymentPolicy?: Prisma.PaymentPolicyOmit
   shippingMethodConfig?: Prisma.ShippingMethodConfigOmit
   paymentReceipt?: Prisma.PaymentReceiptOmit
   marketSettings?: Prisma.MarketSettingsOmit

@@ -6,6 +6,7 @@ import { getPrisma } from "@/backend/database/prisma";
 import { positiveInt, text } from "@/backend/security/validation";
 import { writeAudit } from "@/backend/services/audit.service";
 import { changeOrderStatus } from "@/backend/services/order-status.service";
+import { parsePaymentRange } from "@/lib/payment-policy";
 import type { DiscountType, MetalType, OrderStatus, PaymentMethod, UserRole } from "@/generated/prisma/enums";
 
 /** آرایه‌ی URL تصاویر را از فیلد JSON فرم می‌خواند؛ در صورت نبود، به imageUrl تکی برمی‌گردد. */
@@ -346,6 +347,7 @@ export async function createPaymentMethodAction(formData: FormData) {
 
   const m = await p.paymentMethodConfig.create({
     data: {
+      ...parsePaymentRange(formData.get("minimumAmount") ?? "0", formData.get("maximumAmount")),
       name,
       type,
       description: text(formData.get("description"), 500) || null,
@@ -358,6 +360,7 @@ export async function createPaymentMethodAction(formData: FormData) {
   });
   await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_CREATE", entityType: "PaymentMethodConfig", entityId: m.id, newData: { name, type } });
   revalidatePath("/admin/payment-methods");
+  revalidatePath("/checkout");
 }
 
 export async function togglePaymentMethodAction(formData: FormData) {
@@ -369,6 +372,7 @@ export async function togglePaymentMethodAction(formData: FormData) {
   await p.paymentMethodConfig.update({ where: { id }, data: { isActive: !old.isActive } });
   await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_TOGGLE", entityType: "PaymentMethodConfig", entityId: id, newData: { isActive: !old.isActive } });
   revalidatePath("/admin/payment-methods");
+  revalidatePath("/checkout");
 }
 
 export async function deletePaymentMethodAction(formData: FormData) {
@@ -377,6 +381,7 @@ export async function deletePaymentMethodAction(formData: FormData) {
   await getPrisma().paymentMethodConfig.delete({ where: { id } });
   await writeAudit({ actorId: s.userId, action: "PAYMENT_METHOD_DELETE", entityType: "PaymentMethodConfig", entityId: id });
   revalidatePath("/admin/payment-methods");
+  revalidatePath("/checkout");
 }
 
 /* ===================== روش‌های ارسال ===================== */

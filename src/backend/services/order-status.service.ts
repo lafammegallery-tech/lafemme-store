@@ -15,7 +15,7 @@ export async function changeOrderStatus(id: string, status: OrderStatus, actorId
     if (!transitions[old.status].includes(status)) throw new Error("تغییر وضعیت سفارش مجاز نیست.");
     if (["CONFIRMED", "PROCESSING", "SHIPPED", "DELIVERED"].includes(status)) {
       const paid = old.payments.filter(payment => payment.status === "SUCCESS").reduce((sum, payment) => sum + Number(payment.amount), 0);
-      if (paid !== Number(old.totalAmount) || (old.twoStagePayment && (!["DEPOSIT", "BALANCE"].every(stage => old.payments.some(payment => payment.stage === stage && payment.status === "SUCCESS"))))) throw new Error("ابتدا هر دو مرحلهٔ پرداخت و تسویهٔ کامل را تأیید کنید.");
+      if (paid !== Number(old.totalAmount) || (old.twoStagePayment && (!["DEPOSIT", "BALANCE"].every(stage => old.payments.some(payment => payment.stage === stage && payment.status === "SUCCESS"))))) throw new Error(old.twoStagePayment ? "ابتدا هر دو مرحلهٔ پرداخت و تسویهٔ کامل را تأیید کنید." : "ابتدا پرداخت کامل سفارش را تأیید کنید.");
     }
     if (status === "CANCELLED" || status === "SHIPPED") {
       for (const item of old.items) {

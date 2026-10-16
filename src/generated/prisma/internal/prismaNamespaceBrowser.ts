@@ -74,6 +74,7 @@ export const ModelName = {
   AuditLog: 'AuditLog',
   PreOrder: 'PreOrder',
   PaymentMethodConfig: 'PaymentMethodConfig',
+  PaymentPolicy: 'PaymentPolicy',
   ShippingMethodConfig: 'ShippingMethodConfig',
   PaymentReceipt: 'PaymentReceipt',
   MarketSettings: 'MarketSettings',
@@ -310,6 +311,7 @@ export const OrderScalarFieldEnum = {
   shippingMethod: 'shippingMethod',
   paymentMethodName: 'paymentMethodName',
   twoStagePayment: 'twoStagePayment',
+  depositPercent: 'depositPercent',
   paymentRevision: 'paymentRevision'
 } as const
 
@@ -474,11 +476,26 @@ export const PaymentMethodConfigScalarFieldEnum = {
   requiresReceipt: 'requiresReceipt',
   isActive: 'isActive',
   sortOrder: 'sortOrder',
+  minimumAmount: 'minimumAmount',
+  maximumAmount: 'maximumAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentMethodConfigScalarFieldEnum = (typeof PaymentMethodConfigScalarFieldEnum)[keyof typeof PaymentMethodConfigScalarFieldEnum]
+
+
+export const PaymentPolicyScalarFieldEnum = {
+  id: 'id',
+  twoStageEnabled: 'twoStageEnabled',
+  depositPercent: 'depositPercent',
+  thresholdAmount: 'thresholdAmount',
+  revision: 'revision',
+  updatedAt: 'updatedAt',
+  updatedBy: 'updatedBy'
+} as const
+
+export type PaymentPolicyScalarFieldEnum = (typeof PaymentPolicyScalarFieldEnum)[keyof typeof PaymentPolicyScalarFieldEnum]
 
 
 export const ShippingMethodConfigScalarFieldEnum = {

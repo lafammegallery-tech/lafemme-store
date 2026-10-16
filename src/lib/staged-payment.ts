@@ -1,11 +1,13 @@
-export const STAGE_LABELS = { FULL: "پرداخت کامل", DEPOSIT: "پیش‌پرداخت ۱۰٪ — تأیید اولیه", BALANCE: "تسویه مانده — تأیید نهایی" };
+export const STAGE_LABELS = { FULL: "پرداخت کامل", DEPOSIT: "پیش‌پرداخت — تأیید اولیه", BALANCE: "تسویه مانده — تأیید نهایی" };
 export const MAX_RECEIPT_FILES = 10;
 export const MAX_RECEIPT_BYTES = 30 * 1024 * 1024;
 
 /** Whole toman, rounded up once for the deposit; the remainder sums exactly. */
-export function splitPayment(total: number) {
+export function splitPayment(total: number, percent = 10) {
   if (!Number.isSafeInteger(total) || total < 10) throw new Error("مبلغ سفارش برای پرداخت دو مرحله‌ای معتبر نیست.");
-  const deposit = Number((BigInt(total) + BigInt(9)) / BigInt(10));
+  if (!Number.isInteger(percent) || percent < 1 || percent > 99) throw new Error("درصد پیش‌پرداخت باید عدد صحیح بین ۱ تا ۹۹ باشد.");
+  const deposit = Number((BigInt(total) * BigInt(percent) + BigInt(99)) / BigInt(100));
+  if (deposit >= total) throw new Error("مبلغ سفارش برای پرداخت دو مرحله‌ای معتبر نیست.");
   return { deposit, balance: total - deposit };
 }
 

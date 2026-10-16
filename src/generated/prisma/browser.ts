@@ -133,6 +133,11 @@ export type PreOrder = Prisma.PreOrderModel
  */
 export type PaymentMethodConfig = Prisma.PaymentMethodConfigModel
 /**
+ * Model PaymentPolicy
+ * Global checkout policy. Each new order snapshots its own deposit percentage.
+ */
+export type PaymentPolicy = Prisma.PaymentPolicyModel
+/**
  * Model ShippingMethodConfig
  * روش‌های ارسال قابل تنظیم توسط مدیر — پیک، پست، تحویل حضوری و ... .
  */

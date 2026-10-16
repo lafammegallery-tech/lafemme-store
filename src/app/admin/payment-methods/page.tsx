@@ -3,6 +3,8 @@ import { getPrisma } from "@/backend/database/prisma";
 import { createPaymentMethodAction, togglePaymentMethodAction, deletePaymentMethodAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
 import { Container, Card, Input, Textarea, Button, Badge } from "@/components/ui";
+import { PaymentPolicyForm, PaymentRangeForm } from "@/components/admin/PaymentPolicyForms";
+import { getPaymentPolicy } from "@/backend/services/payment-policy.service";
 
 export const dynamic = "force-dynamic";
 
@@ -15,12 +17,14 @@ const TYPE_LABELS: Record<string, string> = {
 
 export default async function Page() {
   await requireAdmin();
-  const rows = await getPrisma().paymentMethodConfig.findMany({ orderBy: { sortOrder: "asc" } });
+  const [rows, policy] = await Promise.all([getPrisma().paymentMethodConfig.findMany({ orderBy: { sortOrder: "asc" } }), getPaymentPolicy()]);
 
   return (
     <PageLayout>
       <PageHero title="روش‌های پرداخت" description="روش‌های پرداخت فروشگاه را اضافه و مدیریت کنید" />
       <Container>
+        <Card className="p-6 mb-6"><PaymentPolicyForm policy={policy} /></Card>
+        <p className="mb-6">هر روش فقط در بازهٔ مبلغ خودش به مشتری نمایش داده می‌شود. بازهٔ پیش‌فرض ۰ تا نامحدود است. می‌توانید چند کارت با بازه‌های متفاوت داشته باشید؛ اگر هیچ روش فعالی با مبلغ سفارش سازگار نباشد، ثبت سفارش بسته می‌شود.</p>
         <div className="admin-grid">
           <Card className="admin-form-card">
             <h2 className="admin-form-title">افزودن روش پرداخت</h2>
@@ -37,6 +41,8 @@ export default async function Page() {
               <Input name="bankName" placeholder="نام بانک" />
               <Textarea name="description" placeholder="توضیحات برای مشتری" rows={2} />
               <Input name="sortOrder" type="number" placeholder="ترتیب نمایش (۰)" dir="ltr" />
+              <label>حداقل مبلغ سفارش (تومان)<Input name="minimumAmount" defaultValue="0" inputMode="numeric" dir="ltr" required /></label>
+              <label>سقف مبلغ، غیرشامل (خالی = نامحدود)<Input name="maximumAmount" inputMode="numeric" dir="ltr" /></label>
               <label className="admin-checkbox">
                 <input type="checkbox" name="requiresReceipt" defaultChecked />
                 <span>نیازمند بارگذاری رسید توسط مشتری</span>
@@ -48,7 +54,8 @@ export default async function Page() {
           <div className="admin-list">
             {rows.length === 0 && <Card className="p-6 text-center admin-empty">هنوز روش پرداختی اضافه نشده است.</Card>}
             {rows.map((m) => (
-              <Card key={m.id} className="admin-item">
+              <Card key={m.id} className="p-5">
+                <div className="admin-item">
                 <div className="admin-item-main">
                   <div className="admin-item-head">
                     <b>{m.name}</b>
@@ -69,6 +76,8 @@ export default async function Page() {
                     <Button type="submit" variant="danger" size="sm">حذف</Button>
                   </form>
                 </div>
+                </div>
+                <PaymentRangeForm id={m.id} range={{ minimumAmount: Number(m.minimumAmount), maximumAmount: m.maximumAmount === null ? null : Number(m.maximumAmount) }} />
               </Card>
             ))}
           </div>

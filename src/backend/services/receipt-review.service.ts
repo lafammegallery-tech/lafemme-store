@@ -16,7 +16,7 @@ export async function reviewPaymentReceipt(id: string, approved: boolean, actorI
     await tx.order.update({ where: { id: receipt.orderId }, data: {
       paymentRevision: { increment: 1 },
       ...(final ? { status: "CONFIRMED" } : {}),
-      statusHistory: { create: { fromStatus: "PENDING", toStatus: final ? "CONFIRMED" : "PENDING", note: receipt.stage === "DEPOSIT" ? (approved ? "تأیید اولیه: پیش‌پرداخت ۱۰٪ تأیید شد؛ در انتظار تعیین مقصد و تسویه مانده." : `رسیدهای پیش‌پرداخت رد شد. ${note ?? ""}`) : (approved ? "تأیید نهایی: همهٔ رسیدهای این مرحله و تسویه تأیید شد." : `رسیدهای تسویه رد شد. ${note ?? ""}`), actorId } },
+      statusHistory: { create: { fromStatus: "PENDING", toStatus: final ? "CONFIRMED" : "PENDING", note: receipt.stage === "DEPOSIT" ? (approved ? `تأیید اولیه: پیش‌پرداخت ${order.depositPercent ?? 10}٪ تأیید شد؛ در انتظار تعیین مقصد و تسویه مانده.` : `رسیدهای پیش‌پرداخت رد شد. ${note ?? ""}`) : (approved ? "تأیید نهایی: همهٔ رسیدهای این مرحله و تسویه تأیید شد." : `رسیدهای تسویه رد شد. ${note ?? ""}`), actorId } },
     } });
     await tx.auditLog.create({ data: { actorId, action: "RECEIPT_BUNDLE_REVIEW", entityType: "Order", entityId: receipt.orderId, newData: { stage: receipt.stage, approved, note, receiptIds: bundle.map(r => r.id), amount: String(payment.amount) } } });
     return receipt.orderId;

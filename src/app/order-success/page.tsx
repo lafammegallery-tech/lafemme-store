@@ -19,13 +19,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
   const active = row.status === "PENDING";
   return (
     <PageLayout>
-      <PageHero title={row.twoStagePayment ? "پیگیری پرداخت دو مرحله‌ای" : "پیگیری پرداخت سفارش"} description="تأیید اولیهٔ پیش‌پرداخت و تأیید نهایی تسویه به‌صورت جداگانه انجام می‌شود." />
+      <PageHero title={row.twoStagePayment ? "پیگیری پرداخت دو مرحله‌ای" : "پیگیری پرداخت سفارش"} description={row.twoStagePayment ? "تأیید اولیهٔ پیش‌پرداخت و تأیید نهایی تسویه به‌صورت جداگانه انجام می‌شود." : "مبلغ کامل سفارش را واریز و تصاویر رسیدها را برای بررسی مدیر ارسال کنید."} />
       <section className="py-16"><Container><Card className="p-6 sm:p-8 order-success-card space-y-6">
         <p>شماره سفارش: <strong dir="ltr">{row.orderNumber}</strong></p>
         <p>جمع نهایی سفارش: <strong>{formatMoney(Number(row.totalAmount))} تومان</strong></p>
         <p>وضعیت سفارش: {row.status === "PENDING" ? (row.twoStagePayment ? (depositApproved ? "تأیید اولیه انجام شده؛ در انتظار تسویه" : "در انتظار پرداخت و تأیید اولیه") : "در انتظار بررسی پرداخت کامل") : row.status === "CONFIRMED" ? "تأیید نهایی و تسویه کامل" : row.status}</p>
-        {active && !depositApproved && <p>فیش پیش‌پرداخت را تا ۲۴ ساعت ارسال کنید. تأیید وصول وجه توسط مدیر انجام می‌شود؛ ثبت درخواست به‌تنهایی تأیید خرید نیست.</p>}
-        {row.twoStagePayment && <p>ابتدا فقط ۱۰٪ جمع نهایی را به کارت مرحلهٔ اول واریز و تصویر فیش‌ها را ارسال کنید. پس از تأیید اولیه، برای هماهنگی مانده با پشتیبانی تماس بگیرید یا منتظر تماس فروشگاه باشید. مدیر، کارت یا شبای اختصاصی همین سفارش را در مرحلهٔ دوم اعلام می‌کند. قبل از نمایش مقصد مرحلهٔ دوم، مانده را واریز نکنید.</p>}
+        {active && !depositApproved && <p>فیش {row.twoStagePayment ? "پیش‌پرداخت" : "پرداخت کامل"} را تا ۲۴ ساعت ارسال کنید. تأیید وصول وجه توسط مدیر انجام می‌شود؛ ثبت درخواست به‌تنهایی تأیید خرید نیست.</p>}
+        {row.twoStagePayment && <p>درصد ثبت‌شدهٔ این سفارش: {(row.depositPercent ?? 10).toLocaleString("fa-IR")}٪. ابتدا فقط پیش‌پرداخت را به کارت مرحلهٔ اول واریز و تصویر فیش‌ها را ارسال کنید. پس از تأیید اولیه، برای هماهنگی مانده با پشتیبانی تماس بگیرید یا منتظر تماس فروشگاه باشید. مدیر، کارت یا شبای اختصاصی همین سفارش را در مرحلهٔ دوم اعلام می‌کند. قبل از نمایش مقصد مرحلهٔ دوم، مانده را واریز نکنید. تغییر تنظیمات فروشگاه، مبلغ این سفارش را تغییر نمی‌دهد.</p>}
         <p><Link href="/contact" className="underline">راه‌های تماس و هماهنگی پرداخت</Link> — شمارهٔ تماس ثبت‌شدهٔ شما: <span dir="ltr">{row.customerPhone}</span></p>
         <PaymentRefresh />
         {row.payments.sort((a, b) => ({ FULL: 0, DEPOSIT: 1, BALANCE: 2 }[a.stage] - { FULL: 0, DEPOSIT: 1, BALANCE: 2 }[b.stage])).map(payment => {
@@ -40,7 +40,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ o
             <p className="text-xl">مبلغ این مرحله: <strong>{formatMoney(Number(payment.amount))} تومان</strong></p>
             {payment.status === "SUCCESS" ? <p className="receipt-success">✓ {payment.stage === "DEPOSIT" ? "پیش‌پرداخت تأیید شد؛ این تأیید به معنی تسویه کامل نیست." : "پرداخت این مرحله تأیید شد."}</p> : !active ? <p>سفارش در این وضعیت قابل واریز نیست؛ برای پیگیری با پشتیبانی هماهنگ کنید.</p> : !unlocked ? <p>این مرحله پس از تأیید اولیهٔ پیش‌پرداخت فعال می‌شود.</p> : !hasDestination ? <p role="status">منتظر اعلام کارت یا شبا توسط مدیر هستید. برای هماهنگی تماس بگیرید؛ مبلغ مانده را فعلاً به کارت پیش‌پرداخت واریز نکنید.</p> : <>
               <div className="card-info-box">
-                <p>مقصد واریز {payment.stage === "DEPOSIT" ? "فقط پیش‌پرداخت ۱۰٪" : payment.stage === "BALANCE" ? "فقط ماندهٔ همین سفارش" : "مبلغ کامل"}:</p>
+                <p>مقصد واریز {payment.stage === "DEPOSIT" ? `فقط پیش‌پرداخت ${(row.depositPercent ?? 10).toLocaleString("fa-IR")}٪` : payment.stage === "BALANCE" ? "فقط ماندهٔ همین سفارش" : "مبلغ کامل"}:</p>
                 {destination.cardNumber && <p>کارت: <strong dir="ltr" className="break-all">{destination.cardNumber}</strong></p>}
                 {destination.iban && <p>شبا: <strong dir="ltr" className="break-all">{destination.iban}</strong></p>}
                 {destination.cardHolder && <p>به نام: {destination.cardHolder}</p>}

@@ -17,7 +17,7 @@ export function assertStage(order: PaymentOrder, stage: PaymentStage, revision: 
   const payment = currentPayment(order);
   if (!payment || payment.stage !== stage || payment.method !== "CARD_TO_CARD" || !["PENDING", "PROCESSING"].includes(payment.status)) throw new Error("این مرحله قابل پرداخت نیست.");
   if (order.twoStagePayment) {
-    const amounts = splitPayment(Number(order.totalAmount));
+    const amounts = splitPayment(Number(order.totalAmount), order.depositPercent ?? 10);
     const deposit = order.payments.find(p => p.stage === "DEPOSIT");
     const balance = order.payments.find(p => p.stage === "BALANCE");
     if (order.payments.length !== 2 || !deposit || !balance || deposit.method !== "CARD_TO_CARD" || balance.method !== "CARD_TO_CARD" || Number(deposit.amount) !== amounts.deposit || Number(balance.amount) !== amounts.balance) throw new Error("مبالغ پرداخت سفارش نیاز به بررسی دارد.");

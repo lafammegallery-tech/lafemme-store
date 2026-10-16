@@ -372,6 +372,7 @@ model Order {
   shippingMethod String?
   paymentMethodName String?
   twoStagePayment Boolean @default(false)
+  depositPercent Int?
   paymentRevision Int @default(0)
 
   user     User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -570,10 +571,23 @@ model PaymentMethodConfig {
   requiresReceipt Boolean       @default(false)
   isActive        Boolean       @default(true)
   sortOrder       Int           @default(0)
+  minimumAmount   Decimal       @default(0) @db.Decimal(18, 0)
+  maximumAmount   Decimal?      @db.Decimal(18, 0)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   @@index([isActive, sortOrder])
+}
+
+/// Global checkout policy. Each new order snapshots its own deposit percentage.
+model PaymentPolicy {
+  id              String   @id @default("global")
+  twoStageEnabled Boolean  @default(true)
+  depositPercent  Int      @default(10)
+  thresholdAmount Decimal  @default(60000000) @db.Decimal(18, 0)
+  revision        Int      @default(0)
+  updatedAt       DateTime @updatedAt
+  updatedBy       String?
 }
 
 /// روش‌های ارسال قابل تنظیم توسط مدیر — پیک، پست، تحویل حضوری و ... .

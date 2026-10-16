@@ -31,6 +31,7 @@ export type OrderAvgAggregateOutputType = {
   discountAmount: runtime.Decimal | null
   shippingAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  depositPercent: number | null
   paymentRevision: number | null
 }
 
@@ -39,6 +40,7 @@ export type OrderSumAggregateOutputType = {
   discountAmount: runtime.Decimal | null
   shippingAmount: runtime.Decimal | null
   totalAmount: runtime.Decimal | null
+  depositPercent: number | null
   paymentRevision: number | null
 }
 
@@ -62,6 +64,7 @@ export type OrderMinAggregateOutputType = {
   shippingMethod: string | null
   paymentMethodName: string | null
   twoStagePayment: boolean | null
+  depositPercent: number | null
   paymentRevision: number | null
 }
 
@@ -85,6 +88,7 @@ export type OrderMaxAggregateOutputType = {
   shippingMethod: string | null
   paymentMethodName: string | null
   twoStagePayment: boolean | null
+  depositPercent: number | null
   paymentRevision: number | null
 }
 
@@ -109,6 +113,7 @@ export type OrderCountAggregateOutputType = {
   shippingMethod: number
   paymentMethodName: number
   twoStagePayment: number
+  depositPercent: number
   paymentRevision: number
   _all: number
 }
@@ -119,6 +124,7 @@ export type OrderAvgAggregateInputType = {
   discountAmount?: true
   shippingAmount?: true
   totalAmount?: true
+  depositPercent?: true
   paymentRevision?: true
 }
 
@@ -127,6 +133,7 @@ export type OrderSumAggregateInputType = {
   discountAmount?: true
   shippingAmount?: true
   totalAmount?: true
+  depositPercent?: true
   paymentRevision?: true
 }
 
@@ -150,6 +157,7 @@ export type OrderMinAggregateInputType = {
   shippingMethod?: true
   paymentMethodName?: true
   twoStagePayment?: true
+  depositPercent?: true
   paymentRevision?: true
 }
 
@@ -173,6 +181,7 @@ export type OrderMaxAggregateInputType = {
   shippingMethod?: true
   paymentMethodName?: true
   twoStagePayment?: true
+  depositPercent?: true
   paymentRevision?: true
 }
 
@@ -197,6 +206,7 @@ export type OrderCountAggregateInputType = {
   shippingMethod?: true
   paymentMethodName?: true
   twoStagePayment?: true
+  depositPercent?: true
   paymentRevision?: true
   _all?: true
 }
@@ -308,6 +318,7 @@ export type OrderGroupByOutputType = {
   shippingMethod: string | null
   paymentMethodName: string | null
   twoStagePayment: boolean
+  depositPercent: number | null
   paymentRevision: number
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
@@ -355,6 +366,7 @@ export type OrderWhereInput = {
   shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   paymentMethodName?: Prisma.StringNullableFilter<"Order"> | string | null
   twoStagePayment?: Prisma.BoolFilter<"Order"> | boolean
+  depositPercent?: Prisma.IntNullableFilter<"Order"> | number | null
   paymentRevision?: Prisma.IntFilter<"Order"> | number
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
@@ -387,6 +399,7 @@ export type OrderOrderByWithRelationInput = {
   shippingMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethodName?: Prisma.SortOrderInput | Prisma.SortOrder
   twoStagePayment?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   address?: Prisma.AddressOrderByWithRelationInput
@@ -422,6 +435,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   paymentMethodName?: Prisma.StringNullableFilter<"Order"> | string | null
   twoStagePayment?: Prisma.BoolFilter<"Order"> | boolean
+  depositPercent?: Prisma.IntNullableFilter<"Order"> | number | null
   paymentRevision?: Prisma.IntFilter<"Order"> | number
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   address?: Prisma.XOR<Prisma.AddressNullableScalarRelationFilter, Prisma.AddressWhereInput> | null
@@ -454,6 +468,7 @@ export type OrderOrderByWithAggregationInput = {
   shippingMethod?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethodName?: Prisma.SortOrderInput | Prisma.SortOrder
   twoStagePayment?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
   _avg?: Prisma.OrderAvgOrderByAggregateInput
@@ -486,6 +501,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   shippingMethod?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   paymentMethodName?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   twoStagePayment?: Prisma.BoolWithAggregatesFilter<"Order"> | boolean
+  depositPercent?: Prisma.IntNullableWithAggregatesFilter<"Order"> | number | null
   paymentRevision?: Prisma.IntWithAggregatesFilter<"Order"> | number
 }
 
@@ -508,6 +524,7 @@ export type OrderCreateInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -540,6 +557,7 @@ export type OrderUncheckedCreateInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -568,6 +586,7 @@ export type OrderUpdateInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -600,6 +619,7 @@ export type OrderUncheckedUpdateInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -630,6 +650,7 @@ export type OrderCreateManyInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
 }
 
@@ -652,6 +673,7 @@ export type OrderUpdateManyMutationInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -676,6 +698,7 @@ export type OrderUncheckedUpdateManyInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -710,6 +733,7 @@ export type OrderCountOrderByAggregateInput = {
   shippingMethod?: Prisma.SortOrder
   paymentMethodName?: Prisma.SortOrder
   twoStagePayment?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
 }
 
@@ -718,6 +742,7 @@ export type OrderAvgOrderByAggregateInput = {
   discountAmount?: Prisma.SortOrder
   shippingAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
 }
 
@@ -741,6 +766,7 @@ export type OrderMaxOrderByAggregateInput = {
   shippingMethod?: Prisma.SortOrder
   paymentMethodName?: Prisma.SortOrder
   twoStagePayment?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
 }
 
@@ -764,6 +790,7 @@ export type OrderMinOrderByAggregateInput = {
   shippingMethod?: Prisma.SortOrder
   paymentMethodName?: Prisma.SortOrder
   twoStagePayment?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
 }
 
@@ -772,6 +799,7 @@ export type OrderSumOrderByAggregateInput = {
   discountAmount?: Prisma.SortOrder
   shippingAmount?: Prisma.SortOrder
   totalAmount?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   paymentRevision?: Prisma.SortOrder
 }
 
@@ -866,6 +894,14 @@ export type OrderUncheckedUpdateManyWithoutAddressNestedInput = {
 
 export type EnumOrderStatusFieldUpdateOperationsInput = {
   set?: $Enums.OrderStatus
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type OrderCreateNestedOneWithoutItemsInput = {
@@ -971,6 +1007,7 @@ export type OrderCreateWithoutUserInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
@@ -1001,6 +1038,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1060,6 +1098,7 @@ export type OrderScalarWhereInput = {
   shippingMethod?: Prisma.StringNullableFilter<"Order"> | string | null
   paymentMethodName?: Prisma.StringNullableFilter<"Order"> | string | null
   twoStagePayment?: Prisma.BoolFilter<"Order"> | boolean
+  depositPercent?: Prisma.IntNullableFilter<"Order"> | number | null
   paymentRevision?: Prisma.IntFilter<"Order"> | number
 }
 
@@ -1082,6 +1121,7 @@ export type OrderCreateWithoutAddressInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   items?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
@@ -1112,6 +1152,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1166,6 +1207,7 @@ export type OrderCreateWithoutItemsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1197,6 +1239,7 @@ export type OrderUncheckedCreateWithoutItemsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -1240,6 +1283,7 @@ export type OrderUpdateWithoutItemsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1271,6 +1315,7 @@ export type OrderUncheckedUpdateWithoutItemsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1298,6 +1343,7 @@ export type OrderCreateWithoutStatusHistoryInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1329,6 +1375,7 @@ export type OrderUncheckedCreateWithoutStatusHistoryInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1372,6 +1419,7 @@ export type OrderUpdateWithoutStatusHistoryInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1403,6 +1451,7 @@ export type OrderUncheckedUpdateWithoutStatusHistoryInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -1430,6 +1479,7 @@ export type OrderCreateWithoutShipmentInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1461,6 +1511,7 @@ export type OrderUncheckedCreateWithoutShipmentInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutOrderInput
@@ -1504,6 +1555,7 @@ export type OrderUpdateWithoutShipmentInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1535,6 +1587,7 @@ export type OrderUncheckedUpdateWithoutShipmentInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutOrderNestedInput
@@ -1562,6 +1615,7 @@ export type OrderCreateWithoutPaymentsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1593,6 +1647,7 @@ export type OrderUncheckedCreateWithoutPaymentsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1636,6 +1691,7 @@ export type OrderUpdateWithoutPaymentsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1667,6 +1723,7 @@ export type OrderUncheckedUpdateWithoutPaymentsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -1694,6 +1751,7 @@ export type OrderCreateWithoutCouponUsagesInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1725,6 +1783,7 @@ export type OrderUncheckedCreateWithoutCouponUsagesInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1768,6 +1827,7 @@ export type OrderUpdateWithoutCouponUsagesInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1799,6 +1859,7 @@ export type OrderUncheckedUpdateWithoutCouponUsagesInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -1826,6 +1887,7 @@ export type OrderCreateWithoutReceiptsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   user?: Prisma.UserCreateNestedOneWithoutOrdersInput
   address?: Prisma.AddressCreateNestedOneWithoutOrdersInput
@@ -1857,6 +1919,7 @@ export type OrderUncheckedCreateWithoutReceiptsInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
   items?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   shipment?: Prisma.ShipmentUncheckedCreateNestedOneWithoutOrderInput
@@ -1900,6 +1963,7 @@ export type OrderUpdateWithoutReceiptsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
@@ -1931,6 +1995,7 @@ export type OrderUncheckedUpdateWithoutReceiptsInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -1959,6 +2024,7 @@ export type OrderCreateManyUserInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
 }
 
@@ -1981,6 +2047,7 @@ export type OrderUpdateWithoutUserInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   address?: Prisma.AddressUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
@@ -2011,6 +2078,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -2040,6 +2108,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -2063,6 +2132,7 @@ export type OrderCreateManyAddressInput = {
   shippingMethod?: string | null
   paymentMethodName?: string | null
   twoStagePayment?: boolean
+  depositPercent?: number | null
   paymentRevision?: number
 }
 
@@ -2085,6 +2155,7 @@ export type OrderUpdateWithoutAddressInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneWithoutOrdersNestedInput
   items?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
@@ -2115,6 +2186,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
   items?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   shipment?: Prisma.ShipmentUncheckedUpdateOneWithoutOrderNestedInput
@@ -2144,6 +2216,7 @@ export type OrderUncheckedUpdateManyWithoutAddressInput = {
   shippingMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethodName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twoStagePayment?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  depositPercent?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   paymentRevision?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -2235,6 +2308,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   shippingMethod?: boolean
   paymentMethodName?: boolean
   twoStagePayment?: boolean
+  depositPercent?: boolean
   paymentRevision?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
@@ -2268,6 +2342,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   shippingMethod?: boolean
   paymentMethodName?: boolean
   twoStagePayment?: boolean
+  depositPercent?: boolean
   paymentRevision?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
@@ -2294,6 +2369,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   shippingMethod?: boolean
   paymentMethodName?: boolean
   twoStagePayment?: boolean
+  depositPercent?: boolean
   paymentRevision?: boolean
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
@@ -2320,10 +2396,11 @@ export type OrderSelectScalar = {
   shippingMethod?: boolean
   paymentMethodName?: boolean
   twoStagePayment?: boolean
+  depositPercent?: boolean
   paymentRevision?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "orderNumber" | "status" | "customerName" | "customerPhone" | "customerEmail" | "subtotal" | "discountAmount" | "shippingAmount" | "totalAmount" | "shippingAddress" | "customerNote" | "createdAt" | "updatedAt" | "deletedAt" | "shippingMethod" | "paymentMethodName" | "twoStagePayment" | "paymentRevision", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "orderNumber" | "status" | "customerName" | "customerPhone" | "customerEmail" | "subtotal" | "discountAmount" | "shippingAmount" | "totalAmount" | "shippingAddress" | "customerNote" | "createdAt" | "updatedAt" | "deletedAt" | "shippingMethod" | "paymentMethodName" | "twoStagePayment" | "depositPercent" | "paymentRevision", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.Order$userArgs<ExtArgs>
   address?: boolean | Prisma.Order$addressArgs<ExtArgs>
@@ -2377,6 +2454,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     shippingMethod: string | null
     paymentMethodName: string | null
     twoStagePayment: boolean
+    depositPercent: number | null
     paymentRevision: number
   }, ExtArgs["result"]["order"]>
   composites: {}
@@ -2829,6 +2907,7 @@ export interface OrderFieldRefs {
   readonly shippingMethod: Prisma.FieldRef<"Order", 'String'>
   readonly paymentMethodName: Prisma.FieldRef<"Order", 'String'>
   readonly twoStagePayment: Prisma.FieldRef<"Order", 'Boolean'>
+  readonly depositPercent: Prisma.FieldRef<"Order", 'Int'>
   readonly paymentRevision: Prisma.FieldRef<"Order", 'Int'>
 }
     

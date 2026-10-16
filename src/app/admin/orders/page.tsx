@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   await requireAdmin();
   const rows = await getPrisma().order.findMany({ where: { deletedAt: null }, include: { payments: true, shipment: true, receipts: { where: { status: "PENDING" } } }, orderBy: { createdAt: "desc" }, take: 100 });
-  return <PageLayout><PageHero title="مدیریت سفارش‌ها" description="پیش‌پرداخت ۱۰٪، تعیین مقصد مانده و تأیید نهایی" /><section className="py-12"><Container><div className="grid gap-4">{rows.map(o => {
+  return <PageLayout><PageHero title="مدیریت سفارش‌ها" description="پرداخت کامل یا پیش‌پرداخت طبق قانون مبلغ، تعیین مقصد مانده و تأیید نهایی" /><section className="py-12"><Container><div className="grid gap-4">{rows.map(o => {
     const deposit = o.payments.find(p => p.stage === "DEPOSIT");
     const balance = o.payments.find(p => p.stage === "BALANCE");
     const progress = !o.twoStagePayment ? "پرداخت تک‌مرحله‌ای" : balance?.status === "SUCCESS" ? "تسویه کامل و تأیید نهایی" : deposit?.status === "SUCCESS" ? "تأیید اولیه؛ منتظر تسویهٔ مانده" : "منتظر پیش‌پرداخت و تأیید اولیه";
