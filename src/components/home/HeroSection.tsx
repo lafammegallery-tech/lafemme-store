@@ -89,11 +89,19 @@ export function HeroSection() {
                 <span />
               </div>
 
-              <div className="hero-metal-card hero-metal-card--gold" aria-hidden="true">
+              <div
+                className="hero-metal-card hero-metal-card--gold"
+                data-purity="995"
+                aria-hidden="true"
+              >
                 Au
               </div>
 
-              <div className="hero-metal-card hero-metal-card--silver" aria-hidden="true">
+              <div
+                className="hero-metal-card hero-metal-card--silver"
+                data-purity="999"
+                aria-hidden="true"
+              >
                 Ag
               </div>
             </div>

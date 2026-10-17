@@ -38,16 +38,28 @@ export default async function Page() {
       <PageHero title="قیمت بازار" description="مدیریت قیمت لحظه‌ای طلا و نقره" />
       <section className="py-12">
         <Container>
-
           {/* قیمت‌های لحظه‌ای */}
-          <div className="grid gap-4 mb-8" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+          <div className="market-admin-quotes grid gap-4 mb-8 lg:grid-cols-3">
             <Card className="p-6">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span style={{ color: "var(--color-gold)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: 2 }}>
+                  <span
+                    style={{
+                      color: "var(--color-gold)",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      letterSpacing: 2,
+                    }}
+                  >
                     طلا عیار ۹۹۵
-                    {liveQuotes.gold995.isFallback && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(پشتیبان)</span>}
-                    {liveQuotes.gold995.isManual && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>}
+                    {liveQuotes.gold995.isFallback && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>
+                        (پشتیبان)
+                      </span>
+                    )}
+                    {liveQuotes.gold995.isManual && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>
+                    )}
                   </span>
                   <h2 style={{ fontSize: "1.6rem", margin: "6px 0" }}>
                     <PriceDisplay value={liveQuotes.gold995.price} />
@@ -63,10 +75,23 @@ export default async function Page() {
             <Card className="p-6">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span style={{ color: "var(--color-gold)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: 2 }}>
+                  <span
+                    style={{
+                      color: "var(--color-gold)",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      letterSpacing: 2,
+                    }}
+                  >
                     طلا عیار ۷۵۰
-                    {liveQuotes.gold750.isFallback && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(پشتیبان)</span>}
-                    {liveQuotes.gold750.isManual && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>}
+                    {liveQuotes.gold750.isFallback && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>
+                        (پشتیبان)
+                      </span>
+                    )}
+                    {liveQuotes.gold750.isManual && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>
+                    )}
                   </span>
                   <h2 style={{ fontSize: "1.6rem", margin: "6px 0" }}>
                     <PriceDisplay value={liveQuotes.gold750.price} />
@@ -75,17 +100,31 @@ export default async function Page() {
                 {liveQuotes.gold750.stale && <span className="market-stale">قیمت تأییدنشده</span>}
               </div>
               <small style={{ color: "var(--color-gray)" }}>
-                منبع: {liveQuotes.gold750.source} | {new Date(liveQuotes.gold750.updatedAt).toLocaleString("fa-IR")}
+                منبع: {liveQuotes.gold750.source} |{" "}
+                {new Date(liveQuotes.gold750.updatedAt).toLocaleString("fa-IR")}
               </small>
             </Card>
 
             <Card className="p-6">
               <div className="flex justify-between items-start mb-3">
                 <div>
-                  <span style={{ color: "#b8bcc4", fontSize: "0.8rem", fontWeight: 700, letterSpacing: 2 }}>
+                  <span
+                    style={{
+                      color: "#b8bcc4",
+                      fontSize: "0.8rem",
+                      fontWeight: 700,
+                      letterSpacing: 2,
+                    }}
+                  >
                     نقره ۹۹۹
-                    {liveQuotes.silver999.isFallback && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(پشتیبان)</span>}
-                    {liveQuotes.silver999.isManual && <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>}
+                    {liveQuotes.silver999.isFallback && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>
+                        (پشتیبان)
+                      </span>
+                    )}
+                    {liveQuotes.silver999.isManual && (
+                      <span style={{ color: "var(--color-warning)", marginRight: 6 }}>(دستی)</span>
+                    )}
                   </span>
                   <h2 style={{ fontSize: "1.6rem", margin: "6px 0" }}>
                     <PriceDisplay value={liveQuotes.silver999.price} />
@@ -94,7 +133,8 @@ export default async function Page() {
                 {liveQuotes.silver999.stale && <span className="market-stale">قیمت تأییدنشده</span>}
               </div>
               <small style={{ color: "var(--color-gray)" }}>
-                منبع: {liveQuotes.silver999.source} | {new Date(liveQuotes.silver999.updatedAt).toLocaleString("fa-IR")}
+                منبع: {liveQuotes.silver999.source} |{" "}
+                {new Date(liveQuotes.silver999.updatedAt).toLocaleString("fa-IR")}
               </small>
             </Card>
           </div>
@@ -120,9 +160,16 @@ export default async function Page() {
                 />
                 <span>فعال‌سازی حالت دستی</span>
               </label>
-              <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "0.5rem",
+                      color: "var(--color-gray)",
+                      fontSize: "0.85rem",
+                    }}
+                  >
                     قیمت طلا ۷۵۰ (تومان)
                   </label>
                   <MoneyInput
@@ -143,7 +190,14 @@ export default async function Page() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "0.5rem",
+                      color: "var(--color-gray)",
+                      fontSize: "0.85rem",
+                    }}
+                  >
                     قیمت نقره ۹۹۹ (تومان)
                   </label>
                   <MoneyInput
@@ -165,11 +219,7 @@ export default async function Page() {
                 </div>
               </div>
               <div>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  style={{ minWidth: "180px" }}
-                >
+                <button type="submit" className="btn btn-primary" style={{ minWidth: "180px" }}>
                   ذخیره تنظیمات
                 </button>
               </div>
@@ -181,20 +231,26 @@ export default async function Page() {
           <div className="grid gap-3">
             {historyRows.length === 0 ? (
               <Card className="p-6 text-center">
-                <p style={{ color: "var(--color-gray)" }}>هنوز قیمتی ذخیره نشده است. از دکمه بالا برای ثبت استفاده کنید.</p>
+                <p style={{ color: "var(--color-gray)" }}>
+                  هنوز قیمتی ذخیره نشده است. از دکمه بالا برای ثبت استفاده کنید.
+                </p>
               </Card>
             ) : (
               historyRows.map((r) => (
                 <Card key={r.id} className="p-4">
-                  <div className="flex justify-between items-center">
+                  <div className="flex flex-wrap gap-3 justify-between items-center">
                     <span>
-                      <strong style={{ color: r.metalType === "GOLD" ? "var(--color-gold)" : "#b8bcc4" }}>
+                      <strong
+                        style={{ color: r.metalType === "GOLD" ? "var(--color-gold)" : "#b8bcc4" }}
+                      >
                         {r.metalType === "GOLD" ? "طلا" : "نقره"}
                       </strong>
                       {" • "}
                       {r.source}
                       {r.isStale && (
-                        <span style={{ color: "#888", marginRight: "8px", fontSize: "0.8rem" }}>(قدیمی)</span>
+                        <span style={{ color: "#888", marginRight: "8px", fontSize: "0.8rem" }}>
+                          (قدیمی)
+                        </span>
                       )}
                     </span>
                     <PriceDisplay value={Number(r.price)} />

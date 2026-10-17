@@ -16,12 +16,20 @@ export function Drawer({ open, onClose, title, children, side = "end" }: DrawerP
   const ref = useRef<HTMLDivElement>(null);
   useEscapeKey(open, onClose);
   useEffect(() => {
-    if (open) ref.current?.focus();
+    if (!open) return;
+    const trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    ref.current?.focus();
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      trigger?.focus();
+    };
   }, [open]);
   if (!open || typeof document === "undefined") return null;
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] bg-black/70"
+      className="fixed inset-0 z-[1100] bg-black/70"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -32,6 +40,25 @@ export function Drawer({ open, onClose, title, children, side = "end" }: DrawerP
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
+        onKeyDown={(event) => {
+          if (event.key !== "Tab") return;
+          const elements = ref.current?.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex="0"]',
+          );
+          if (!elements?.length) return;
+          const first = elements[0];
+          const last = elements[elements.length - 1];
+          if (
+            event.shiftKey &&
+            (document.activeElement === first || document.activeElement === ref.current)
+          ) {
+            event.preventDefault();
+            last.focus();
+          } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        }}
         className={`absolute inset-y-0 w-[min(90vw,26rem)] overflow-auto border-l border-lf-border bg-lf-surface shadow-lf-card outline-none ${side === "end" ? "right-0" : "left-0"}`}
       >
         <header className="flex items-center justify-between border-b border-lf-border px-5 py-4">

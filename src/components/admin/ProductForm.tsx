@@ -36,7 +36,12 @@ interface Props {
   submitLabel?: string;
 }
 
-export default function ProductForm({ action, cats, defaults = {}, submitLabel = "ثبت محصول" }: Props) {
+export default function ProductForm({
+  action,
+  cats,
+  defaults = {},
+  submitLabel = "ثبت محصول",
+}: Props) {
   const [metalType, setMetalType] = useState(defaults.metalType ?? "GOLD");
   const [weightValue, setWeightValue] = useState(String(defaults.weightValue ?? ""));
   const [premiumPercent, setPremiumPercent] = useState(String(defaults.premiumPercent ?? "0"));
@@ -48,33 +53,76 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
 
       {/* اطلاعات اصلی */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>اطلاعات اصلی</legend>
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          اطلاعات اصلی
+        </legend>
         <Input name="name" placeholder="نام محصول" defaultValue={defaults.name ?? ""} required />
-        <Input name="slug" placeholder="slug-english (اختیاری — اگر خالی باشد خودکار ساخته می‌شود)" dir="ltr" defaultValue={defaults.slug ?? ""} />
+        <Input
+          name="slug"
+          placeholder="slug-english (اختیاری — اگر خالی باشد خودکار ساخته می‌شود)"
+          dir="ltr"
+          defaultValue={defaults.slug ?? ""}
+        />
         <Input name="sku" placeholder="SKU (اختیاری)" dir="ltr" defaultValue={defaults.sku ?? ""} />
 
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>دسته‌بندی *</label>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--color-gray)",
+              fontSize: "0.85rem",
+            }}
+          >
+            دسته‌بندی *
+          </label>
           <select
             name="categoryId"
             required
             defaultValue={defaults.categoryId ?? ""}
-            style={{ width: "100%", padding: "12px 14px", background: "var(--color-surface-raised)", border: "1px solid var(--color-border)", borderRadius: "12px", color: "var(--color-white)", fontSize: "1rem" }}
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              background: "var(--color-surface-raised)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "12px",
+              color: "var(--color-white)",
+              fontSize: "1rem",
+            }}
           >
             <option value="">انتخاب دسته‌بندی...</option>
             {cats.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </select>
         </div>
 
         <div>
-          <label style={{ display: "block", marginBottom: "0.5rem", color: "var(--color-gray)", fontSize: "0.85rem" }}>نوع فلز</label>
+          <label
+            style={{
+              display: "block",
+              marginBottom: "0.5rem",
+              color: "var(--color-gray)",
+              fontSize: "0.85rem",
+            }}
+          >
+            نوع فلز
+          </label>
           <select
             name="metalType"
             value={metalType}
             onChange={(e) => setMetalType(e.target.value)}
-            style={{ width: "100%", padding: "12px 14px", background: "var(--color-surface-raised)", border: "1px solid var(--color-border)", borderRadius: "12px", color: "var(--color-white)", fontSize: "1rem" }}
+            style={{
+              width: "100%",
+              padding: "12px 14px",
+              background: "var(--color-surface-raised)",
+              border: "1px solid var(--color-border)",
+              borderRadius: "12px",
+              color: "var(--color-white)",
+              fontSize: "1rem",
+            }}
           >
             <option value="GOLD">طلا</option>
             <option value="SILVER">نقره</option>
@@ -85,9 +133,15 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
 
       {/* وزن و عیار */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>وزن و خلوص</legend>
-        <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
-          <Input name="weight" placeholder="وزن نمایشی — مثال: ۵ گرم" defaultValue={defaults.weight ?? ""} />
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          وزن و خلوص
+        </legend>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            name="weight"
+            placeholder="وزن نمایشی — مثال: ۵ گرم"
+            defaultValue={defaults.weight ?? ""}
+          />
           <Input
             name="weightValue"
             type="number"
@@ -99,23 +153,36 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
             onChange={(e) => setWeightValue(e.target.value)}
           />
         </div>
-        <Input name="purity" placeholder="عیار — مثال: عیار ۱۸ یا 750" defaultValue={defaults.purity ?? ""} />
+        <Input
+          name="purity"
+          placeholder="عیار — مثال: عیار ۱۸ یا 750"
+          defaultValue={defaults.purity ?? ""}
+        />
       </fieldset>
 
       {/* قیمت‌گذاری */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>قیمت‌گذاری</legend>
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          قیمت‌گذاری
+        </legend>
 
         {/* نمایش زنده قیمت بازار */}
         <PriceCalculator
           metalType={metalType}
           weightValue={weightValue}
           premiumPercent={premiumPercent}
-          onApply={value => setPrice(String(value))}
+          onApply={(value) => setPrice(String(value))}
         />
 
-        <MoneyInput name="price" placeholder="قیمت پشتیبان (تومان) — از دکمه اعمال بالا یا وارد کنید" required dir="ltr" value={price} onValueChange={setPrice} />
-        <div className="grid gap-4" style={{ gridTemplateColumns: "1fr 1fr" }}>
+        <MoneyInput
+          name="price"
+          placeholder="قیمت پشتیبان (تومان) — از دکمه اعمال بالا یا وارد کنید"
+          required
+          dir="ltr"
+          value={price}
+          onValueChange={setPrice}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Input
               name="premiumPercent"
@@ -127,30 +194,58 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
               value={premiumPercent}
               onChange={(e) => setPremiumPercent(e.target.value)}
             />
-            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>درصد سود روی قیمت فلز</small>
+            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>
+              درصد سود روی قیمت فلز
+            </small>
           </div>
           <div>
-            <MoneyInput name="fixedPremium" placeholder="سود ثابت (تومان)" dir="ltr" defaultValue={String(defaults.fixedPremium ?? "0")} />
-            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>مبلغ ثابت علاوه بر قیمت فلز</small>
+            <MoneyInput
+              name="fixedPremium"
+              placeholder="سود ثابت (تومان)"
+              dir="ltr"
+              defaultValue={String(defaults.fixedPremium ?? "0")}
+            />
+            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>
+              مبلغ ثابت علاوه بر قیمت فلز
+            </small>
           </div>
         </div>
       </fieldset>
 
       {/* موجودی */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>موجودی</legend>
-        <Input name="stock" type="number" min="0" placeholder="موجودی انبار" required dir="ltr" defaultValue={String(defaults.stock ?? "0")} />
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          موجودی
+        </legend>
+        <Input
+          name="stock"
+          type="number"
+          min="0"
+          placeholder="موجودی انبار"
+          required
+          dir="ltr"
+          defaultValue={String(defaults.stock ?? "0")}
+        />
       </fieldset>
 
       {/* توضیحات */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>توضیحات</legend>
-        <Textarea name="shortDescription" placeholder="توضیح کوتاه محصول" rows={3} defaultValue={defaults.shortDescription ?? ""} />
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          توضیحات
+        </legend>
+        <Textarea
+          name="shortDescription"
+          placeholder="توضیح کوتاه محصول"
+          rows={3}
+          defaultValue={defaults.shortDescription ?? ""}
+        />
       </fieldset>
 
       {/* تصاویر */}
       <fieldset className="grid gap-4">
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>تصاویر محصول</legend>
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          تصاویر محصول
+        </legend>
         <MultiImageUploader
           name="imageUrls"
           defaultUrls={defaults.imageUrls ?? (defaults.imageUrl ? [defaults.imageUrl] : [])}
@@ -159,16 +254,25 @@ export default function ProductForm({ action, cats, defaults = {}, submitLabel =
 
       {/* گزینه‌های نمایش */}
       <fieldset>
-        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>گزینه‌های نمایش</legend>
+        <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
+          گزینه‌های نمایش
+        </legend>
         <label className="flex items-center gap-3">
-          <input type="checkbox" name="isFeatured" defaultChecked={defaults.isFeatured ?? false} className="w-5 h-5" />
+          <input
+            type="checkbox"
+            name="isFeatured"
+            defaultChecked={defaults.isFeatured ?? false}
+            className="w-5 h-5"
+          />
           <span>نمایش در بخش محصولات ویژه</span>
         </label>
       </fieldset>
 
       <div className="flex gap-4">
         <Button type="submit">{submitLabel}</Button>
-        <a href="/admin/products" style={{ padding: "12px 24px", color: "var(--color-gray)" }}>انصراف</a>
+        <a href="/admin/products" style={{ padding: "12px 24px", color: "var(--color-gray)" }}>
+          انصراف
+        </a>
       </div>
     </form>
   );
