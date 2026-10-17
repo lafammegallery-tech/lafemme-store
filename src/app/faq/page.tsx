@@ -12,10 +12,18 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <PageLayout>
-      <PageHero title="سؤالات متداول" description="راهنمای انتخاب شمش، پرداخت، ارسال و پیگیری خرید در La Femme" />
-      <section className="py-16">
+      <PageHero
+        title="سؤالات متداول"
+        description="راهنمای انتخاب شمش، پرداخت، ارسال و پیگیری خرید در La Femme"
+      />
+      <section className="faq-section">
         <Container>
-          <p className="mb-8 leading-8 text-lf-gray-light">پاسخ پرسش‌های رایج خرید را اینجا ببینید. برای جزئیات، <Link href="/terms">قوانین خرید</Link> و <Link href="/privacy">حریم خصوصی</Link> را مطالعه کنید؛ اگر پاسخ خود را پیدا نکردید، از <Link href="/contact">تماس با ما</Link> کمک بگیرید.</p>
+          <p className="faq-intro">
+            پاسخ پرسش‌های رایج خرید را اینجا ببینید. برای جزئیات،{" "}
+            <Link href="/terms">قوانین خرید</Link> و <Link href="/privacy">حریم خصوصی</Link> را
+            مطالعه کنید؛ اگر پاسخ خود را پیدا نکردید، از <Link href="/contact">تماس با ما</Link> کمک
+            بگیرید.
+          </p>
           <Accordion items={faqItems} />
         </Container>
       </section>

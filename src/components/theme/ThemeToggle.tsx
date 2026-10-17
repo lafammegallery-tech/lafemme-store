@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { IconButton } from "@/components/ui";
+import { Icon } from "@/components/ui/Icon";
 import { THEME_STORAGE_KEY } from "./ThemeScript";
 
 type Theme = "dark" | "light";
@@ -33,7 +34,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <IconButton
       className={className}
       label={theme === "dark" ? "روشن کردن حالت نمایش" : "تیره کردن حالت نمایش"}
-      icon={<span aria-hidden="true">{theme === "dark" ? "☀️" : "🌙"}</span>}
+      icon={<Icon name={theme === "dark" ? "sun" : "moon"} />}
       onClick={toggle}
     />
   );

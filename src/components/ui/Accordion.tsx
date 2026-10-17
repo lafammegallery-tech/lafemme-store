@@ -1,5 +1,6 @@
 "use client";
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
+import { Icon } from "./Icon";
 export interface AccordionItem {
   id: string;
   title: ReactNode;
@@ -14,6 +15,7 @@ export function Accordion({
   allowMultiple?: boolean;
 }) {
   const [open, setOpen] = useState<string[]>([]);
+  const prefix = useId();
   const toggle = (id: string) =>
     setOpen((current) =>
       current.includes(id)
@@ -23,27 +25,33 @@ export function Accordion({
           : [id],
     );
   return (
-    <div className="divide-y divide-lf-border rounded-lf-md border border-lf-border">
+    <div className="site-accordion" dir="rtl">
       {items.map((item) => {
         const expanded = open.includes(item.id);
+        const panelId = `${prefix}-panel-${item.id}`;
+        const triggerId = `${prefix}-trigger-${item.id}`;
         return (
-          <section key={item.id}>
+          <section className="site-accordion-item" data-open={expanded} key={item.id}>
             <h3>
               <button
                 type="button"
+                id={triggerId}
                 aria-expanded={expanded}
-                aria-controls={`accordion-${item.id}`}
+                aria-controls={panelId}
                 onClick={() => toggle(item.id)}
-                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-right font-semibold outline-none focus-visible:shadow-lf-focus"
+                className="site-accordion-trigger"
               >
                 <span>{item.title}</span>
-                <span aria-hidden="true">{expanded ? "−" : "+"}</span>
+                <span className="site-accordion-indicator">
+                  <Icon name="chevron-down" size={18} />
+                </span>
               </button>
             </h3>
             <div
-              id={`accordion-${item.id}`}
+              id={panelId}
+              aria-labelledby={triggerId}
               hidden={!expanded}
-              className="px-5 pb-5 text-lf-gray-light"
+              className="site-accordion-content"
             >
               {item.content}
             </div>

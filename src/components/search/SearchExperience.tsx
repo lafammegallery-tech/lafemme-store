@@ -1,67 +1,44 @@
 "use client";
 import { useMemo, useState } from "react";
-import { Container, EmptyState, SearchBar, Select, Skeleton } from "@/components/ui";
+import { Container, EmptyState } from "@/components/ui";
 import { ProductCard } from "@/components/products";
+import { ProductToolbar } from "@/components/products/ProductToolbar";
 import type { Product } from "@/types/product";
 
-/** رابط جست‌وجو، فیلتر و مرتب‌سازی فقط با داده Mock. */
+/** Client-side search and filtering of the current storefront products. */
 export function SearchExperience({ products }: { products: Product[] }) {
   const [query, setQuery] = useState("");
   const [metal, setMetal] = useState("all");
   const [sort, setSort] = useState("default");
-  const [loading, setLoading] = useState(false);
   const results = useMemo(
     () =>
       products
-        .filter(
-          (p) =>
-            p.name.includes(query) &&
-            (metal === "all" ||
-              p.type === metal),
-        )
+        .filter((p) => p.name.includes(query) && (metal === "all" || p.type === metal))
         .sort((a, b) =>
           sort === "price-asc" ? a.price - b.price : sort === "price-desc" ? b.price - a.price : 0,
         ),
     [query, metal, sort, products],
   );
   return (
-    <section className="py-16">
+    <section className="catalog-search-section">
       <Container>
-        <div className="mb-8 grid gap-4 md:grid-cols-[1fr_220px_220px]">
-          <SearchBar
-            onSubmit={(e) => e.preventDefault()}
-            placeholder="جست‌وجوی محصول..."
-            inputProps={{
-              value: query,
-              onChange: (e) => {
-                setLoading(true);
-                setQuery(e.target.value);
-                window.setTimeout(() => setLoading(false), 200);
-              },
-            }}
-          />
-          <Select
-            value={metal}
-            onChange={(e) => setMetal(e.target.value)}
-            aria-label="فیلتر نوع فلز"
-          >
-            <option value="all">همه فلزها</option>
-            <option value="gold">طلا</option>
-            <option value="silver">نقره</option>
-          </Select>
-          <Select value={sort} onChange={(e) => setSort(e.target.value)} aria-label="مرتب‌سازی">
-            <option value="default">مرتب‌سازی پیش‌فرض</option>
-            <option value="price-asc">قیمت صعودی</option>
-            <option value="price-desc">قیمت نزولی</option>
-          </Select>
-        </div>
-        {loading ? (
-          <div className="grid gap-6 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} className="h-80" />
-            ))}
-          </div>
-        ) : results.length ? (
+        <ProductToolbar
+          query={query}
+          onQueryChange={setQuery}
+          metal={metal}
+          onMetalChange={setMetal}
+          sort={sort}
+          onSortChange={setSort}
+          sortOptions={[
+            { value: "default", label: "پیش‌فرض" },
+            { value: "price-asc", label: "کمترین قیمت" },
+            { value: "price-desc", label: "بیشترین قیمت" },
+          ]}
+        />
+        <p className="catalog-results-count" role="status">
+          {results.length.toLocaleString("fa-IR")} محصول پیدا شد
+        </p>
+        {results.length ? (
           <div className="products-grid">
             {results.map((p) => (
               <ProductCard key={p.id} product={p} />

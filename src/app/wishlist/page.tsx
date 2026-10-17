@@ -6,6 +6,7 @@ import { AccountLayout } from "@/components/account/AccountLayout";
 import { PageLayout } from "@/components/common";
 import { ProductCard } from "@/components/products";
 import { Card } from "@/components/ui";
+import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = {
   title: "علاقه‌مندی‌ها | La Femme",
@@ -39,7 +40,9 @@ export default async function WishlistPage() {
           <h1>علاقه‌مندی‌ها</h1>
           {wishlistProducts.length === 0 ? (
             <div className="empty-cart" style={{ padding: "40px 0" }}>
-              <div className="empty-cart-icon">🤍</div>
+              <div className="empty-cart-icon">
+                <Icon name="heart" size={56} />
+              </div>
               <h2>لیست علاقه‌مندی‌ها خالی است</h2>
               <p>محصولاتی که دوست دارید را به اینجا اضافه کنید.</p>
             </div>

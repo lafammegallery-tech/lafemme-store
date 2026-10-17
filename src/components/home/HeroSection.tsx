@@ -34,13 +34,13 @@ export function HeroSection() {
             <div className="hero-buttons">
               <ButtonLink href="/products">اکنون خرید کنید</ButtonLink>
 
-              <Link className="hero-consultation" href="/contact">
+              <Link className="hero-consultation" href="#investment-calculator">
                 <span className="hero-consultation__icon" aria-hidden="true">
                   ✦
                 </span>
 
                 <span>
-                  <strong>مشاوره رایگان</strong>
+                  <strong>مشاوره خرید</strong>
                   <small>راهنمای انتخاب و خرید</small>
                 </span>
               </Link>

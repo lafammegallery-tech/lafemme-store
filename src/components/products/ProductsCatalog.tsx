@@ -3,13 +3,14 @@
 import { useMemo, useState } from "react";
 import type { Product, ProductType } from "@/types/product";
 import { ProductGrid } from "./ProductGrid";
+import { ProductToolbar } from "./ProductToolbar";
 
 type FilterValue = "all" | ProductType;
 type SortValue = "default" | "newest" | "price-low" | "price-high" | "weight-low" | "weight-high";
 
 /**
  * رابط جست‌وجو، فیلتر و مرتب‌سازی محصولات.
- * این منطق فقط روی داده Mock کار می‌کند و هیچ ارتباطی با Backend ندارد.
+ * فیلتر و مرتب‌سازی روی محصولات دریافتی از سرور انجام می‌شود.
  */
 export function ProductsCatalog({ items }: { items: Product[] }) {
   const [search, setSearch] = useState("");
@@ -30,7 +31,10 @@ export function ProductsCatalog({ items }: { items: Product[] }) {
     });
 
     return [...result].sort((first, second) => {
-      if (sort === "newest") return Date.parse(second.createdAt ?? "1970-01-01") - Date.parse(first.createdAt ?? "1970-01-01");
+      if (sort === "newest")
+        return (
+          Date.parse(second.createdAt ?? "1970-01-01") - Date.parse(first.createdAt ?? "1970-01-01")
+        );
       if (sort === "price-low") return first.price - second.price;
       if (sort === "price-high") return second.price - first.price;
       if (sort === "weight-low") return first.weightValue - second.weightValue;
@@ -43,56 +47,22 @@ export function ProductsCatalog({ items }: { items: Product[] }) {
     <>
       <section className="products-toolbar" aria-label="ابزارهای فهرست محصولات">
         <div className="container">
-          <div className="toolbar-wrapper">
-            <div className="search-box">
-              <label className="sr-only" htmlFor="searchInput">
-                جست‌وجوی محصول
-              </label>
-              <input
-                type="search"
-                id="searchInput"
-                placeholder="جستجوی محصول ..."
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </div>
-
-            <div className="products-filter" aria-label="فیلتر نوع محصول">
-              {[
-                { value: "all", label: "همه" },
-                { value: "gold", label: "طلا" },
-                { value: "silver", label: "نقره" },
-              ].map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  className={`filter-btn ${filter === item.value ? "active" : ""}`}
-                  aria-pressed={filter === item.value}
-                  onClick={() => setFilter(item.value as FilterValue)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="sort-box">
-              <label className="sr-only" htmlFor="sortProducts">
-                مرتب‌سازی محصولات
-              </label>
-              <select
-                id="sortProducts"
-                value={sort}
-                onChange={(event) => setSort(event.target.value as SortValue)}
-              >
-                <option value="default">مرتب سازی</option>
-                <option value="newest">جدیدترین</option>
-                <option value="price-low">کمترین قیمت</option>
-                <option value="price-high">بیشترین قیمت</option>
-                <option value="weight-low">وزن کمتر</option>
-                <option value="weight-high">وزن بیشتر</option>
-              </select>
-            </div>
-          </div>
+          <ProductToolbar
+            query={search}
+            onQueryChange={setSearch}
+            metal={filter}
+            onMetalChange={setFilter}
+            sort={sort}
+            onSortChange={(value) => setSort(value as SortValue)}
+            sortOptions={[
+              { value: "default", label: "پیش‌فرض" },
+              { value: "newest", label: "جدیدترین" },
+              { value: "price-low", label: "کمترین قیمت" },
+              { value: "price-high", label: "بیشترین قیمت" },
+              { value: "weight-low", label: "وزن کمتر" },
+              { value: "weight-high", label: "وزن بیشتر" },
+            ]}
+          />
         </div>
       </section>
 
