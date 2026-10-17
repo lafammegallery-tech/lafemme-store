@@ -3150,6 +3150,7 @@ flex-direction:column;
 input, textarea, select {
   color: var(--color-white) !important;
   background-color: var(--color-surface-raised);
+  font-family: var(--font-vazirmatn), "Vazirmatn", sans-serif;
 }
 
 input::placeholder, textarea::placeholder { color: var(--color-gray) !important; opacity: 1; }
@@ -4174,6 +4175,144 @@ button:disabled{cursor:not-allowed;opacity:.55}
   height: 100%;
   object-fit: contain;
    padding: clamp(12px, 2vw, 22px);
+}
+
+/* Unified account/admin forms — prevents browser-default fields from leaking
+   into the light theme and keeps labels readable after a field is filled. */
+.form-control,
+.dashboard input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.dashboard select,
+.dashboard textarea,
+.admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.admin-shell select,
+.admin-shell textarea,
+.checkout-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.checkout-form textarea,
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.72rem 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface-raised);
+  color: var(--color-white);
+  font: 500 0.94rem/1.6 var(--font-vazirmatn), "Vazirmatn", sans-serif;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.form-control:hover,
+.dashboard input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):hover,
+.dashboard select:hover,
+.dashboard textarea:hover,
+.admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):hover,
+.admin-shell select:hover,
+.admin-shell textarea:hover {
+  border-color: rgba(var(--color-gold-rgb), .55);
+}
+
+.form-control:focus,
+.dashboard input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus,
+.dashboard select:focus,
+.dashboard textarea:focus,
+.admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus,
+.admin-shell select:focus,
+.admin-shell textarea:focus,
+.checkout-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus,
+.checkout-form textarea:focus {
+  border-color: var(--color-gold);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(var(--color-gold-rgb) / .18);
+}
+
+.form-control:disabled,
+.dashboard input:disabled,
+.admin-shell input:disabled { cursor: not-allowed; opacity: .58; }
+
+.dashboard textarea,
+.admin-shell textarea,
+.checkout-form textarea,
+.form-control:is(textarea) { min-height: 104px; padding-block: .78rem; resize: vertical; }
+
+.dashboard input::placeholder,
+.dashboard textarea::placeholder,
+.admin-shell input::placeholder,
+.admin-shell textarea::placeholder { color: var(--color-gray) !important; opacity: .9; }
+
+.form-field { display: grid; gap: .42rem; min-width: 0; }
+.form-field-label { color: var(--color-gray-light); font-size: .82rem; font-weight: 700; line-height: 1.5; }
+.form-field-hint { color: var(--color-gray); font-size: .73rem; line-height: 1.55; }
+.form-choice { min-height: 44px; color: var(--color-gray-light); }
+.form-choice input[type="checkbox"],
+.form-choice input[type="radio"] { width: 19px; height: 19px; accent-color: var(--color-gold); }
+.ui-button {
+  border: 1px solid transparent;
+  font-family: var(--font-vazirmatn), "Vazirmatn", sans-serif;
+  line-height: 1.6;
+}
+.ui-button[data-variant="secondary"] { border-color: var(--color-gold); }
+.ui-button[data-variant="primary"] { color: #211a10; box-shadow: 0 4px 12px rgb(var(--color-gold-rgb) / .12); }
+.ui-button:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+.dashboard :is(input[type="checkbox"], input[type="radio"]),
+.admin-shell :is(input[type="checkbox"], input[type="radio"]) { width: 19px; height: 19px; flex-shrink: 0; accent-color: var(--color-gold); }
+.dashboard label:has(> :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea)),
+.admin-shell label:has(> :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select, textarea)) {
+  display: grid;
+  gap: .45rem;
+  min-width: 0;
+  color: var(--color-gray-light);
+  font-size: .82rem;
+  font-weight: 600;
+}
+.form-control[aria-invalid="true"] { border-color: var(--color-danger); }
+.form-control[aria-invalid="true"]:focus { box-shadow: 0 0 0 3px rgb(var(--color-danger-rgb) / .16); }
+.profile-form { margin-top: 1.5rem; }
+.product-editor-form { width: 100%; }
+.product-editor-form fieldset { min-width: 0; border: 0; padding: 0; }
+.product-editor-form select { font-size: .94rem; }
+.product-editor-form > .flex { flex-wrap: wrap; }
+
+.account-form-card { padding: clamp(1.25rem, 3vw, 2rem); }
+.panel-form-header { margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--color-border-subtle); }
+.panel-form-header h1 { margin-bottom: .25rem; }
+.panel-form-header p { color: var(--color-gray); font-size: .86rem; }
+.address-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.form-span-full { grid-column: 1 / -1; }
+.form-actions { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: .5rem; }
+.saved-addresses { display: grid; gap: .85rem; margin-top: 2.25rem; }
+.saved-addresses > h2 { margin-bottom: .25rem; font-size: 1.1rem; }
+.saved-address-card { display: grid; gap: .35rem; padding: 1rem 1.1rem; }
+.saved-address-card p { color: var(--color-gray-light); font-size: .86rem; }
+.saved-address-heading { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.saved-address-heading h3 { font-size: 1rem; }
+.saved-address-card form { margin-top: .35rem; }
+
+.inventory-section { padding: 2rem 0 5rem; }
+.inventory-list { display: grid; gap: 1rem; }
+.inventory-card { padding: clamp(1rem, 2vw, 1.35rem); }
+.inventory-form { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(150px, .65fr) minmax(150px, .65fr) auto; align-items: end; gap: 1rem; }
+.inventory-product { min-width: 0; }
+.inventory-product h2 { margin-bottom: .2rem; font-size: 1.05rem; }
+.inventory-product p { color: var(--color-gray); font-size: .8rem; }
+
+@media (min-width: 701px) and (max-width: 1000px) {
+  .inventory-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+  .inventory-product { grid-column: 1 / -1; }
+}
+
+@media (max-width: 700px) {
+  .address-form { grid-template-columns: 1fr; }
+  .form-span-full { grid-column: auto; }
+  .form-actions { align-items: stretch; flex-direction: column; }
+  .form-actions .ui-button { width: 100%; }
+  .inventory-form { grid-template-columns: 1fr 1fr; align-items: stretch; }
+  .inventory-product { grid-column: 1 / -1; }
+  .inventory-form .ui-button { grid-column: 1 / -1; width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .inventory-form { grid-template-columns: 1fr; }
+  .inventory-product { grid-column: auto; }
 }
 .product-card .product-content {
   display: flex;
@@ -5447,5 +5586,22 @@ button:disabled{cursor:not-allowed;opacity:.55}
 @media (max-width: 380px) {
   .catalog-toolbar {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Keep this after legacy responsive overrides: 16px prevents iOS field zoom. */
+@media (max-width: 640px) {
+  .form-control,
+  .form-group input,
+  .form-group textarea,
+  .dashboard input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .dashboard select,
+  .dashboard textarea,
+  .admin-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .admin-shell select,
+  .admin-shell textarea,
+  .checkout-form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .checkout-form textarea {
+    font-size: 16px;
   }
 }

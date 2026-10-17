@@ -29,8 +29,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type="button"
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      data-variant={variant}
+      data-size={size}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-lf-sm font-semibold transition duration-lf focus-visible:outline-none focus-visible:shadow-lf-focus disabled:cursor-not-allowed disabled:opacity-50",
+        "ui-button inline-flex items-center justify-center gap-2 rounded-lf-sm font-semibold transition duration-lf focus-visible:outline-none focus-visible:shadow-lf-focus disabled:cursor-not-allowed disabled:opacity-50",
         variants[variant],
         sizes[size],
         className,

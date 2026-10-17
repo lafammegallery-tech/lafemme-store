@@ -2,7 +2,7 @@ import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { createPaymentMethodAction, togglePaymentMethodAction, deletePaymentMethodAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Input, Textarea, Button, Badge } from "@/components/ui";
+import { Container, Card, Input, Textarea, Button, Badge, Field, Checkbox } from "@/components/ui";
 import { PaymentPolicyForm, PaymentRangeForm } from "@/components/admin/PaymentPolicyForms";
 import { getPaymentPolicy } from "@/backend/services/payment-policy.service";
 
@@ -29,24 +29,23 @@ export default async function Page() {
           <Card className="admin-form-card">
             <h2 className="admin-form-title">افزودن روش پرداخت</h2>
             <form action={createPaymentMethodAction} className="grid gap-3">
-              <Input name="name" placeholder="نام (مثلاً کارت به کارت ملت)" required />
-              <select name="type" className="admin-select" defaultValue="CARD_TO_CARD">
+              <Field label="نام روش پرداخت"><Input name="name" placeholder="مثلاً کارت به کارت ملت" required /></Field>
+              <Field label="نوع پرداخت">
+              <select name="type" className="admin-select form-control" defaultValue="CARD_TO_CARD">
                 <option value="CARD_TO_CARD">کارت به کارت</option>
                 <option value="CASH_ON_DELIVERY">پرداخت در محل</option>
                 <option value="ONLINE">درگاه آنلاین</option>
                 <option value="WALLET">کیف پول</option>
               </select>
-              <Input name="cardNumber" placeholder="شماره کارت (۱۶ رقم)" dir="ltr" />
-              <Input name="cardHolder" placeholder="نام صاحب کارت" />
-              <Input name="bankName" placeholder="نام بانک" />
-              <Textarea name="description" placeholder="توضیحات برای مشتری" rows={2} />
-              <Input name="sortOrder" type="number" placeholder="ترتیب نمایش (۰)" dir="ltr" />
-              <label>حداقل مبلغ سفارش (تومان)<Input name="minimumAmount" defaultValue="0" inputMode="numeric" dir="ltr" required /></label>
-              <label>سقف مبلغ، غیرشامل (خالی = نامحدود)<Input name="maximumAmount" inputMode="numeric" dir="ltr" /></label>
-              <label className="admin-checkbox">
-                <input type="checkbox" name="requiresReceipt" defaultChecked />
-                <span>نیازمند بارگذاری رسید توسط مشتری</span>
-              </label>
+              </Field>
+              <Field label="شماره کارت"><Input name="cardNumber" placeholder="شماره کارت ۱۶ رقمی" inputMode="numeric" dir="ltr" /></Field>
+              <Field label="نام صاحب کارت"><Input name="cardHolder" placeholder="نام و نام خانوادگی" /></Field>
+              <Field label="نام بانک"><Input name="bankName" placeholder="مثلاً ملت" /></Field>
+              <Field label="توضیحات برای مشتری"><Textarea name="description" rows={2} /></Field>
+              <Field label="ترتیب نمایش"><Input name="sortOrder" type="number" placeholder="۰" dir="ltr" /></Field>
+              <Field label="حداقل مبلغ سفارش (تومان)"><Input name="minimumAmount" defaultValue="0" inputMode="numeric" dir="ltr" required /></Field>
+              <Field label="سقف مبلغ سفارش (تومان)" hint="خالی یعنی نامحدود؛ سقف شامل این عدد نیست."><Input name="maximumAmount" inputMode="numeric" dir="ltr" /></Field>
+              <Checkbox name="requiresReceipt" defaultChecked label="نیازمند بارگذاری رسید توسط مشتری" />
               <Button type="submit">افزودن روش پرداخت</Button>
             </form>
           </Card>

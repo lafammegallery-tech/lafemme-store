@@ -2,7 +2,7 @@ import { requireAdmin } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { createCategoryAction, toggleCategoryAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Input, Textarea, Button, Badge } from "@/components/ui";
+import { Container, Card, Input, Textarea, Button, Badge, Field } from "@/components/ui";
 import ImageUploader from "@/components/admin/ImageUploader";
 
 export const dynamic = "force-dynamic";
@@ -23,10 +23,10 @@ export default async function Page() {
           <Card className="admin-form-card">
             <h2 className="admin-form-title">افزودن دسته‌بندی</h2>
             <form action={createCategoryAction} className="grid gap-3">
-              <Input name="name" placeholder="نام دسته" required />
-              <Input name="slug" placeholder="slug (نامک انگلیسی)" dir="ltr" required />
-              <Textarea name="description" placeholder="توضیحات" rows={2} />
-              <Input name="sortOrder" type="number" placeholder="ترتیب نمایش (۰)" dir="ltr" />
+              <Field label="نام دسته"><Input name="name" placeholder="مثلاً شمش طلا" required /></Field>
+              <Field label="نامک انگلیسی"><Input name="slug" placeholder="gold-bars" dir="ltr" required /></Field>
+              <Field label="توضیحات"><Textarea name="description" placeholder="توضیح کوتاه درباره دسته‌بندی" rows={2} /></Field>
+              <Field label="ترتیب نمایش"><Input name="sortOrder" type="number" placeholder="۰" dir="ltr" /></Field>
               <ImageUploader name="imageUrl" />
               <Button type="submit">ساخت دسته‌بندی</Button>
             </form>

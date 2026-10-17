@@ -11,7 +11,7 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
   return (
     <label
       className={cn(
-        "inline-flex cursor-pointer items-center gap-3 text-sm text-lf-gray-light",
+        "form-choice inline-flex cursor-pointer items-center gap-3 text-sm text-lf-gray-light",
         className,
       )}
     >

@@ -4,7 +4,7 @@ import { formatMoney } from "@/lib/format-money";
 import { getPrisma } from "@/backend/database/prisma";
 import { createShippingMethodAction, toggleShippingMethodAction, deleteShippingMethodAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Input, Textarea, Button, Badge } from "@/components/ui";
+import { Container, Card, Input, Textarea, Button, Badge, Field } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -22,10 +22,10 @@ export default async function Page() {
           <Card className="admin-form-card">
             <h2 className="admin-form-title">افزودن روش ارسال</h2>
             <form action={createShippingMethodAction} className="grid gap-3">
-              <Input name="name" placeholder="نام (مثلاً پیک امین)" required />
-              <MoneyInput name="cost" placeholder="هزینه (تومان) — ۰ برای رایگان" dir="ltr" />
-              <Textarea name="description" placeholder="توضیحات (مثلاً تحویل حضوری در فروشگاه)" rows={2} />
-              <Input name="sortOrder" type="number" placeholder="ترتیب نمایش (۰)" dir="ltr" />
+              <Field label="نام روش ارسال"><Input name="name" placeholder="مثلاً پیک امین" required /></Field>
+              <Field label="هزینه ارسال (تومان)" hint="برای ارسال رایگان، صفر وارد کنید."><MoneyInput name="cost" placeholder="۰" dir="ltr" /></Field>
+              <Field label="توضیحات"><Textarea name="description" placeholder="مثلاً تحویل حضوری در فروشگاه" rows={2} /></Field>
+              <Field label="ترتیب نمایش"><Input name="sortOrder" type="number" placeholder="۰" dir="ltr" /></Field>
               <Button type="submit">افزودن روش ارسال</Button>
             </form>
           </Card>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Textarea, Button } from "@/components/ui";
+import { Input, Textarea, Button, Field, Checkbox, Select } from "@/components/ui";
 import MultiImageUploader from "./MultiImageUploader";
 import PriceCalculator from "./PriceCalculator";
 import { MoneyInput } from "@/components/ui/MoneyInput";
@@ -48,7 +48,7 @@ export default function ProductForm({
   const [price, setPrice] = useState(defaults.price ?? "");
 
   return (
-    <form action={action} className="grid gap-6 max-w-2xl py-10">
+    <form action={action} className="product-editor-form grid gap-6 max-w-2xl py-10">
       {defaults.id && <input type="hidden" name="id" value={defaults.id} />}
 
       {/* اطلاعات اصلی */}
@@ -56,39 +56,22 @@ export default function ProductForm({
         <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
           اطلاعات اصلی
         </legend>
-        <Input name="name" placeholder="نام محصول" defaultValue={defaults.name ?? ""} required />
+        <Field label="نام محصول"><Input name="name" placeholder="مثلاً شمش طلای ۱ گرمی" defaultValue={defaults.name ?? ""} required /></Field>
+        <Field label="نامک انگلیسی (اختیاری)" hint="اگر خالی باشد، خودکار ساخته می‌شود.">
         <Input
           name="slug"
-          placeholder="slug-english (اختیاری — اگر خالی باشد خودکار ساخته می‌شود)"
+          placeholder="gold-bar-1g"
           dir="ltr"
           defaultValue={defaults.slug ?? ""}
         />
-        <Input name="sku" placeholder="SKU (اختیاری)" dir="ltr" defaultValue={defaults.sku ?? ""} />
+        </Field>
+        <Field label="کد محصول (اختیاری)"><Input name="sku" placeholder="SKU" dir="ltr" defaultValue={defaults.sku ?? ""} /></Field>
 
-        <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "0.5rem",
-              color: "var(--color-gray)",
-              fontSize: "0.85rem",
-            }}
-          >
-            دسته‌بندی *
-          </label>
-          <select
+        <Field label="دسته‌بندی">
+          <Select
             name="categoryId"
             required
             defaultValue={defaults.categoryId ?? ""}
-            style={{
-              width: "100%",
-              padding: "12px 14px",
-              background: "var(--color-surface-raised)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "12px",
-              color: "var(--color-white)",
-              fontSize: "1rem",
-            }}
           >
             <option value="">انتخاب دسته‌بندی...</option>
             {cats.map((c) => (
@@ -96,39 +79,20 @@ export default function ProductForm({
                 {c.name}
               </option>
             ))}
-          </select>
-        </div>
+          </Select>
+        </Field>
 
-        <div>
-          <label
-            style={{
-              display: "block",
-              marginBottom: "0.5rem",
-              color: "var(--color-gray)",
-              fontSize: "0.85rem",
-            }}
-          >
-            نوع فلز
-          </label>
-          <select
+        <Field label="نوع فلز">
+          <Select
             name="metalType"
             value={metalType}
             onChange={(e) => setMetalType(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px 14px",
-              background: "var(--color-surface-raised)",
-              border: "1px solid var(--color-border)",
-              borderRadius: "12px",
-              color: "var(--color-white)",
-              fontSize: "1rem",
-            }}
           >
             <option value="GOLD">طلا</option>
             <option value="SILVER">نقره</option>
             <option value="PLATINUM">پلاتین</option>
-          </select>
-        </div>
+          </Select>
+        </Field>
       </fieldset>
 
       {/* وزن و عیار */}
@@ -137,11 +101,14 @@ export default function ProductForm({
           وزن و خلوص
         </legend>
         <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="وزن نمایشی">
           <Input
             name="weight"
             placeholder="وزن نمایشی — مثال: ۵ گرم"
             defaultValue={defaults.weight ?? ""}
           />
+          </Field>
+          <Field label="وزن عددی (گرم)">
           <Input
             name="weightValue"
             type="number"
@@ -152,12 +119,15 @@ export default function ProductForm({
             value={weightValue}
             onChange={(e) => setWeightValue(e.target.value)}
           />
+          </Field>
         </div>
+        <Field label="عیار و خلوص">
         <Input
           name="purity"
           placeholder="عیار — مثال: عیار ۱۸ یا 750"
           defaultValue={defaults.purity ?? ""}
         />
+        </Field>
       </fieldset>
 
       {/* قیمت‌گذاری */}
@@ -174,16 +144,18 @@ export default function ProductForm({
           onApply={(value) => setPrice(String(value))}
         />
 
+        <Field label="قیمت پشتیبان (تومان)" hint="می‌توانید از دکمه اعمال در محاسبه‌گر بالا استفاده کنید.">
         <MoneyInput
           name="price"
-          placeholder="قیمت پشتیبان (تومان) — از دکمه اعمال بالا یا وارد کنید"
+          placeholder="مبلغ به تومان"
           required
           dir="ltr"
           value={price}
           onValueChange={setPrice}
         />
+        </Field>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
+          <Field label="درصد سود" hint="درصد سود روی قیمت فلز">
             <Input
               name="premiumPercent"
               type="number"
@@ -194,21 +166,15 @@ export default function ProductForm({
               value={premiumPercent}
               onChange={(e) => setPremiumPercent(e.target.value)}
             />
-            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>
-              درصد سود روی قیمت فلز
-            </small>
-          </div>
-          <div>
+          </Field>
+          <Field label="سود ثابت (تومان)" hint="مبلغ ثابت علاوه بر قیمت فلز">
             <MoneyInput
               name="fixedPremium"
               placeholder="سود ثابت (تومان)"
               dir="ltr"
               defaultValue={String(defaults.fixedPremium ?? "0")}
             />
-            <small style={{ color: "var(--color-gray)", fontSize: "0.8rem" }}>
-              مبلغ ثابت علاوه بر قیمت فلز
-            </small>
-          </div>
+          </Field>
         </div>
       </fieldset>
 
@@ -217,6 +183,7 @@ export default function ProductForm({
         <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
           موجودی
         </legend>
+        <Field label="موجودی انبار (عدد)">
         <Input
           name="stock"
           type="number"
@@ -226,6 +193,7 @@ export default function ProductForm({
           dir="ltr"
           defaultValue={String(defaults.stock ?? "0")}
         />
+        </Field>
       </fieldset>
 
       {/* توضیحات */}
@@ -233,12 +201,14 @@ export default function ProductForm({
         <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
           توضیحات
         </legend>
+        <Field label="توضیح کوتاه محصول">
         <Textarea
           name="shortDescription"
           placeholder="توضیح کوتاه محصول"
           rows={3}
           defaultValue={defaults.shortDescription ?? ""}
         />
+        </Field>
       </fieldset>
 
       {/* تصاویر */}
@@ -257,15 +227,11 @@ export default function ProductForm({
         <legend style={{ color: "var(--color-gold)", fontWeight: 700, marginBottom: "1rem" }}>
           گزینه‌های نمایش
         </legend>
-        <label className="flex items-center gap-3">
-          <input
-            type="checkbox"
+          <Checkbox
             name="isFeatured"
             defaultChecked={defaults.isFeatured ?? false}
-            className="w-5 h-5"
+            label="نمایش در بخش محصولات ویژه"
           />
-          <span>نمایش در بخش محصولات ویژه</span>
-        </label>
       </fieldset>
 
       <div className="flex gap-4">

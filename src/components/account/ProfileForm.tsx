@@ -1,6 +1,6 @@
 "use client";
 import { useActionState, useEffect } from "react";
-import { Button, Input, ToastProvider, useToast } from "@/components/ui";
+import { Button, Field, Input, ToastProvider, useToast } from "@/components/ui";
 import { updateProfileAction, type ProfileState } from "@/app/actions/profile";
 
 export interface ProfileFormProps {
@@ -21,19 +21,16 @@ function ProfileFormContent({ name, phone, email }: ProfileFormProps) {
   }, [state.success, push]);
 
   return (
-    <form action={action} className="grid gap-4 md:grid-cols-2">
-      <div>
-        <label htmlFor="profile-name">نام و نام خانوادگی</label>
+    <form action={action} className="profile-form grid gap-4 md:grid-cols-2">
+      <Field label="نام و نام خانوادگی">
         <Input id="profile-name" name="name" defaultValue={name} required />
-      </div>
-      <div>
-        <label htmlFor="profile-phone">شماره موبایل</label>
+      </Field>
+      <Field label="شماره موبایل">
         <Input id="profile-phone" defaultValue={phone} dir="ltr" disabled />
-      </div>
-      <div className="md:col-span-2">
-        <label htmlFor="profile-email">ایمیل</label>
+      </Field>
+      <Field label="ایمیل" className="md:col-span-2">
         <Input id="profile-email" name="email" type="email" defaultValue={email} dir="ltr" />
-      </div>
+      </Field>
       {state.error && (
         <p className="form-error md:col-span-2" role="alert">
           {state.error}

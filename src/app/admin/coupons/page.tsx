@@ -3,7 +3,7 @@ import { MoneyInput } from "@/components/ui/MoneyInput";
 import { getPrisma } from "@/backend/database/prisma";
 import { createCouponAction, toggleCouponAction } from "@/app/actions/admin";
 import { PageLayout, PageHero } from "@/components/common";
-import { Container, Card, Input, Button } from "@/components/ui";
+import { Container, Card, Input, Button, Field } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -19,17 +19,19 @@ export default async function Page() {
       <PageHero title="کدهای تخفیف" description="مدیریت تخفیف و ارسال رایگان" />
       <Container>
         <form action={createCouponAction} className="grid gap-3 max-w-xl py-8">
-          <Input name="code" placeholder="CODE" dir="ltr" required />
-          <Input name="title" placeholder="عنوان" required />
-          <select name="type" className="border rounded-xl p-3">
+          <Field label="کد تخفیف"><Input name="code" placeholder="WELCOME10" dir="ltr" required /></Field>
+          <Field label="عنوان"><Input name="title" placeholder="مثلاً تخفیف خوش‌آمدگویی" required /></Field>
+          <Field label="نوع تخفیف">
+          <select name="type" className="form-control" defaultValue="PERCENT">
             <option value="PERCENT">درصدی</option>
             <option value="FIXED">مبلغ ثابت</option>
             <option value="FREE_SHIPPING">ارسال رایگان</option>
           </select>
-          <MoneyInput name="value" allowDecimals placeholder="مقدار (درصد یا تومان)" />
-          <MoneyInput name="minimumAmount" placeholder="حداقل خرید" />
-          <Input name="usageLimit" type="number" placeholder="سقف استفاده" />
-          <Input name="expiresAt" type="date" />
+          </Field>
+          <Field label="مقدار تخفیف (درصد یا تومان)"><MoneyInput name="value" allowDecimals placeholder="۰" /></Field>
+          <Field label="حداقل خرید (تومان)"><MoneyInput name="minimumAmount" placeholder="۰" /></Field>
+          <Field label="سقف تعداد استفاده"><Input name="usageLimit" type="number" placeholder="تعداد مجاز" /></Field>
+          <Field label="تاریخ انقضا"><Input name="expiresAt" type="date" /></Field>
           <Button type="submit">ساخت کد</Button>
         </form>
         <div className="grid gap-3 pb-12">
