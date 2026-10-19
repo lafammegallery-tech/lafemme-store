@@ -7,6 +7,8 @@ import { InvestmentCalculator, ProductGallery, ProductInfo, ProductPrice, Produc
 import { Container } from "@/components/ui";
 import { getStorefrontProduct } from "@/backend/services/storefront-product.service";
 import { addToCartAction } from "@/app/actions/cart";
+import { StructuredData } from "@/components/seo/StructuredData";
+import { breadcrumbSchema, productSchema } from "@/lib/seo";
 
 interface PageProps { params: Promise<{ id: string }>; }
 // force-dynamic عمداً است، نه ISR — نگاه کنید به توضیح مشابه در src/app/products/page.tsx:
@@ -18,13 +20,14 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const product = await getStorefrontProduct(id);
-  if (!product) return { title: "محصول یافت نشد" };
+  if (!product) notFound();
   return {
-    title: `${product.name} | La Femme`,
+    title: product.name,
     description: product.description,
     alternates: { canonical: `/products/${product.id}` },
     openGraph: { title: product.name, description: product.description, url: `/products/${product.id}`, type: "website", images: [{ url: product.imageSrc, alt: product.name }] },
-    other: { "product:price:amount": String(product.price * 10), "product:price:currency": "IRR" },
+    twitter: { card: "summary_large_image", title: product.name, description: product.description, images: [product.imageSrc] },
+    ...(product.isLivePrice && Number.isFinite(product.price) && product.price > 0 ? { other: { "product:price:amount": String(product.price * 10), "product:price:currency": "IRR" } } : {}),
   };
 }
 
@@ -32,16 +35,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { id } = await params;
   const product = await getStorefrontProduct(id);
   if (!product) notFound();
-  const productJsonLd = {
-    "@context": "https://schema.org", "@type": "Product", name: product.name, image: [product.imageSrc], description: product.description,
-    sku: product.slug, brand: { "@type": "Brand", name: product.brand ?? "La Femme" },
-    offers: { "@type": "Offer", priceCurrency: "IRR", price: product.price * 10, availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock", url: `/products/${product.id}` },
-  };
   return (
     <>
       <SiteHeader />
       <main dir="rtl">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, "\\u003c") }} />
+        <StructuredData data={productSchema(product)} />
+        <StructuredData data={breadcrumbSchema([{ name: "خانه", path: "/" }, { name: "محصولات", path: "/products" }, { name: product.name, path: `/products/${product.id}` }])} />
         <section className="breadcrumb-section" aria-label="مسیر صفحه"><Container><nav className="breadcrumb"><Link href="/">خانه</Link><span>/</span><Link href="/products">محصولات</Link><span>/</span><span aria-current="page">{product.name}</span></nav></Container></section>
         <section className="product-detail"><Container><div className="product-detail-wrapper"><ProductGallery product={product} /><div className="product-detail-info"><ProductInfo product={product} /><ProductPrice value={product.price} />
           <div className="live-price-note" role="status">{product.isLivePrice ? `قیمت بر پایه نرخ لحظه‌ای هر گرم ${product.type === "gold" ? "طلا" : "نقره"} محاسبه شده است.` : "قیمت موقت فروشگاه نمایش داده می‌شود؛ نرخ بازار در دسترس نیست."}</div>

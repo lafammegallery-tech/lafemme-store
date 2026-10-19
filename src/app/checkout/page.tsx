@@ -6,7 +6,7 @@ import { cartToView, getCurrentCart } from "@/backend/services/cart.service";
 import { getPrisma } from "@/backend/database/prisma";
 import { getPaymentPolicy } from "@/backend/services/payment-policy.service";
 
-export const metadata: Metadata = { title: "تسویه حساب | La Femme", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "تسویه حساب", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function CheckoutPage() {

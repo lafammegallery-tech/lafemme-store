@@ -4,9 +4,11 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ProductsCatalog } from "@/components/products";
 import { getStorefrontProducts } from "@/backend/services/storefront-product.service";
+import { StructuredData } from "@/components/seo/StructuredData";
+import { breadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "خرید شمش طلا و نقره | La Femme",
+  title: "قیمت و خرید شمش طلا و نقره",
   description: "مشاهده و مقایسه شمش‌های طلا و نقره با قیمت لحظه‌ای بازار، گواهی اصالت و ارسال امن.",
   keywords: ["شمش طلا", "شمش نقره", "قیمت لحظه‌ای طلا", "La Femme"],
   alternates: { canonical: "/products" },
@@ -26,6 +28,7 @@ export default async function ProductsPage() {
     <>
       <SiteHeader />
       <main dir="rtl">
+        <StructuredData data={breadcrumbSchema([{ name: "خانه", path: "/" }, { name: "محصولات", path: "/products" }])} />
         <section className="page-hero"><div className="container"><span className="hero-badge">مجموعه شمش‌های لوکس</span><h1>محصولات La Femme</h1><p>شمش‌های طلا و نقره با قیمت محاسبه‌شده از بازار، اصالت قابل رهگیری و بسته‌بندی امن.</p></div></section>
         <section className="breadcrumb-section" aria-label="مسیر صفحه"><div className="container"><nav className="breadcrumb"><Link href="/">خانه</Link><span aria-hidden="true">/</span><span aria-current="page">محصولات</span></nav></div></section>
         <ProductsCatalog items={products} />

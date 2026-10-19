@@ -5,9 +5,10 @@ import { AuthCard } from "@/components/auth/AuthCard";
 import { PageHero, PageLayout } from "@/components/common";
 import { Container } from "@/components/ui";
 export const metadata: Metadata = {
-  title: "ثبت‌نام | La Femme",
-  description: "ساخت حساب کاربری آزمایشی در La Femme",
+  title: "ثبت‌نام",
+  description: "ساخت حساب کاربری در La Femme",
   alternates: { canonical: "/register" },
+  robots: { index: false, follow: true },
 };
 /** صفحه ثبت‌نام نمایشی و آماده اتصال به Backend است. */
 export default async function RegisterPage({

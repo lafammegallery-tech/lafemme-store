@@ -8,7 +8,7 @@ import { Card, EmptyState } from "@/components/ui";
 import { mockFavorites } from "@/data/frontend";
 
 export const metadata: Metadata = {
-  title: "علاقه‌مندی‌ها | La Femme",
+  title: "علاقه‌مندی‌ها",
   description: "محصولات مورد علاقه شما",
   robots: { index: false, follow: false },
 };

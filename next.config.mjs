@@ -11,7 +11,19 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  images: { unoptimized: true },
+  // Resolve metadata before streaming so missing products can return a real 404
+  // and all crawlers receive the same complete metadata in the initial HTML.
+  htmlLimitedBots: /.*/,
+  async redirects() { return [{ source: "/product", destination: "/products", permanent: true }]; },
+  images: {
+    formats: ["image/webp"],
+    // Only public catalog images may enter the shared image optimizer cache.
+    // Receipts remain authenticated, unoptimized and private/no-store.
+    localPatterns: [
+      { pathname: "/assets/images/**", search: "" },
+      { pathname: "/uploads/products/**", search: "" },
+    ],
+  },
   async headers() { return [{ source: "/:path*", headers: securityHeaders }]; },
 };
 export default nextConfig;

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { InfoPage } from "@/components/content/InfoPage";
 import { PageHero, PageLayout } from "@/components/common";
 export const metadata: Metadata = {
-  title: "حریم خصوصی | La Femme",
+  title: "حریم خصوصی",
   description: "سیاست حریم خصوصی La Femme",
   alternates: { canonical: "/privacy" },
 };

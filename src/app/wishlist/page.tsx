@@ -9,7 +9,7 @@ import { Card } from "@/components/ui";
 import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = {
-  title: "علاقه‌مندی‌ها | La Femme",
+  title: "علاقه‌مندی‌ها",
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";

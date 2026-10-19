@@ -4,9 +4,10 @@ import { AuthCard } from "@/components/auth/AuthCard";
 import { PageHero, PageLayout } from "@/components/common";
 import { Container } from "@/components/ui";
 export const metadata: Metadata = {
-  title: "بازیابی رمز عبور | La Femme",
+  title: "بازیابی رمز عبور",
   description: "بازیابی نمایشی رمز عبور",
   alternates: { canonical: "/forgot-password" },
+  robots: { index: false, follow: true },
 };
 /** صفحه بازیابی رمز عبور بدون ارسال واقعی پیامک. */
 export default function ForgotPasswordPage() {

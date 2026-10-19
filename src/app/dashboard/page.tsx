@@ -8,7 +8,7 @@ import { userRepository } from "@/backend/database/repositories/user.repository"
 import { orderRepository } from "@/backend/database/repositories/order.repository";
 import { logoutAction } from "@/app/actions/auth";
 export const metadata: Metadata = {
-  title: "داشبورد | La Femme",
+  title: "داشبورد",
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";

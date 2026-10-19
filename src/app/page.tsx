@@ -7,7 +7,7 @@ import { InvestmentCalculator } from "@/components/home/InvestmentCalculator";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "شمش طلا و نقره",
+  title: { absolute: "La Femme | فروش شمش طلا و نقره" },
   description: "فروش شمش طلا و نقره برند La Femme با طراحی لوکس و کیفیت ممتاز.",
   alternates: { canonical: "/" },
   openGraph: {

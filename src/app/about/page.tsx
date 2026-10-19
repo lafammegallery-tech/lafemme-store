@@ -3,7 +3,7 @@ import { InfoPage } from "@/components/content/InfoPage";
 import { PageHero, PageLayout } from "@/components/common";
 
 export const metadata: Metadata = {
-  title: "درباره ما | La Femme Gold",
+  title: "درباره ما",
   description: "آشنایی با مجموعه La Femme Gold — فروشگاه طلا و جواهر در بازار بزرگ تهران",
   alternates: { canonical: "/about" },
 };

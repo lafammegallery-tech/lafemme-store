@@ -6,9 +6,10 @@ import { PageHero, PageLayout } from "@/components/common";
 import { Container } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "ورود | La Femme",
+  title: "ورود",
   description: "ورود امن به حساب کاربری La Femme",
   alternates: { canonical: "/login" },
+  robots: { index: false, follow: true },
 };
 /** صفحه ورود متصل به احراز هویت واقعی. */
 export default async function LoginPage({

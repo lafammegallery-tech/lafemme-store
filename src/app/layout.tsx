@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { ThemeScript } from "@/components/theme/ThemeScript";
+import { StructuredData } from "@/components/seo/StructuredData";
+import { absoluteUrl, getSiteUrl, isPublicSite } from "@/lib/seo";
 import "./globals.css";
+
+// Domain and indexing policy are runtime settings, not Docker build-time defaults.
+export const dynamic = "force-dynamic";
 
 const vazirmatn = localFont({
   src: [
@@ -16,8 +21,9 @@ const vazirmatn = localFont({
   fallback: ["Arial", "sans-serif"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+export function generateMetadata(): Metadata {
+  return {
+  metadataBase: new URL(getSiteUrl()),
   title: { default: "La Femme | شمش طلا و نقره", template: "%s | La Femme" },
   description: "فروش شمش طلا و نقره برند La Femme",
   keywords: ["شمش طلا", "شمش نقره", "La Femme"],
@@ -26,11 +32,9 @@ export const metadata: Metadata = {
   publisher: "La Femme",
   applicationName: "La Femme",
   robots: {
-    index: true,
+    index: isPublicSite(),
     follow: true,
     googleBot: {
-      index: true,
-      follow: true,
       "max-image-preview": "large",
       "max-snippet": -1,
       "max-video-preview": -1,
@@ -55,7 +59,8 @@ export const metadata: Metadata = {
     description: "فروش شمش طلا و نقره برند La Femme",
     images: ["/assets/images/logo.png"],
   },
-};
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -65,10 +70,39 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${absoluteUrl("/")}#organization`,
+        name: "La Femme Gold",
+        url: absoluteUrl("/"),
+        logo: absoluteUrl("/assets/images/logo.png"),
+        telephone: "+982155622804",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "تهران",
+          streetAddress: "بازار بزرگ تهران، پاساژ اردیبهشت، پلاک ۲/۳۱",
+          addressCountry: "IR",
+        },
+        sameAs: ["https://instagram.com/lafemmegold"],
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${absoluteUrl("/")}#website`,
+        name: "La Femme",
+        url: absoluteUrl("/"),
+        inLanguage: "fa-IR",
+        publisher: { "@id": `${absoluteUrl("/")}#organization` },
+      },
+    ],
+  };
   return (
     <html lang="fa" dir="rtl" className={vazirmatn.variable} suppressHydrationWarning>
       <head>
         <ThemeScript />
+        <StructuredData data={structuredData} />
       </head>
       <body>{children}</body>
     </html>

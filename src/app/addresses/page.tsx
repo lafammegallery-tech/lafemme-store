@@ -6,7 +6,7 @@ import { requireSession } from "@/backend/auth/session";
 import { getPrisma } from "@/backend/database/prisma";
 import { createAddressAction, deleteAddressAction } from "@/app/actions/address";
 
-export const metadata: Metadata = { title: "آدرس‌ها | La Femme", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "آدرس‌ها", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function Page() {

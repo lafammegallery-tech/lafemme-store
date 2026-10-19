@@ -3,7 +3,7 @@ import { CartList, CartSummary } from "@/components/cart";
 import { PageHero, PageLayout } from "@/components/common";
 import { Container } from "@/components/ui";
 import { cartToView, getCurrentCart } from "@/backend/services/cart.service";
-export const metadata: Metadata = { title: "سبد خرید | La Femme", description: "سبد خرید فروشگاه La Femme", alternates: { canonical: "/cart" } };
+export const metadata: Metadata = { title: "سبد خرید", description: "سبد خرید فروشگاه La Femme", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 export default async function CartPage() {
   const items = cartToView(await getCurrentCart()); const total = items.reduce((s,i)=>s+i.price*i.quantity,0); const itemCount=items.reduce((s,i)=>s+i.quantity,0);

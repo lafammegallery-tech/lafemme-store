@@ -3,8 +3,9 @@ import Link from "next/link";
 import { PageHero, PageLayout } from "@/components/common";
 import { Accordion, Container } from "@/components/ui";
 import { faqItems } from "@/data/faq";
+import { StructuredData } from "@/components/seo/StructuredData";
 export const metadata: Metadata = {
-  title: "سؤالات متداول | La Femme",
+  title: "سؤالات متداول",
   description: "پاسخ پرسش‌های متداول درباره محصولات و خدمات La Femme",
   alternates: { canonical: "/faq" },
 };
@@ -12,6 +13,14 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <PageLayout>
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((item) => ({
+          "@type": "Question", name: item.title,
+          acceptedAnswer: { "@type": "Answer", text: item.content },
+        })),
+      }} />
       <PageHero
         title="سؤالات متداول"
         description="راهنمای انتخاب شمش، پرداخت، ارسال و پیگیری خرید در La Femme"

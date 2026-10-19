@@ -4,7 +4,7 @@ import { SearchExperience } from "@/components/search/SearchExperience";
 import { getStorefrontProducts } from "@/backend/services/storefront-product.service";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
-  title: "جست‌وجو | La Femme",
+  title: "جست‌وجو",
   description: "جست‌وجو و فیلتر محصولات La Femme",
   robots: { index: false, follow: true },
 };

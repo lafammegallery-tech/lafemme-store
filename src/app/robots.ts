@@ -1,5 +1,14 @@
 import type { MetadataRoute } from "next";
+import { absoluteUrl, getSiteUrl, isPublicSite } from "@/lib/seo";
+
+export const dynamic = "force-dynamic";
+
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-  return { rules: [{ userAgent: "*", allow: "/", disallow: ["/admin/", "/dashboard/", "/checkout/", "/orders/", "/api/"] }], sitemap: `${baseUrl}/sitemap.xml`, host: baseUrl };
+  return {
+    rules: isPublicSite()
+      ? [{ userAgent: "*", allow: "/", disallow: ["/admin", "/dashboard", "/checkout", "/orders", "/api/"] }]
+      : [{ userAgent: "*", disallow: "/" }],
+    sitemap: absoluteUrl("/sitemap.xml"),
+    host: getSiteUrl(),
+  };
 }

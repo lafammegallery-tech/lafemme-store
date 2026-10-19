@@ -40,6 +40,7 @@ async function loadDbProducts(): Promise<Product[] | null> {
       return {
         id: row.id,
         createdAt: row.createdAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString(),
         name: row.name,
         slug: row.slug,
         description: row.description ?? row.shortDescription ?? "",

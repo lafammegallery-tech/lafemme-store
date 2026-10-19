@@ -5,7 +5,7 @@ import { Card, Container } from "@/components/ui";
 import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = {
-  title: "تماس با ما | La Femme Gold",
+  title: "تماس با ما",
   description: "راه‌های ارتباط با مجموعه La Femme Gold — تهران، بازار بزرگ، پاساژ اردیبهشت",
   alternates: { canonical: "/contact" },
   openGraph: {

@@ -12,6 +12,7 @@ export type ProductType = "gold" | "silver";
  */
 export interface Product {
   createdAt?: string;
+  updatedAt?: string;
   /** شناسه یکتای محصول */
   id: string;
   /** نام نمایشی محصول */

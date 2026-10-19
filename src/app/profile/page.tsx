@@ -7,7 +7,7 @@ import { PageLayout } from "@/components/common";
 import { Card } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "پروفایل | La Femme",
+  title: "پروفایل",
   robots: { index: false, follow: false },
 };
 export const dynamic = "force-dynamic";

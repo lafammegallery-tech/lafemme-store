@@ -110,7 +110,7 @@ export function InvestmentCalculator() {
               <div className={styles.planHeading}><span className={styles.planNumber}>{money.format(index + 1).padStart(2, "۰")}</span><h4>{plan.title}</h4><span className={styles.pieces}>{money.format(plan.count)} قطعه</span></div>
               <ul className={styles.products}>{plan.items.map(({ product, quantity }) => <li key={product.id}>
                 <Link href={product.href} className={styles.productLink}>
-                  <span className={styles.image}><Image src={product.imageSrc} alt="" width={56} height={64} unoptimized /></span>
+                  <span className={styles.image}><Image src={product.imageSrc} alt="" width={56} height={64} /></span>
                   <span className={styles.productInfo}><strong>{product.name}</strong><small>{money.format(quantity)} عدد × {money.format(product.price)} تومان</small></span><span aria-hidden="true" className={styles.productArrow}>↖</span>
                 </Link>
               </li>)}</ul>

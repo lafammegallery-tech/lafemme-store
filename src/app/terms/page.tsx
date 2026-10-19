@@ -3,7 +3,7 @@ import Link from "next/link";
 import { InfoPage } from "@/components/content/InfoPage";
 import { PageHero, PageLayout } from "@/components/common";
 export const metadata: Metadata = {
-  title: "قوانین استفاده | La Femme",
+  title: "قوانین استفاده",
   description: "شرایط و قوانین استفاده از فروشگاه La Femme",
   alternates: { canonical: "/terms" },
 };

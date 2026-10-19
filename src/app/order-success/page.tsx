@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { formatMoney } from "@/lib/format-money";
 import { PageLayout, PageHero } from "@/components/common";
 import { Container, Card } from "@/components/ui";
@@ -10,6 +11,7 @@ import { notFound } from "next/navigation";
 import { destinationSnapshot, STAGE_LABELS } from "@/lib/staged-payment";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "پیگیری پرداخت سفارش", robots: { index: false, follow: false } };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ order?: string }> }) {
   const { order } = await searchParams;

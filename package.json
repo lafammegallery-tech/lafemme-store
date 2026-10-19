@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "tsx --test tests/security.test.ts tests/custom-prices.test.ts tests/investment-planner.test.ts tests/money.test.ts tests/market-content.test.ts tests/staged-payment.test.ts tests/payment-policy.test.ts",
+    "test": "tsx --test tests/security.test.ts tests/custom-prices.test.ts tests/investment-planner.test.ts tests/money.test.ts tests/market-content.test.ts tests/staged-payment.test.ts tests/payment-policy.test.ts tests/seo.test.ts",
     "test:integration": "node --conditions=react-server --import tsx --test --test-concurrency=1 tests/orders.integration.test.ts tests/market-availability.integration.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:prisma": "tsc --noEmit -p tsconfig.prisma.json",
