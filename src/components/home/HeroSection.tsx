@@ -19,15 +19,15 @@ export function HeroSection() {
             </span>
 
             <h1 id="home-hero-title">
-              شمش‌های طلا و نقره
+              شمش‌های طلا و نقره لفم
               <span lang="fr">La Femme</span>
             </h1>
 
             <p className="hero-lead">تجسم هنر، سرمایه‌گذاری و اصالت</p>
 
             <p className="hero-description">
-              مجموعه‌ای منتخب از شمش‌های طلا و نقره با طراحی ماندگار، بسته‌بندی نفیس و تضمین اصالت؛
-              برای هدیه‌ای ارزشمند و سرمایه‌گذاری مطمئن.
+              در فروشگاه لفم (La Femme)، مجموعه شمش‌های طلا و نقره را ببینید و
+              مشخصات، وزن و قیمت محصولات را برای انتخاب و خرید مقایسه کنید.
             </p>
 
             {/* ================= BUTTONS ================= */}
@@ -46,7 +46,7 @@ export function HeroSection() {
               </Link>
             </div>
 
-            <ul className="hero-trust" aria-label="مزیت‌های خرید از La Femme">
+            <ul className="hero-trust" aria-label="مزیت‌های خرید از لفم (La Femme)">
               <li>
                 <span aria-hidden="true">✓</span>
                 تضمین اصالت
@@ -74,7 +74,7 @@ export function HeroSection() {
 
                 <div className="relative flex h-full w-full items-center justify-center">
                   <Image
-                    alt="شمش طلای La Femme در بسته‌بندی سبز"
+                    alt="شمش طلای لفم (La Femme) در بسته‌بندی سبز"
                     src="/assets/images/hero-gold-bar.webp"
                     width={693}
                     height={965}

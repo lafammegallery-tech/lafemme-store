@@ -6,11 +6,11 @@ import { Icon } from "@/components/ui/Icon";
 
 export const metadata: Metadata = {
   title: "تماس با ما",
-  description: "راه‌های ارتباط با مجموعه La Femme Gold — تهران، بازار بزرگ، پاساژ اردیبهشت",
+  description: "راه‌های ارتباط با لفم (La Femme) برای مشاوره خرید شمش طلا و نقره — تهران، بازار بزرگ، پاساژ اردیبهشت.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "تماس با La Femme Gold",
-    description: "راه‌های ارتباط با مجموعه La Femme Gold",
+    title: "تماس با لفم (La Femme)",
+    description: "راه‌های ارتباط با لفم برای مشاوره خرید شمش طلا و نقره و پشتیبانی.",
   },
 };
 
@@ -19,7 +19,7 @@ export default function ContactPage() {
     <PageLayout>
       <PageHero
         title="تماس با ما"
-        description="برای مشاوره خرید، استعلام قیمت و پشتیبانی با ما در ارتباط باشید."
+        description="برای مشاوره خرید شمش طلا و نقره، استعلام قیمت و پشتیبانی با لفم (La Femme) در ارتباط باشید."
       />
       <section className="py-16">
         <Container>

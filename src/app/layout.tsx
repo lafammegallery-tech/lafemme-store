@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { ThemeScript } from "@/components/theme/ThemeScript";
 import { StructuredData } from "@/components/seo/StructuredData";
 import { absoluteUrl, getSiteUrl, isPublicSite } from "@/lib/seo";
+import { brandName, brandAlternateNames, brandDisplayName, brandHomeTitle, brandDescription } from "@/lib/brand";
 import "./globals.css";
 
 // Domain and indexing policy are runtime settings, not Docker build-time defaults.
@@ -24,13 +25,13 @@ const vazirmatn = localFont({
 export function generateMetadata(): Metadata {
   return {
   metadataBase: new URL(getSiteUrl()),
-  title: { default: "La Femme | شمش طلا و نقره", template: "%s | La Femme" },
-  description: "فروش شمش طلا و نقره برند La Femme",
-  keywords: ["شمش طلا", "شمش نقره", "La Femme"],
-  authors: [{ name: "La Femme" }],
-  creator: "La Femme",
-  publisher: "La Femme",
-  applicationName: "La Femme",
+  title: { default: brandHomeTitle, template: "%s | لفم" },
+  description: brandDescription,
+  keywords: ["شمش طلا", "شمش نقره", brandName, "La Femme"],
+  authors: [{ name: brandDisplayName }],
+  creator: brandDisplayName,
+  publisher: brandDisplayName,
+  applicationName: brandName,
   robots: {
     index: isPublicSite(),
     follow: true,
@@ -48,15 +49,15 @@ export function generateMetadata(): Metadata {
   openGraph: {
     type: "website",
     locale: "fa_IR",
-    siteName: "La Femme",
-    title: "La Femme | شمش طلا و نقره",
-    description: "فروش شمش طلا و نقره برند La Femme",
-    images: [{ url: "/assets/images/logo.png", alt: "La Femme" }],
+    siteName: brandName,
+    title: brandHomeTitle,
+    description: brandDescription,
+    images: [{ url: "/assets/images/logo.png", alt: brandDisplayName }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "La Femme | شمش طلا و نقره",
-    description: "فروش شمش طلا و نقره برند La Femme",
+    title: brandHomeTitle,
+    description: brandDescription,
     images: ["/assets/images/logo.png"],
   },
   };
@@ -76,7 +77,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       {
         "@type": "Organization",
         "@id": `${absoluteUrl("/")}#organization`,
-        name: "La Femme Gold",
+        name: brandName,
+        alternateName: brandAlternateNames,
         url: absoluteUrl("/"),
         logo: absoluteUrl("/assets/images/logo.png"),
         telephone: "+982155622804",
@@ -91,7 +93,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       {
         "@type": "WebSite",
         "@id": `${absoluteUrl("/")}#website`,
-        name: "La Femme",
+        name: brandName,
+        alternateName: brandAlternateNames,
         url: absoluteUrl("/"),
         inLanguage: "fa-IR",
         publisher: { "@id": `${absoluteUrl("/")}#organization` },

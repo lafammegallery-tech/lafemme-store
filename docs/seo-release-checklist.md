@@ -34,3 +34,12 @@ The October 2026 SEO patch is prepared on preview first. It does not register an
 6. Plan original, accurate buying guides and product descriptions based on actual specifications. Do not publish made-up expertise, guaranteed investment returns, keyword-stuffed or duplicate landing pages.
 
 Schema does not guarantee a rich result or ranking increase. Google limits FAQ rich results mainly to authoritative government/health sites; the store's FAQ markup is semantic only, not a promise of expanded Google snippets. No obsolete sitelinks search box schema is added.
+
+## Persian brand follow-up (preview first)
+
+- The owner confirmed the Persian spelling **لفم**. `src/lib/brand.ts` connects it to the existing English names `La Femme` and `La Femme Gold`.
+- Home title: `لفم | خرید شمش طلا و نقره`. Readable home, catalog, about, contact and footer copy introduces both names; Organization and WebSite retain their existing IDs and use the English names as aliases.
+- Third-party product manufacturers, prices, stock, business contact information and database records are not renamed or changed.
+- Keep preview blocked from indexing. Deploy this follow-up to production only after the owner approves the preview; Google cannot learn the new copy from a blocked preview.
+- After release, inspect the live home/catalog in Search Console and monitor actual queries such as `لفم` and `شمش لفم`. Do not repeatedly submit indexing requests.
+- Search suggestions/autocomplete are controlled by Google. Structured data and clearer branding are not an autocomplete switch, and neither ranking nor autocomplete inclusion is guaranteed. Do not use fabricated searches, traffic or reviews.

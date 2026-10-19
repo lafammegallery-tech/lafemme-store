@@ -9,10 +9,10 @@ import { breadcrumbSchema } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "قیمت و خرید شمش طلا و نقره",
-  description: "مشاهده و مقایسه شمش‌های طلا و نقره با قیمت لحظه‌ای بازار، گواهی اصالت و ارسال امن.",
-  keywords: ["شمش طلا", "شمش نقره", "قیمت لحظه‌ای طلا", "La Femme"],
+  description: "مشاهده و مقایسه شمش‌های طلا و نقره در فروشگاه لفم (La Femme)، همراه با مشخصات، وزن و قیمت محصولات.",
+  keywords: ["شمش طلا", "شمش نقره", "قیمت لحظه‌ای طلا", "لفم", "La Femme"],
   alternates: { canonical: "/products" },
-  openGraph: { title: "محصولات La Femme", description: "شمش‌های طلا و نقره با قیمت لحظه‌ای بازار", url: "/products", type: "website" },
+  openGraph: { title: "محصولات لفم (La Femme)", description: "مشاهده مشخصات، وزن و قیمت شمش‌های طلا و نقره در فروشگاه لفم", url: "/products", type: "website" },
 };
 
 // force-dynamic عمداً است، نه ISR: این پروژه در Docker ساخته می‌شود بدون دسترسی به
@@ -29,7 +29,7 @@ export default async function ProductsPage() {
       <SiteHeader />
       <main dir="rtl">
         <StructuredData data={breadcrumbSchema([{ name: "خانه", path: "/" }, { name: "محصولات", path: "/products" }])} />
-        <section className="page-hero"><div className="container"><span className="hero-badge">مجموعه شمش‌های لوکس</span><h1>محصولات La Femme</h1><p>شمش‌های طلا و نقره با قیمت محاسبه‌شده از بازار، اصالت قابل رهگیری و بسته‌بندی امن.</p></div></section>
+        <section className="page-hero"><div className="container"><span className="hero-badge">مجموعه شمش‌های لوکس</span><h1>محصولات لفم (La Femme)</h1><p>شمش‌های طلا و نقره در فروشگاه لفم؛ مشخصات، وزن و قیمت محصولات را برای انتخاب و خرید مقایسه کنید.</p></div></section>
         <section className="breadcrumb-section" aria-label="مسیر صفحه"><div className="container"><nav className="breadcrumb"><Link href="/">خانه</Link><span aria-hidden="true">/</span><span aria-current="page">محصولات</span></nav></div></section>
         <ProductsCatalog items={products} />
       </main>

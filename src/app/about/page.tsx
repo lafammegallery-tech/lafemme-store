@@ -4,19 +4,25 @@ import { PageHero, PageLayout } from "@/components/common";
 
 export const metadata: Metadata = {
   title: "درباره ما",
-  description: "آشنایی با مجموعه La Femme Gold — فروشگاه طلا و جواهر در بازار بزرگ تهران",
+  description: "آشنایی با لفم (La Femme)، فروشگاه شمش طلا و نقره در بازار بزرگ تهران و راه‌های ارتباط با مجموعه.",
   alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
   return (
     <PageLayout>
-      <PageHero title="درباره La Femme Gold" description="طلا و جواهر اصیل، از بازار بزرگ تهران تا در خانه شما" />
+      <PageHero title="درباره لفم (La Femme)" description="آشنایی با مجموعه و فروشگاه آنلاین شمش طلا و نقره لفم" />
       <InfoPage>
+
+        <p>
+          <strong>لفم (La Femme)</strong> نام فارسی و انگلیسی مجموعه ماست.
+          در فروشگاه آنلاین لفم می‌توانید شمش‌های طلا و نقره را ببینید و
+          مشخصات، وزن و قیمت محصولات را پیش از خرید مقایسه کنید.
+        </p>
 
         <h2>داستان ما</h2>
         <p>
-          مجموعه <strong>La Femme Gold</strong> در دل بازار بزرگ تهران، در پاساژ اردیبهشت پایه‌گذاری شده است.
+          مجموعه <strong>لفم (La Femme Gold)</strong> در دل بازار بزرگ تهران، در پاساژ اردیبهشت پایه‌گذاری شده است.
           ما با سال‌ها تجربه در حوزه طلا و جواهر، طیف گسترده‌ای از زیورآلات طلا، جواهرات میناکاری و
           سنگ‌های قیمتی را برای بانوان، آقایان و کودکان عرضه می‌کنیم.
         </p>

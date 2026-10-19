@@ -8,8 +8,8 @@ export function SiteFooter() {
       <Container>
         <div className="footer-grid">
           <div className="footer-column footer-brand">
-            <h3>La Femme Gold</h3>
-            <p>طلا و جواهر اصیل با قیمت لحظه‌ای بازار — مناسب پوشش، هدیه و سرمایه‌گذاری.</p>
+            <h3>لفم (La Femme)</h3>
+            <p>فروشگاه شمش طلا و نقره لفم؛ مشاهده و مقایسه مشخصات، وزن و قیمت محصولات.</p>
             <div className="footer-contact">
               <span className="footer-contact-row">
                 <Icon name="map-pin" size={18} />

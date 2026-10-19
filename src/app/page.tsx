@@ -4,28 +4,29 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MarketOverview } from "@/components/market/MarketOverview";
 import { InvestmentCalculator } from "@/components/home/InvestmentCalculator";
+import { brandHomeTitle, brandDescription } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "La Femme | فروش شمش طلا و نقره" },
-  description: "فروش شمش طلا و نقره برند La Femme با طراحی لوکس و کیفیت ممتاز.",
+  title: { absolute: brandHomeTitle },
+  description: brandDescription,
   alternates: { canonical: "/" },
   openGraph: {
-    title: "La Femme | شمش طلا و نقره",
-    description: "مجموعه منتخب شمش‌های طلا و نقره La Femme.",
+    title: brandHomeTitle,
+    description: brandDescription,
     url: "/",
     type: "website",
     images: [
       {
         url: "/assets/images/hero-gold-bar.webp",
-        alt: "شمش طلای La Femme",
+        alt: "شمش طلای لفم (La Femme)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "La Femme | شمش طلا و نقره",
-    description: "مجموعه منتخب شمش‌های طلا و نقره La Femme.",
+    title: brandHomeTitle,
+    description: brandDescription,
     images: ["/assets/images/hero-gold-bar.webp"],
   },
 };

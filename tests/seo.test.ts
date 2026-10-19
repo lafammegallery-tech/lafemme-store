@@ -4,6 +4,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { absoluteUrl, getSiteUrl, isPublicSite, safeJsonLd, breadcrumbSchema, productSchema } from "../src/lib/seo";
 import robots from "../src/app/robots";
 import type { Product } from "../src/types/product";
+import { brandName, brandAlternateNames, brandDisplayName, brandHomeTitle, brandDescription } from "../src/lib/brand";
 
 const product: Product = {
   id: "gold-10", slug: "gold-10g", name: "شمش طلا ۱۰ گرمی", description: "مشخصات شمش طلا",
@@ -62,6 +63,26 @@ test("breadcrumb schema has ordered absolute links", () => {
   assert.equal(schema["@type"], "BreadcrumbList");
   assert.deepEqual(schema.itemListElement.map((item) => item.position), [1, 2]);
   assert.deepEqual(schema.itemListElement.map((item) => item.item), [absoluteUrl("/"), absoluteUrl("/products")]);
+});
+
+test("owner-confirmed Persian brand is visible and linked to the established English names", () => {
+  const source = (path: string) => readFileSync(new URL(`../src/${path}`, import.meta.url), "utf8");
+  assert.equal(brandName, "لفم");
+  assert.deepEqual(brandAlternateNames, ["La Femme", "La Femme Gold"]);
+  assert.equal(brandDisplayName, "لفم (La Femme)");
+  assert.equal(brandHomeTitle, "لفم | خرید شمش طلا و نقره");
+  assert.ok(brandDescription.includes(brandDisplayName));
+  const layout = source("app/layout.tsx");
+  assert.equal((layout.match(/name: brandName,/g) ?? []).length, 2);
+  assert.equal((layout.match(/alternateName: brandAlternateNames,/g) ?? []).length, 2);
+  assert.match(layout, /siteName: brandName/);
+  assert.match(layout, /template: "%s \| لفم"/);
+  assert.match(source("app/page.tsx"), /title: \{ absolute: brandHomeTitle \}/);
+  for (const path of ["components/home/HeroSection.tsx", "components/layout/SiteFooter.tsx", "app/about/page.tsx", "app/contact/page.tsx", "app/products/page.tsx"]) {
+    assert.ok(source(path).includes(brandDisplayName), `${path}: readable Persian and English brand`);
+  }
+  // Do not relabel third-party manufacturers as the storefront brand.
+  assert.equal(productSchema({ ...product, brand: "Nadir" }).brand.name, "Nadir");
 });
 
 test("runtime metadata, private noindex and image cache boundaries remain explicit", () => {

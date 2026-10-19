@@ -78,6 +78,7 @@ try {
     const organization = data.schemas.find((schema) => schema["@type"] === "Organization");
     const website = data.schemas.find((schema) => schema["@type"] === "WebSite");
     check(`${path}: organization and website schema`, organization?.url === `${origin}/` && website?.url === `${origin}/`);
+    check(`${path}: Persian brand and English aliases`, [organization, website].every((schema) => schema?.name === "لفم" && schema.alternateName?.includes("La Femme") && schema.alternateName?.includes("La Femme Gold")));
     if ([...publicPaths, ...productPaths].includes(path)) {
       check(`${path}: description exists`, Boolean(data.description));
       check(`${path}: canonical matches public URL`, data.canonical === (path === "/" ? `${origin}/` : `${origin}${path}`) || path === "/" && data.canonical === origin);
@@ -101,6 +102,9 @@ try {
     }
     if (path === "/") {
       check("hero uses responsive image optimization", body.includes("/_next/image?") && body.includes("srcSet="));
+      check("home: Persian brand title", data.title === "لفم | خرید شمش طلا و نقره");
+      check("home: visible Persian brand in heading", /<h1[^>]*>[^<]*لفم/.test(body));
+      check("home: description connects Persian and English brand", data.description?.includes("لفم (La Femme)"));
     }
   }
   const redirect = await request("/product");
