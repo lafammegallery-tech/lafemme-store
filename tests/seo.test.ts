@@ -5,6 +5,8 @@ import { absoluteUrl, getSiteUrl, isPublicSite, safeJsonLd, breadcrumbSchema, pr
 import robots from "../src/app/robots";
 import type { Product } from "../src/types/product";
 import { brandName, brandAlternateNames, brandDisplayName, brandHomeTitle, brandDescription } from "../src/lib/brand";
+import { getProductEditorial, productEditorialDrafts, withProductEditorial } from "../src/lib/product-editorial";
+import { buyingGuides, getBuyingGuide } from "../src/data/buying-guides";
 
 const product: Product = {
   id: "gold-10", slug: "gold-10g", name: "شمش طلا ۱۰ گرمی", description: "مشخصات شمش طلا",
@@ -105,4 +107,63 @@ test("runtime metadata, private noindex and image cache boundaries remain explic
   for (const path of ["src/app/admin/payment-receipts/page.tsx", "src/app/admin/orders/[id]/page.tsx"]) {
     assert.match(source(path), /unoptimized/);
   }
+});
+
+test("all 20 catalogue editorials only change matching product copy, never commercial fields", () => {
+  assert.equal(productEditorialDrafts.length, 20);
+  assert.equal(new Set(productEditorialDrafts.map((draft) => draft.id)).size, 20);
+  assert.equal(new Set(productEditorialDrafts.map((draft) => draft.description)).size, 20);
+  assert.equal(new Set(productEditorialDrafts.map((draft) => draft.heading)).size, 20);
+  assert.equal(productEditorialDrafts.filter((draft) => draft.type === "gold").length, 14);
+  assert.equal(productEditorialDrafts.filter((draft) => draft.type === "silver").length, 6);
+  for (const draft of productEditorialDrafts) {
+    const item: Product = { ...product, id: draft.id, type: draft.type, weightValue: draft.grams, purity: draft.purity, brand: draft.brand };
+    const before = structuredClone(item);
+    const result = withProductEditorial(item);
+    assert.equal(result.description, draft.description);
+    assert.match(result.description, /بسته‌بندی ضدجعل/);
+    assert.match(result.description, /شماره‌سریال مخفی/);
+    assert.match(result.description, /کیفیت و زیبایی/);
+    assert.deepEqual({ ...result, description: item.description }, before);
+    assert.deepEqual(item, before, "original data is not mutated");
+    assert.equal(productSchema(result).description, result.description);
+    for (const change of [{ id: "different-id" }, { weightValue: 500 }, { purity: "750" }, { brand: "Nadir" }, { type: draft.type === "gold" ? "silver" as const : "gold" as const }]) {
+      const changed = { ...item, ...change };
+      assert.equal(getProductEditorial(changed), undefined);
+      assert.equal(withProductEditorial(changed), changed);
+    }
+    assert.ok(getBuyingGuide(draft.guideSlug));
+  }
+  assert.equal(withProductEditorial(product), product);
+});
+
+test("sales copy uses owner-confirmed features without missing-data copy or fabricated guarantees", () => {
+  const paths = ["src/lib/product-editorial.ts", "src/data/buying-guides.ts", "src/components/products/ProductBuyingGuide.tsx", "src/app/about/page.tsx", "src/app/guides/page.tsx", "src/app/guides/[slug]/page.tsx"];
+  for (const file of paths) {
+    const text = readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
+    assert.doesNotMatch(text, /اطلاعات.*درج نشده|گواهی مشخصی|ذکر نشده|تضمین سود|سود قطعی|بدون ریسک|غیرقابل جعل|تضمین بازخرید|سامانهٔ استعلام|QR|NFC/);
+  }
+  const component = readFileSync(new URL("../src/components/products/ProductBuyingGuide.tsx", import.meta.url), "utf8");
+  assert.match(component, /href="#product-purchase"/);
+  const detail = readFileSync(new URL("../src/app/products/[id]/page.tsx", import.meta.url), "utf8");
+  assert.match(detail, /id="product-purchase"/);
+  assert.match(detail, /disabled=\{product.stock <= 0\}/, "stock controls remain intact");
+  assert.match(detail, /نرخ بازار در دسترس نیست/, "live price status remains truthful");
+});
+
+test("buying guides have unique URLs and substantive sections without invented author credentials", () => {
+  assert.equal(buyingGuides.length, 3);
+  assert.equal(new Set(buyingGuides.map((guide) => guide.slug)).size, 3);
+  assert.equal(getBuyingGuide("unknown-guide"), undefined);
+  for (const guide of buyingGuides) {
+    assert.ok(/^[a-z-]+$/.test(guide.slug));
+    assert.ok(guide.sections.length >= 4);
+    assert.ok(guide.sections.every((section) => section.title && section.paragraphs.length > 0));
+    assert.ok(guide.sections.flatMap((section) => section.paragraphs).join(" ").length > 1000);
+  }
+  const page = readFileSync(new URL("../src/app/guides/[slug]/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /if \(!guide\) notFound\(\)/);
+  assert.doesNotMatch(page, /datePublished|dateModified|Person|aggregateRating/);
+  const about = readFileSync(new URL("../src/app/about/page.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(about, /سال‌ها تجربه|گواهی اصالت عرضه|سنگ‌های قیمتی|جواهرات میناکاری/);
 });

@@ -5,6 +5,7 @@ import { StructuredData } from "@/components/seo/StructuredData";
 import { absoluteUrl, getSiteUrl, isPublicSite } from "@/lib/seo";
 import { brandName, brandAlternateNames, brandDisplayName, brandHomeTitle, brandDescription } from "@/lib/brand";
 import "./globals.css";
+import "./buying-guides.css";
 
 // Domain and indexing policy are runtime settings, not Docker build-time defaults.
 export const dynamic = "force-dynamic";

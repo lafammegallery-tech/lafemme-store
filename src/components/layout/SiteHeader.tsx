@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
 const navigationItems = [
   { href: "/", label: "خانه" },
   { href: "/products", label: "محصولات" },
+  { href: "/guides", label: "راهنمای خرید" },
   { href: "/about", label: "درباره ما" },
   { href: "/contact", label: "تماس با ما" },
 ] as const;

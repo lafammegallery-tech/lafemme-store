@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { MarketOverview } from "@/components/market/MarketOverview";
 import { InvestmentCalculator } from "@/components/home/InvestmentCalculator";
 import { brandHomeTitle, brandDescription } from "@/lib/brand";
+import { BuyingGuidesSection } from "@/components/home/BuyingGuidesSection";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -60,6 +61,8 @@ export default function HomePage() {
 
         {/* FEATURED PRODUCTS — ویترین محصولات منتخب */}
         <FeaturedProductsSection />
+
+        <BuyingGuidesSection />
 
         {/* WHY CHOOSE US — مزیت‌های برند La Femme */}
         <WhyUsSection />

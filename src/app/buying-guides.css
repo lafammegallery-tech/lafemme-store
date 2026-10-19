@@ -1,0 +1,50 @@
+/* Scoped editorial additions; existing storefront palette and typography are unchanged. */
+.buying-guides-section { padding: 64px 0; }
+#product-purchase { scroll-margin-top: 160px; }
+.buying-guide-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+.buying-guide-section-heading h2, .buying-guide-panel h2 { color: var(--color-gold); font-size: clamp(1.25rem, 2.5vw, 1.9rem); line-height: 1.8; margin: 8px 0 16px; }
+.buying-guide-section-heading p, .buying-guide-card p, .buying-guide-panel p { color: var(--color-gray-light); line-height: 2.1; }
+.buying-guide-eyebrow { color: var(--color-gray-light); font-size: .85rem; line-height: 1.9; }
+.buying-guide-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.buying-guide-card { display: flex; flex-direction: column; gap: 18px; border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-surface); padding: 28px; min-width: 0; }
+.buying-guide-card h3 { color: var(--color-white); font-size: 1.2rem; line-height: 1.9; }
+.buying-guide-card p { flex: 1; }
+.buying-guide-link { color: var(--color-gold); display: inline-flex; align-items: center; gap: 8px; line-height: 2; font-weight: 600; text-decoration: underline; text-underline-offset: 5px; }
+.buying-guide-link:hover { color: var(--color-white); }
+.buying-guide-link:focus-visible, .buying-guide-toc a:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 5px; border-radius: 3px; }
+.buying-guide-panel { border: 1px solid var(--color-border); border-radius: var(--radius-medium); background: var(--color-surface); padding: clamp(24px, 4vw, 48px); min-width: 0; }
+.buying-guide-panel p + p { margin-top: 16px; }
+.buying-guide-panel h3 { color: var(--color-white); font-size: 1.15rem; margin: 24px 0 12px; }
+.buying-guide-actions { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 24px; }
+.buying-guide-facts { display: flex; flex-wrap: wrap; gap: 12px 24px; padding: 20px 0; margin-bottom: 12px; color: var(--color-white); border-bottom: 1px solid var(--color-border); line-height: 2; }
+.buying-guide-note { color: var(--color-gray-light); font-size: .9rem; line-height: 2; padding-top: 20px; margin-top: 20px; border-top: 1px solid var(--color-border); }
+.buying-guide-spaced { margin-top: 32px; }
+.buying-guide-reading-layout { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 32px; align-items: start; }
+.buying-guide-toc { border: 1px solid var(--color-border); border-radius: var(--radius-medium); padding: 24px; background: var(--color-surface); }
+.buying-guide-toc h2 { color: var(--color-white); margin-bottom: 16px; font-size: 1.1rem; }
+.buying-guide-toc ol { padding-inline-start: 20px; margin-bottom: 24px; list-style: decimal; }
+.buying-guide-toc li { color: var(--color-gray-light); line-height: 2; margin-bottom: 12px; }
+.buying-guide-toc a { color: inherit; }
+.buying-guide-article > section { scroll-margin-top: 180px; margin-top: 36px; }
+.buying-guide-checklist { list-style: disc; padding-inline-start: 24px; color: var(--color-gray-light); line-height: 2.1; margin-top: 16px; }
+.buying-guide-checklist li { margin-bottom: 10px; }
+.buying-guide-callout { border-top: 1px solid var(--color-border); margin-top: 40px; padding-top: 20px; }
+:root[data-theme="light"] .buying-guide-link,
+:root[data-theme="light"] .buying-guide-section-heading h2,
+:root[data-theme="light"] .buying-guide-panel h2 { color: var(--color-gold-dark); }
+:root[data-theme="light"] .buying-guide-section-heading p,
+:root[data-theme="light"] .buying-guide-card p,
+:root[data-theme="light"] .buying-guide-panel p,
+:root[data-theme="light"] .buying-guide-eyebrow,
+:root[data-theme="light"] .buying-guide-toc li,
+:root[data-theme="light"] .buying-guide-checklist { color: var(--color-gray); }
+@media (max-width: 1023px) {
+  .buying-guide-grid { grid-template-columns: 1fr; }
+  .buying-guide-reading-layout { grid-template-columns: 1fr; }
+  .buying-guide-section-heading { align-items: start; flex-direction: column; }
+}
+@media (max-width: 479px) {
+  .buying-guides-section { padding: 40px 0; }
+  .buying-guide-card, .buying-guide-panel, .buying-guide-toc { padding: 22px; }
+  .buying-guide-actions { flex-direction: column; align-items: start; }
+}

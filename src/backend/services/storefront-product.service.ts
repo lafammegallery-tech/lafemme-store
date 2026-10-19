@@ -2,6 +2,7 @@ import "server-only";
 import type { Product } from "@/types/product";
 import { products as fallbackProducts } from "@/data/products";
 import { calculateProductPrice, getMarketQuotes } from "./market-price.service";
+import { withProductEditorial } from "@/lib/product-editorial";
 
 // استفاده از طلای ۹۹۵ به عنوان مبنای محاسبه قیمت
 function purityFactor(purity: string | null | undefined): number {
@@ -77,7 +78,7 @@ async function loadDbProducts(): Promise<Product[] | null> {
 export async function getStorefrontProducts(): Promise<Product[]> {
   const [dbProducts, quotes] = await Promise.all([loadDbProducts(), getMarketQuotes()]);
   return applyLivePrices(
-    dbProducts?.length ? dbProducts : fallbackProducts,
+    (dbProducts?.length ? dbProducts : fallbackProducts).map(withProductEditorial),
     quotes.gold995.stale ? 0 : quotes.gold995.price,
     quotes.silver999.stale ? 0 : quotes.silver999.price,
   );

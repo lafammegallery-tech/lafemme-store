@@ -50,6 +50,9 @@ export function SiteFooter() {
             <h4>راهنما</h4>
             <ul>
               <li>
+                <Link href="/guides">راهنمای خرید شمش</Link>
+              </li>
+              <li>
                 <Link href="/about">درباره ما</Link>
               </li>
               <li>

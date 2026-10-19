@@ -6,6 +6,7 @@ import { Drawer, IconButton } from "@/components/ui";
 const baseItems = [
   ["/", "خانه"],
   ["/products", "محصولات"],
+  ["/guides", "راهنمای خرید"],
   ["/search", "جست‌وجو"],
   ["/about", "درباره ما"],
   ["/contact", "تماس با ما"],

@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { getStorefrontProducts } from "@/backend/services/storefront-product.service";
 import { absoluteUrl } from "@/lib/seo";
+import { buyingGuides } from "@/data/buying-guides";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = ["", "/products", "/about", "/contact", "/faq", "/privacy", "/terms"];
+  const staticRoutes = ["", "/products", "/about", "/contact", "/faq", "/privacy", "/terms", "/guides", ...buyingGuides.map((guide) => `/guides/${guide.slug}`)];
   let products: Awaited<ReturnType<typeof getStorefrontProducts>> = [];
   try { products = await getStorefrontProducts(); } catch { products = []; }
   return [
